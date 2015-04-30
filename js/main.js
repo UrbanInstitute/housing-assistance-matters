@@ -1,67 +1,49 @@
 function drawGraphic(containerWidth){
-	var dispatch = d3.dispatch("load");
-	// console.log(dispatch)
+	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance");
 	var data = d3.map();
+	var quantize = d3.scale.quantize()
+		.domain([0, 100])
+		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+	var COLORS = 
+		{
+			"q0-9": "rgb(247,251,255)",
+			"q1-9": "rgb(222,235,247)",
+			"q2-9": "rgb(198,219,239)",
+			"q3-9": "rgb(158,202,225)",
+			"q4-9": "rgb(107,174,214)",
+			"q5-9": "rgb(66,146,198)",
+			"q6-9": "rgb(33,113,181)",
+			"q7-9": "rgb(8,81,156)",
+			"q8-9": "rgb(8,48,107)"
+		}
+	var getAssistance = function(){
 
-	// d3.csv("../data/source/HAI_commsoutput_2013.csv", function(error, counties) {
-	// 	if (error) throw error;
-	// 	counties.forEach(function(d) {
-	// 	  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
-	// 	  data.set(FIPS,{
-	// 	  	"id": FIPS,
-	// 	    "name": d["County Name"],
-	// 	    "state": d["State Name"],
-	// 	    "2013": {"aaa":{
-	// 	    				"on":d["Units per 100 renters"],
-	// 	    				"off": d["Units per 100 renters (asst off)"]
-	// 	    				}	
-	// 	    		}
-	// 	  })
-	// 	});
-	// 	d3.csv("../data/source/HAI_commsoutput_2000.csv", function(error, counties) {
-	// 	if (error) throw error;
-	// 	counties.forEach(function(d) {
-	// 	  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
-	// 	  data.get(FIPS)["2000"] =
-	// 				{"aaa":{
-	// 	    				"on":d["Units per 100 renters"],
-	// 	    				"off": d["Units per 100 renters (asst off)"]
-	// 	    				}	
-	// 	    		}
-	// 		});
-	// 		d3.csv("../data/source/HAI_commsoutput_2006.csv", function(error, counties) {
-	// 		if (error) throw error;
-	// 		counties.forEach(function(d) {
-	// 		  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
-	// 		  data.get(FIPS)["2006"] =
-	// 					{"aaa":{
-	// 		    				"on":d["Units per 100 renters"],
-	// 		    				"off": d["Units per 100 renters (asst off)"]
-	// 		    				}	
-	// 		    		}
-	// 			});
-	// 			d3.csv("../data/source/HAI_commsoutput_2012.csv", function(error, counties) {
-	// 			if (error) throw error;
-	// 			counties.forEach(function(d) {
-	// 			  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
-	// 			  data.get(FIPS)["2012"] =
-	// 						{"aaa":{
-	// 			    				"on":d["Units per 100 renters"],
-	// 			    				"off": d["Units per 100 renters (asst off)"]
-	// 			    				}	
-	// 			    		}
-	// 				});
-	// 			});//end 2012
-	// 		});//end 2006
-	// 	});//end 2000
-	// });//end 2013
+	}
 
-	// console.log(data)
-	// console.log(data)
+	d3.selectAll(".year.button")
+		.on("click", function(){ dispatch.changeYear(d3.select(this).attr("id").replace("_button","")); })
+	d3.select(".assistance.button", function(){
+		var assistance = getAssistance();
+		dispatch.changeAssistance(getAssistance);
+	});
 
-
+	dispatch.on("changeYear.map", function(year){
+		console.log(year);
+		d3.selectAll("#counties path")
+			.transition()
+			.style("fill", function(d){ return COLORS[quantize(d.properties["asst" +  year])]; })
+			// .transition()
+			// .duration(0)
+			// .attr("class", function(d) { return quantize(d.properties["asst" +  year]);})
+					 //    .attr("id", "counties")
+		    // .selectAll("path")
+		    //   .data(topojson.feature(us, us.objects.UScounties).features)
+		    // .enter().append("path")
+		    //   .attr("d", path)
+  	   //        .attr("class", function(d) { return quantize(d.properties.asst2013); })
+		    //   .on("click", clicked);
+	})
  	dispatch.on("load.map", function(data){
- 		console.log("foo")
 		d3.selectAll("svg").remove()
 		var width = containerWidth,
     	height = containerWidth/2,
@@ -86,37 +68,27 @@ function drawGraphic(containerWidth){
 		var g = svg.append("g");
 
 		d3.json("data/data.json", function(error, us) {
-					console.log(us)
 
-			g.append("g")
-		      .attr("id", "counties")
+		g.append("g")
+		    .attr("id", "counties")
 		    .selectAll("path")
 		      .data(topojson.feature(us, us.objects.UScounties).features)
 		    .enter().append("path")
 		      .attr("d", path)
+		      .style("fill", function(d){ return COLORS[quantize(d.properties.asst2013)]; })
+  	          .attr("class", function(d) {
+  	          	var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+  	          	return ignored;
+  	          })
 		      .on("click", clicked);
 		  g.append("path")
 		      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
 		      .attr("id", "county-borders")
 		      .attr("d", path);
-		  
-		  // g.append("g")
-		  //     .attr("id", "states")
-		  //   .selectAll("path")
-		  //     .data(topojson.feature(us, us.objects.states).features)
-		  //   .enter().append("path")
-		  //     .attr("d", path)
-		  //     .on("click", clicked);
-		  // g.append("path")
-		  //     .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-		  //     .attr("id", "state-borders")
-		  //     .attr("d", path);
-
-
 		});
 
 		function clicked(d) {
-		  console.log("test", d)
+		  // console.log("test", d)
 		  var x, y, k;
 
 		  if (d && centered !== d) {

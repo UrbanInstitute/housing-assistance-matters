@@ -1,10 +1,42 @@
 body{font: 12pt Lato;}
-
+/*Map controls*/
+.button{
+  float:left;
+  margin-left: 15px;
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: #00a6d2;
+  background-image: none;
+  background-origin: padding-box;
+  background-position: 0 0;
+  background-repeat: repeat;
+  background-size: auto auto;
+  font-weight: 500;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  text-align: center;
+}
 
 .background {
   fill: none;
   pointer-events: all;
 }
+
+
+/*Map fill and stroke*/
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+
+.ignored{ fill: #ccc !important;}
 
 #states {
   fill: none;
@@ -15,7 +47,7 @@ body{font: 12pt Lato;}
 }
 
 #counties {
-  fill: #aaa;
+  /*fill: #aaa;*/
 }
 
 #counties .active {
