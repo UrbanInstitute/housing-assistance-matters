@@ -86,6 +86,7 @@ function drawGraphic(containerWidth){
 		var g = svg.append("g");
 
 		d3.json("data/data.json", function(error, us) {
+		console.log(us)
 
 		g.append("g")
 		    .attr("id", "counties")
@@ -102,6 +103,19 @@ function drawGraphic(containerWidth){
 		  g.append("path")
 		      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
 		      .attr("id", "county-borders")
+		      .attr("d", path);
+
+
+		g.append("g")
+		    .attr("id", "states")
+		    .selectAll("path")
+		      .data(topojson.feature(us, us.objects.cb_2013_us_state_500k).features)
+		    .enter().append("path")
+		      .attr("d", path)
+		      .on("click", clicked);
+		  g.append("path")
+		      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return a !== b; }))
+		      .attr("id", "state-borders")
 		      .attr("d", path);
 		});
 
