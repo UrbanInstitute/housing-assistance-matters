@@ -3,6 +3,94 @@ function drawGraphic(containerWidth){
 	var width = containerWidth,
     height = containerWidth/2,
     centered;
+	var dispatch = d3.dispatch("load");
+	var data = d3.map();
+
+	d3.csv("../data/source/HAI_commsoutput_2013.csv", function(error, counties) {
+		if (error) throw error;
+		counties.forEach(function(d) {
+		  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
+		  data.set(FIPS,{
+		  	"id": FIPS,
+		    "name": d["County Name"],
+		    "state": d["State Name"],
+		    "2013": {"aaa":{
+		    				"on":d["Units per 100 renters"],
+		    				"off": d["Units per 100 renters (asst off)"]
+		    				}	
+		    		}
+
+		  })
+		});
+		d3.csv("../data/source/HAI_commsoutput_2000.csv", function(error, counties) {
+		if (error) throw error;
+		counties.forEach(function(d) {
+		  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
+		  data.get(FIPS)["2000"] =
+					{"aaa":{
+		    				"on":d["Units per 100 renters"],
+		    				"off": d["Units per 100 renters (asst off)"]
+		    				}	
+		    		}
+			});
+			d3.csv("../data/source/HAI_commsoutput_2006.csv", function(error, counties) {
+			if (error) throw error;
+			counties.forEach(function(d) {
+			  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
+			  data.get(FIPS)["2006"] =
+						{"aaa":{
+			    				"on":d["Units per 100 renters"],
+			    				"off": d["Units per 100 renters (asst off)"]
+			    				}	
+			    		}
+				});
+				d3.csv("../data/source/HAI_commsoutput_2012.csv", function(error, counties) {
+				if (error) throw error;
+				counties.forEach(function(d) {
+				  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
+				  data.get(FIPS)["2012"] =
+							{"aaa":{
+				    				"on":d["Units per 100 renters"],
+				    				"off": d["Units per 100 renters (asst off)"]
+				    				}	
+				    		}
+					});
+				});//end 2012
+			});//end 2006
+		});//end 2000
+	});//end 2013
+
+	// d3.csv("../data/source/HAI_commsoutput_2006.csv", function(error, counties) {
+	// 	if (error) throw error;
+	// 	counties.forEach(function(d) {
+	// 	  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
+	// 	  data.get(FIPS)["2006"] =
+	// 				{"aaa":{
+	// 	    				"on":d["Units per 100 renters"],
+	// 	    				"off": d["Units per 100 renters (asst off)"]
+	// 	    				}	
+	// 	    		}
+
+
+	// 	});
+	// });
+	// d3.csv("../data/source/HAI_commsoutput_2012.csv", function(error, counties) {
+	// 	if (error) throw error;
+	// 	counties.forEach(function(d) {
+	// 	  var FIPS = (d.county == "National") ? 1 : parseInt(d.county, 10);
+	// 	  data.get(FIPS)["2012"] =
+	// 				{"aaa":{
+	// 	    				"on":d["Units per 100 renters"],
+	// 	    				"off": d["Units per 100 renters (asst off)"]
+	// 	    				}	
+	// 	    		}
+
+
+	// 	});
+	// });
+
+		console.log(data)
+
 
 	var projection = d3.geo.albersUsa()
 	    .scale(width)
