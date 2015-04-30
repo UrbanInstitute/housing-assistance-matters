@@ -17,31 +17,49 @@ function drawGraphic(containerWidth){
 			"q8-9": "rgb(8,48,107)"
 		}
 	var getAssistance = function(){
+		var btn = d3.select(".assistance.button");
+		if (btn.classed("on")){return "asst"}
+		else{ return "noAsst"}
+	}
 
+	var getYear = function(){
+		return d3.select(".year.button.active").attr("id").replace("_button","")
 	}
 
 	d3.selectAll(".year.button")
-		.on("click", function(){ dispatch.changeYear(d3.select(this).attr("id").replace("_button","")); })
-	d3.select(".assistance.button", function(){
-		var assistance = getAssistance();
-		dispatch.changeAssistance(getAssistance);
+		.on("click", function(){ 
+			d3.select(".year.button.active").classed("active",false)
+			d3.select(this).classed("active", true)
+			dispatch.changeYear(d3.select(this).attr("id").replace("_button","")); 
+		})
+	d3.select(".assistance.button")
+		.on("click", function(){
+		var btn = d3.select(this)
+		if(btn.classed("on")){
+			btn.classed("on",false)
+			btn.classed("off", true)
+			dispatch.changeAssistance("noAsst");
+		}
+		else{
+			btn.classed("on",true)
+			btn.classed("off", false)
+			dispatch.changeAssistance("asst");
+		}
+		
 	});
 
-	dispatch.on("changeYear.map", function(year){
-		console.log(year);
+	dispatch.on("changeAssistance.map", function(asst){
+		var year = getYear();
 		d3.selectAll("#counties path")
 			.transition()
-			.style("fill", function(d){ return COLORS[quantize(d.properties["asst" +  year])]; })
-			// .transition()
-			// .duration(0)
-			// .attr("class", function(d) { return quantize(d.properties["asst" +  year]);})
-					 //    .attr("id", "counties")
-		    // .selectAll("path")
-		    //   .data(topojson.feature(us, us.objects.UScounties).features)
-		    // .enter().append("path")
-		    //   .attr("d", path)
-  	   //        .attr("class", function(d) { return quantize(d.properties.asst2013); })
-		    //   .on("click", clicked);
+			.style("fill", function(d){ return COLORS[quantize(d.properties[asst +  year])]; })
+	})
+
+	dispatch.on("changeYear.map", function(year){
+		var asst = getAssistance();
+		d3.selectAll("#counties path")
+			.transition()
+			.style("fill", function(d){ return COLORS[quantize(d.properties[asst + year])]; })
 	})
  	dispatch.on("load.map", function(data){
 		d3.selectAll("svg").remove()

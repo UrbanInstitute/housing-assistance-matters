@@ -19,10 +19,22 @@ body{font: 12pt Lato;}
   text-align: center;
 }
 
+.button.on{
+  background-color: #00a6d2;
+}
+.button.off{
+  background-color: #ccc;
+}
+
+.button.active{
+	background-color: orange;
+}
+
 .background {
   fill: none;
   pointer-events: all;
 }
+
 
 
 /*Map fill and stroke*/
@@ -36,7 +48,7 @@ body{font: 12pt Lato;}
 .q7-9 { fill:rgb(8,81,156); }
 .q8-9 { fill:rgb(8,48,107); }
 
-.ignored{ fill: #ccc !important;}
+/*.ignored{ fill: #ccc !important;}*/
 
 #states {
   fill: none;
