@@ -1,5 +1,11 @@
+var pymChild = null;
+var selectedCounties = [];
+var BAR_WIDTH = 200.0;
+var drawDetail = function(d){
+	var detail;
+}
 function drawGraphic(containerWidth){
-	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance");
+	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
@@ -73,7 +79,7 @@ function drawGraphic(containerWidth){
 		var path = d3.geo.path()
 		    .projection(projection);
 
-		var svg = d3.select("body").append("svg")
+		var svg = d3.select(".map.container").append("svg")
 		    .attr("width", width)
 		    .attr("height", height);
 
@@ -86,8 +92,6 @@ function drawGraphic(containerWidth){
 		var g = svg.append("g");
 
 		d3.json("data/data.json", function(error, us) {
-		console.log(us)
-
 		g.append("g")
 		    .attr("id", "counties")
 		    .selectAll("path")
@@ -120,6 +124,7 @@ function drawGraphic(containerWidth){
 		});
 
 		function clicked(d) {
+		  dispatch.selectCounty(d);
 		  // console.log("test", d)
 		  var x, y, k;
 
@@ -145,7 +150,138 @@ function drawGraphic(containerWidth){
 		      .style("stroke-width", 1.5 / k + "px");
 		}
 	});
-	dispatch.load(data)
+	dispatch.on("load.details", function(data){
+		d3.select(".detail.list")
+			.append("li")
+			.classed("national", true)
+			.classed("show", true)
+			.text("The USA data goes here")
+		// pymChild.sendHeight();
+	})
+	dispatch.on("selectCounty.details", function(d){
+		console.log(d)
+		console.log(getYear())
+		console.log(getAssistance())
+		var year = getYear();
+		var assistance = getAssistance();
+		var identifier = (typeof(d) == "undefined") ? null : assistance +  year + "_" + d.id;
+		var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + year]
+		var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + year]
+
+		if(typeof(d) != "undefined" && selectedCounties.indexOf(identifier) === -1){
+			selectedCounties.push(identifier)
+			var li = d3.select(".detail.list")
+				 .insert("li",":first-child");
+			var wrapper = li.append("div")
+				.attr("class", "detail container")
+				.attr("id", "county_detail");
+			wrapper.append("div")
+				.attr("class", "detail county close-button")
+				.text("X")
+				.on("click", function(){dispatch.deselectCounty(identifier)});
+
+			wrapper.append("div")
+				.attr("class", "detail county name")
+				.text(d.properties.name)
+			wrapper.append("div")
+				.attr("");
+
+			var total = wrapper.append("div")
+				.attr("class", "detail county total bar")
+				.classed(year, true);	
+
+			total.append("div")
+				.attr("class", "asst bar")
+				.style("width", asst + "%");
+
+			total.append("div")
+				.datum(d)
+				.attr("class", "display bar")
+				.style("width", function(){
+					if(assistance == "noAsst"){
+						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+					}
+					else{
+						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+					}
+				})
+				.style("background", function(){
+					if(assistance == "noAsst"){
+						return COLORS[quantize(noAsst)]
+					}
+					else{
+						return COLORS[quantize(asst)]
+					}
+				})
+				.style("border", function(){
+					if(assistance == "noAsst"){
+						return "1px solid " + COLORS[quantize(noAsst)]
+					}
+					else{
+						return "1px solid " + COLORS[quantize(asst)]
+					}
+				})
+
+			total.append("div")
+				.datum(d)
+				.attr("class", "bar marker")
+								.style("width", function(){
+					if(assistance == "noAsst"){
+						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+					}
+					else{
+						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+					}
+				})
+
+			li.transition()
+				 .duration(4)
+				 .attr("class", "show")
+			pymChild.sendHeight();
+		}
+
+	});
+
+	dispatch.on("changeAssistance.details", function(a){
+		// var totalWidth = d3.select("")
+		var year = getYear();
+		d3.selectAll(".display.bar")
+			.transition()
+			.style("width", function(d){
+				var asst = d.properties["asst" + year]
+				var noAsst = d.properties["noAsst" + year]
+				if(a == "noAsst"){
+					return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+				}
+				else{
+					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+				}
+			})
+			.style("background", function(d){
+				var asst = d.properties["asst" + year]
+				var noAsst = d.properties["noAsst" + year]
+				if(a == "noAsst"){
+					return COLORS[quantize(noAsst)]
+				}
+				else{
+					return COLORS[quantize(asst)]
+				}
+			})
+			.style("border-color", function(d){
+				var asst = d.properties["asst" + year]
+				var noAsst = d.properties["noAsst" + year]
+				if(a == "noAsst"){
+					return COLORS[quantize(noAsst)]
+				}
+				else{
+					return COLORS[quantize(asst)]
+				}
+			})
+})
+
+	dispatch.load(data);
+	// pymChild.sendHeight();
+	// console.log(d3.select(".detail.list"))
 }
 
-pymChild = new pym.Child({ renderCallback: drawGraphic});
+pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
