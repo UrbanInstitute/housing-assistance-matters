@@ -171,10 +171,12 @@ function drawGraphic(containerWidth){
 		if(typeof(d) != "undefined" && selectedCounties.indexOf(identifier) === -1){
 			selectedCounties.push(identifier)
 			var li = d3.select(".detail.list")
-				 .insert("li",":first-child");
+				 .insert("li",":first-child")
+ 				.attr("id", identifier)
+ 				.classed("ui-state-default", true);
+
 			var wrapper = li.append("div")
 				.attr("class", "detail container")
-				.attr("id", "county_detail");
 			wrapper.append("div")
 				.attr("class", "detail county close-button")
 				.text("X")
@@ -234,13 +236,16 @@ function drawGraphic(containerWidth){
 					}
 				})
 
-			li.transition()
-				 .duration(4)
-				 .attr("class", "show")
+			// li.transition()
+			// 	 .duration(4)
+			// 	 .attr("class", "show")
 			pymChild.sendHeight();
 		}
 
 	});
+	dispatch.on("deselectCounty.details", function(identifier){
+		d3.select("#" + identifier).classed("show", false)
+	})
 
 	dispatch.on("changeAssistance.details", function(a){
 		// var totalWidth = d3.select("")
@@ -284,4 +289,16 @@ function drawGraphic(containerWidth){
 	// console.log(d3.select(".detail.list"))
 }
 
+  $(function() {
+    $( "#sortable" ).sortable({
+      revert: true
+    });
+    $( "#draggable" ).draggable({
+      connectToSortable: "#sortable",
+      helper: "clone",
+      revert: "invalid"
+    });
+    $( "ul, li" ).disableSelection();
+  });
 pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
+

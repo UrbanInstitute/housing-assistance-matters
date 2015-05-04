@@ -98,9 +98,9 @@ body{font: 12pt Lato;}
   padding: 0 0.5em;
   overflow: hidden;
   width: 100%;
+  transition: all 0.4s ease-out;
   opacity: 0;
-  transform: rotateX(-90deg);
-  transition: all 0.5s cubic-bezier(.36,-0.64,.34,1.76);
+
 }
 
 .swing li.show {
@@ -108,12 +108,13 @@ body{font: 12pt Lato;}
   width: 100%;
   margin: 2px 0;
   opacity: 1;
-  transform: none;
-  transition: all 0.5s cubic-bezier(.36,-0.64,.34,1.76);
 }
 
 
 /*Detail view layout*/
+.close-button{
+  cursor: pointer;
+}
 .detail.container{
   border: solid;
   border-width: 1pt;
