@@ -1,11 +1,44 @@
-.scatter{
-	width: 100px;
-	height: 20px;
-	border: 2px solid white;
-	background: orange;
+.scatter.container{
+	width: 700px;
+	height: 200px;
+	border-bottom: 1px solid #ccc;
+	/*background: orange;*/
 }
 
-.scatter .text{
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+
+.dot{
+
+}
+.line{
+	fill: none;
+	stroke-width: 1px;
+}
+
+.asst.dot{
+	fill: #1696d2;
+}
+.asst.line{
+	stroke: #1696d2;
+}
+
+.noAsst.dot{
+	fill: #c6c6c6;
+}
+.noAsst.line{
+	stroke: #c6c6c6;
+}
+/*.scatter .text{
 	color: white;
 	font: 12pt Helvetica;
-}
+}*/

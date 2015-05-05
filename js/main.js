@@ -6,12 +6,13 @@ var drawDetail = function(d){
 }
 function drawGraphic(containerWidth){
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty");
+	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
 		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
 	var COLORS = 
 		{
-			"q0-9": "rgb(247,251,255)",
+			"q0-9": "rgb(255,255,255)",
 			"q1-9": "rgb(222,235,247)",
 			"q2-9": "rgb(198,219,239)",
 			"q3-9": "rgb(158,202,225)",
@@ -138,7 +139,7 @@ function drawGraphic(containerWidth){
 
 		var legend = g.append("g")
 			.attr("id", "legend")
-			.
+
 
 		function clicked(d) {
 		  dispatch.selectCounty(d);

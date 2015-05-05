@@ -58,6 +58,8 @@ var BAR_WIDTH = 200.0;
 function drawGraphic(containerWidth){
 	var params = getUrlVars();
 	var fips = params.fips
+	var width = 200;
+	var height = 200;
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
 		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
@@ -75,13 +77,87 @@ function drawGraphic(containerWidth){
 		}
     
 	d3.json("data/data.json", function(error, us) {
-		d3.select("body")
+		var data = topojson.feature(us, us.objects.UScounties).features.filter(function(obj){ return fips.indexOf(""+obj.id) != -1})
+		var containers = d3.select("body")
 			.selectAll("div")
-			.data(topojson.feature(us, us.objects.UScounties).features.filter(function(obj){ return fips.indexOf(""+obj.id) != -1}))
+			.data(data)
 			.enter()
 			.append("div")
-			.text(function(d){return d.properties.FIPS})
-			.attr("class","scatter")
+			.attr("class","scatter container")
+
+		var x = d3.scale.linear()
+				.range([30,170])
+				.domain([1999.5,2013.5])
+		var y = d3.scale.linear()
+				.range([170,0])
+				.domain([0,100])
+		var years = [2000,2006,2012,2013]
+		// var line = d3.svg.line()
+	 //    	.x(function(d) { return x(d.date); })
+	 //    	.y(function(d) { return y(d.close); });
+
+	 console.log(data)
+
+		var xAxis = d3.svg.axis()
+		    .scale(x)
+		    .orient("bottom");
+
+		var yAxis = d3.svg.axis()
+		    .scale(y)
+		    .orient("left");
+
+		var svg = containers.append("svg")
+				.attr("height",200)
+				.attr("width",700)
+				.append("g");
+		svg.append("g")
+		      .attr("class", "x axis")
+		      .attr("transform", "translate(0," + 170 + ")")
+		      .call(xAxis);
+
+		svg.append("g")
+		      .attr("class", "y axis")
+		      .attr("transform", "translate(30,0)")
+		      .call(yAxis)
+		    .append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".71em")
+		      .style("text-anchor", "end")
+
+		for(var i = 0; i < years.length; i++){
+			if(i < (years.length - 1)){
+				svg.append("line")
+					.attr("class", "asst line")
+					.attr("x1", x(years[i]))
+					.attr("x2", x(years[i+1]))
+					.attr("y1", function(d){ return y(d.properties["asst" + years[i]])})
+					.attr("y2", function(d){ return y(d.properties["asst" + years[i+1]])})
+
+				svg.append("line")
+					.attr("class", "noAsst line")
+					.attr("x1", x(years[i]))
+					.attr("x2", x(years[i+1]))
+					.attr("y1", function(d){ return y(d.properties["noAsst" + years[i]])})
+					.attr("y2", function(d){ return y(d.properties["noAsst" + years[i+1]])})
+
+			}
+			svg.append("circle")
+				.attr("class","asst dot")
+				.attr("cx",x(years[i]))
+				.attr("cy", function(d){ return y(d.properties["asst" + years[i]])})
+				.attr("r",4)
+
+			svg.append("circle")
+				.attr("class","noAsst dot")
+				.attr("cx",x(years[i]))
+				.attr("cy", function(d){ return y(d.properties["noAsst" + years[i]])})
+				.attr("r",4)
+		}
+
+
+
+
 
 				      // .data(topojson.feature(us, us.objects.UScounties).features)
 	});	
