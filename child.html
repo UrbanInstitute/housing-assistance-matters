@@ -2,6 +2,9 @@
 <meta charset="utf-8">
 <head>
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <style name="impostor_size">
+    .marker + li { border-top-width:0px; }
+  </style>
 </head>
 <body>
 <div class = "year button" id = "2000_button">2000</div>
@@ -10,7 +13,7 @@
 <div class = "year button active" id = "2013_button">2013</div>
 <div class = "assistance button on" id = "asst_button">Assistance</div>
 <div class = "map container"></div>
-<div class = "detail container swing"><ul id="sortable" class = "detail list"></ul></div>
+<div class = "detail container swing"><ul id="holder" class = "detail list"></ul></div>
 
 <script src="js/vendor/d3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>

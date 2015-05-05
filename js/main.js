@@ -6,7 +6,6 @@ var drawDetail = function(d){
 }
 function drawGraphic(containerWidth){
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty");
-	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
 		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
@@ -59,14 +58,14 @@ function drawGraphic(containerWidth){
 		d3.selectAll("#counties path")
 			.transition()
 			.style("fill", function(d){ return COLORS[quantize(d.properties[asst +  year])]; })
-	})
+	});
 
 	dispatch.on("changeYear.map", function(year){
 		var asst = getAssistance();
 		d3.selectAll("#counties path")
 			.transition()
 			.style("fill", function(d){ return COLORS[quantize(d.properties[asst + year])]; })
-	})
+	});
  	dispatch.on("load.map", function(data){
 		d3.selectAll("svg").remove()
 		var width = containerWidth,
@@ -75,6 +74,12 @@ function drawGraphic(containerWidth){
 		var projection = d3.geo.albersUsa()
 		    .scale(width)
 		    .translate([width / 2, height / 2]);
+
+		// var zoom = d3.behavior.zoom()
+  //   		.translate(projection.translate())
+  //   		.scale(projection.scale())
+  //   		.scaleExtent([height, 8 * height])
+  //   		.on("zoom", zoomed);
 
 		var path = d3.geo.path()
 		    .projection(projection);
@@ -89,7 +94,8 @@ function drawGraphic(containerWidth){
 		    .attr("height", height)
 		    .on("click", clicked);
 
-		var g = svg.append("g");
+		var g = svg.append("g")
+				// .call(zoom);
 
 		d3.json("data/data.json", function(error, us) {
 		g.append("g")
@@ -121,7 +127,18 @@ function drawGraphic(containerWidth){
 		      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return a !== b; }))
 		      .attr("id", "state-borders")
 		      .attr("d", path);
+		//   		g.append("rect")
+		// .attr("height", 1200)
+		// .attr("width",650)
+		// .attr("x",700)
+		// .attr("y",0)
+		// .style("fill","#000")
+		// .style("opacity",0.5)
 		});
+
+		var legend = g.append("g")
+			.attr("id", "legend")
+			.
 
 		function clicked(d) {
 		  dispatch.selectCounty(d);
@@ -149,7 +166,14 @@ function drawGraphic(containerWidth){
 		      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
 		      .style("stroke-width", 1.5 / k + "px");
 		}
+		// function zoomed() {
+  // 			projection.translate(d3.event.translate).scale(d3.event.scale);
+ 	// 		g.selectAll("path").attr("d", path);
+		// }
 	});
+	// dispatch.on("load.key", function(data){
+	// 	console.log(svg);
+	// })
 	dispatch.on("load.details", function(data){
 		d3.select(".detail.list")
 			.append("li")
@@ -159,6 +183,7 @@ function drawGraphic(containerWidth){
 		// pymChild.sendHeight();
 	})
 	dispatch.on("selectCounty.details", function(d){
+		d3.selectAll(".garbage").remove();
 		console.log(d)
 		console.log(getYear())
 		console.log(getAssistance())
@@ -173,10 +198,12 @@ function drawGraphic(containerWidth){
 			var li = d3.select(".detail.list")
 				 .insert("li",":first-child")
  				.attr("id", identifier)
- 				.classed("ui-state-default", true);
+ 				// .classed("ui-state-default", true);
 
 			var wrapper = li.append("div")
 				.attr("class", "detail container")
+				.style("height", 0)
+				.style("opacity", 0)
 			wrapper.append("div")
 				.attr("class", "detail county close-button")
 				.text("X")
@@ -199,6 +226,7 @@ function drawGraphic(containerWidth){
 			total.append("div")
 				.datum(d)
 				.attr("class", "display bar")
+				.attr("data-year", year)
 				.style("width", function(){
 					if(assistance == "noAsst"){
 						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
@@ -236,15 +264,27 @@ function drawGraphic(containerWidth){
 					}
 				})
 
-			// li.transition()
-			// 	 .duration(4)
-			// 	 .attr("class", "show")
+		 	wrapper
+			 	.transition()
+			 	.duration(40)
+			 	.style("height", "36px")
+			 	.style("opacity", 1)
 			pymChild.sendHeight();
 		}
 
 	});
 	dispatch.on("deselectCounty.details", function(identifier){
-		d3.select("#" + identifier).classed("show", false)
+		var li = d3.select("#" + identifier)
+		li.transition()
+	 		.duration(200)
+		 	.style("height", "0px")
+		 	.style("opacity", 0)
+		 	.transition()
+		 	.duration(0)
+		 	.style("display", "none")
+		 	.attr("class", "garbage");
+
+		pymChild.sendHeight();
 	})
 
 	dispatch.on("changeAssistance.details", function(a){
@@ -253,6 +293,7 @@ function drawGraphic(containerWidth){
 		d3.selectAll(".display.bar")
 			.transition()
 			.style("width", function(d){
+				var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -263,6 +304,7 @@ function drawGraphic(containerWidth){
 				}
 			})
 			.style("background", function(d){
+				var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -273,6 +315,7 @@ function drawGraphic(containerWidth){
 				}
 			})
 			.style("border-color", function(d){
+				var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -289,16 +332,22 @@ function drawGraphic(containerWidth){
 	// console.log(d3.select(".detail.list"))
 }
 
-  $(function() {
-    $( "#sortable" ).sortable({
-      revert: true
-    });
-    $( "#draggable" ).draggable({
-      connectToSortable: "#sortable",
-      helper: "clone",
-      revert: "invalid"
-    });
-    $( "ul, li" ).disableSelection();
-  });
+       var stylesheet = $('style[name=impostor_size]')[0].sheet,
+            rule = stylesheet.rules ? stylesheet.rules[0].style : stylesheet.cssRules[0].style,
+            setPadding = function(atHeight) {
+                rule.cssText = 'border-top-width: '+atHeight+'px'; 
+            };
+
+        $('ul').sortable({
+            'placeholder':'marker',
+            'start':function(ev, ui) {
+                setPadding(ui.item.height());
+            },
+            'stop':function(ev, ui) {
+                var next = ui.item.next();
+                next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
+                setTimeout(next.css.bind(next, {' -moz-transition':'border-top-width 0.1s ease-in, background .2s ease-out;', '-webkit-transition':'border-top-width 0.1s ease-in, background .2s ease-out;','-o-transition':'border-top-width 0.1s ease-in, background .2s ease-out;','transition':'border-top-width 0.1s ease-in, background .2s ease-out;'})); }
+        });
+
 pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
 
