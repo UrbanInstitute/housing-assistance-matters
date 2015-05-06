@@ -1,5 +1,17 @@
-body{font: 12pt Lato;}
-/*Map controls*/
+body{
+  margin: 0;
+  font: 12pt Lato;
+}
+
+/*Header*/
+.header.container div{
+  float: left;
+}
+.header.container{
+  height: 59px;
+  width: 100%;
+  border-bottom: 2pt solid #ccc;
+}
 .button{
   font: 14px Lato;
   color: #cccccc;
@@ -8,33 +20,93 @@ body{font: 12pt Lato;}
   background-color: #999999;
   text-align: center;
   border-right: 1px solid #888;
-
+  cursor: pointer;
+}
+.button.active{
+  color: #ffffff;
+  background-color: #00a6d2;
 }
 
+.assistance.label{
+  margin-top: 4px;
+  margin-right: 4px;
+}
+.help-button img{
+  width: 15px;
+  margin-top: 6.5px;
+  margin-right: 11px;
+}
+.header.label{
+  font: 13px Lato #333;
+  font-weight: 700;
+}
+
+.button span{
+  position: relative;
+  top: 5px;
+}
+
+.assistance.container, .year.container{
+  border-right: 2px solid #ccc;
+  height: 43px;
+  padding-top: 16px;
+  padding-left: 5px;
+  padding-right: 10px;
+}
+
+.assistance.button{
+  width: 66px;
+  height: 28px;
+}
+
+.year.label{
+  margin-right: 11px;
+}
 .year.button{
   width: 75px;
   height: 28px;
   vertical-align: middle;
 }
 
-.year.button span{
+div.ui-widget{
+  margin-top: 16px;
+  margin-left: 10px;
+}
+input.custom-combobox-input{
+  background: #cccccc;
+  border-radius: 0;
+  outline:0;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  font: 13px Lato !important;
+  color: #333 !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  text-indent: 11px;
+  width: 208px;
+}
+.ui-menu-item{
+  background: #cccccc;
+  font: 13px Lato !important;
+  color: #333 !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+}
+.search-icon{
   position: relative;
-  top: 5px;
+  height: 18px;
+  left: -24px;
+  top: 4px;
 }
-
-.button.on{
-  color: #fff;
-  background-color: #00a6d2;
+.search-icon_background{
+  height: 28px;
+  width: 30px;
+  position: relative;
+  left: 208px;
+  background: #ccc;
 }
-.button.off{
-  color: #cccccc;
-  background-color: #999999;
-}
-
-.button.active{
-  color: #ffffff;
-	background-color: #00a6d2;
-}
+/*Map controls*/
 
 .background {
   fill: none;
@@ -62,7 +134,7 @@ body{font: 12pt Lato;}
   fill: none !important;
 }
 
-#counties .active {
+#counties .active, .dropdown{
   fill: orange !important;
 }
 #state-borders {
@@ -104,6 +176,7 @@ body{font: 12pt Lato;}
 .detail.container{
   margin-top: 50px;
 }
+ul#holder{ padding: 0;}
 li {
  display:block;
  position:relative;

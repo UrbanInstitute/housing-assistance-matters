@@ -24,8 +24,8 @@ function drawGraphic(containerWidth){
 			"q8-9": "rgb(8,48,107)"
 		}
 	var getAssistance = function(){
-		var btn = d3.select(".assistance.button");
-		if (btn.classed("on")){return "asst"}
+		var btn = d3.select(".assistance.button.active");
+		if (btn.classed("turnOn")){return "asst"}
 		else{ return "noAsst"}
 	}
 
@@ -39,24 +39,38 @@ function drawGraphic(containerWidth){
 			d3.select(this).classed("active", true)
 			dispatch.changeYear(d3.select(this).attr("id").replace("_button","")); 
 		})
-	d3.select(".assistance.button")
+	d3.selectAll(".assistance.button")
 		.on("click", function(){
-		var btn = d3.select(this)
-		if(btn.classed("on")){
-			btn.classed("on",false)
-			btn.classed("off", true)
+		// var btn = d3.select(this)
+		var active = d3.select(".assistance.button.active")
+		console.log(active)
+		if(active.classed("turnOn")){
+			active.classed("active", false);
+			d3.select(".assistance.button.turnOff")
+				.classed("active", true);
 			dispatch.changeAssistance("noAsst");
 		}
-		else{
-			btn.classed("on",true)
-			btn.classed("off", false)
+		if(active.classed("turnOff")){
+			active.classed("active", false);
+			d3.select(".assistance.button.turnOn")
+				.classed("active", true);
 			dispatch.changeAssistance("asst");
 		}
+
+		// if(btn.classed("turnOn")){
+		// 	btn.classed("on",false)
+		// 	btn.classed("active", true)
+		// 	dispatch.changeAssistance("noAsst");
+		// }
+		// else{
+		// 	btn.classed("on",true)
+		// 	btn.classed("off", false)
+		// 	dispatch.changeAssistance("asst");
+		// }
 		
 	});
 	d3.select(".print.button")
 		.on("click", function(){
-			// console.log(selectedCounties)
 			var url = "/detail.html?fips=";
 			for(var i = 0; i<selectedCounties.length; i++){
 				url += selectedCounties[i].split("_")[1];
@@ -80,119 +94,104 @@ function drawGraphic(containerWidth){
 			.transition()
 			.style("fill", function(d){ return COLORS[quantize(d.properties[asst + year])]; })
 	});
- 	// dispatch.on("load.map", function(data){
-		d3.selectAll("svg").remove()
-		var width = containerWidth,
-    	height = containerWidth/2,
-    	centered;
-		var projection = d3.geo.albersUsa()
-		    .scale(width)
-		    .translate([width / 2, height / 2]);
 
-		// var zoom = d3.behavior.zoom()
-  //   		.translate(projection.translate())
-  //   		.scale(projection.scale())
-  //   		.scaleExtent([height, 8 * height])
-  //   		.on("zoom", zoomed);
+	d3.selectAll("svg").remove();
+	d3.selectAll(".custom-combobox").remove();
+	d3.selectAll("#combobox").remove();
+	var width = containerWidth,
+	height = containerWidth/2,
+	centered;
+	var projection = d3.geo.albersUsa()
+	    .scale(width)
+	    .translate([width / 2, height / 2]);
 
-		var path = d3.geo.path()
-		    .projection(projection);
+	var path = d3.geo.path()
+	    .projection(projection);
 
-		var svg = d3.select(".map.container").append("svg")
-		    .attr("width", width)
-		    .attr("height", height);
+	var svg = d3.select(".map.container").append("svg")
+	    .attr("width", width)
+	    .attr("height", height);
 
-		svg.append("rect")
-		    .attr("class", "background")
-		    .attr("width", width)
-		    .attr("height", height)
-		    .on("click", clicked);
+	svg.append("rect")
+	    .attr("class", "background")
+	    .attr("width", width)
+	    .attr("height", height)
+	    .on("click", clicked);
 
-		var g = svg.append("g")
-				// .call(zoom);
+	var g = svg.append("g")
 
-		d3.json("data/data.json", function(error, us) {
-			dispatch.load(topojson.feature(us, us.objects.UScounties).features);
+	d3.json("data/data.json", function(error, us) {
+		dispatch.load(topojson.feature(us, us.objects.UScounties).features);
 
-		g.append("g")
-		    .attr("id", "counties")
-		    .selectAll("path")
-		      .data(topojson.feature(us, us.objects.UScounties).features)
-		    .enter().append("path")
-		      .attr("d", path)
-		      .style("fill", function(d){ return COLORS[quantize(d.properties.asst2013)]; })
-  	          .attr("class", function(d) {
-  	          	var ignored = (d.properties.ignore == "1") ? " ignored" : "";
-  	          	return ignored;
-  	          })
-		      .on("click", clicked);
-		  g.append("path")
-		      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
-		      .attr("id", "county-borders")
-		      .attr("d", path);
+	g.append("g")
+	    .attr("id", "counties")
+	    .selectAll("path")
+	      .data(topojson.feature(us, us.objects.UScounties).features)
+	    .enter().append("path")
+	      .attr("d", path)
+	      .style("fill", function(d){ return COLORS[quantize(d.properties.asst2013)]; })
+	          .attr("class", function(d) {
+	          	var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+	          	var fips = "fips_" + d.id
+	          	return ignored + " " + fips;
+	          })
+	      .on("click", clicked);
+	  g.append("path")
+	      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
+	      .attr("id", "county-borders")
+	      .attr("d", path);
 
 
-		g.append("g")
-		    .attr("id", "states")
-		    .selectAll("path")
-		      .data(topojson.feature(us, us.objects.cb_2013_us_state_500k).features)
-		    .enter().append("path")
-		      .attr("d", path)
-		      .on("click", clicked);
-		  g.append("path")
-		      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return a !== b; }))
-		      .attr("id", "state-borders")
-		      .attr("d", path);
-		//   		g.append("rect")
-		// .attr("height", 1200)
-		// .attr("width",650)
-		// .attr("x",700)
-		// .attr("y",0)
-		// .style("fill","#000")
-		// .style("opacity",0.5)
-		});
+	g.append("g")
+	    .attr("id", "states")
+	    .selectAll("path")
+	      .data(topojson.feature(us, us.objects.cb_2013_us_state_500k).features)
+	    .enter().append("path")
+	      .attr("d", path)
+	      .on("click", clicked);
+	  g.append("path")
+	      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return a !== b; }))
+	      .attr("id", "state-borders")
+	      .attr("d", path);
+	});
 
-		var legend = g.append("g")
-			.attr("id", "legend")
+	var legend = g.append("g")
+		.attr("id", "legend")
 
 
-		function clicked(d) {
-		  		  console.log("foo")
+	function clicked(d) {
+	//dropdown class styled same as active class, but doesn't get overwritten
+	  d3.selectAll(".dropdown").classed("dropdown", false)
 
-		  // console.log("test", d)
-		  var x, y, k;
+	//If county is selected from dropdown, add dropdown class
+	  if(typeof(this.tagName) == "undefined"){
+	  	d3.selectAll("path.fips_" + d.id)
+	  		.classed("dropdown",true);
+	  }
+	  var x, y, k;
 
-		  if (d && centered !== d) {
-		    var centroid = path.centroid(d);
-		    x = centroid[0];
-		    y = centroid[1];
-		    k = 4;
-		    centered = d;
-		  } else {
-		    x = width / 2;
-		    y = height / 2;
-		    k = 1;
-		    centered = null;
-		  }
+	  if (d && centered !== d) {
+	    var centroid = path.centroid(d);
+	    x = centroid[0];
+	    y = centroid[1];
+	    k = 4;
+	    centered = d;
+	  } else {
+	    x = width / 2;
+	    y = height / 2;
+	    k = 1;
+	    centered = null;
+	  }
 
-		  g.selectAll("path")
-		      .classed("active", centered && function(d) { return d === centered; });
-		  // console.log(d3.selectAll("path").classed("active"))
+	  g.selectAll("path")
+	      .classed("active", centered && function(d) { return d === centered; });
+	  g.transition()
+	      .duration(750)
+	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+	      .style("stroke-width", 1.5 / k + "px");
 
-		  g.transition()
-		      .duration(750)
-		      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-		      .style("stroke-width", 1.5 / k + "px");
-		  dispatch.selectCounty(d);
-		}
-		// function zoomed() {
-  // 			projection.translate(d3.event.translate).scale(d3.event.scale);
- 	// 		g.selectAll("path").attr("d", path);
-		// }
-	// });
-	// dispatch.on("load.key", function(data){
-	// 	console.log(svg);
-	// })
+	  dispatch.selectCounty(d);
+	}
 
 	dispatch.on("load.menu", function(data){
 		var lookup = {};
@@ -313,10 +312,10 @@ function drawGraphic(containerWidth){
 	          }
 	   
 	          // Remove invalid value
-	          this.input
-	            .val( "" )
-	            .attr( "title", value + " didn't match any item" )
-	            .tooltip( "open" );
+	          // this.input
+	          //   .val( "" )
+	          //   .attr( "title", value + " didn't match any item" )
+	          //   .tooltip( "open" );
 	          this.element.val( "" );
 	          this._delay(function() {
 	            this.input.tooltip( "close" ).attr( "title", "" );
@@ -353,6 +352,15 @@ function drawGraphic(containerWidth){
 	    $(".custom-combobox input").click(function(){
 	     $(this).focus().val('')
 	    })
+	    d3.selectAll("a.ui-button").remove();
+	    var span = d3.select(".search.container span")
+	    span.append("div")
+	    	.attr("class", "search-icon_background")
+	    span.append("img")
+	    	.attr("src","/images/search-icon.png")
+	    	.attr("class","search-icon")
+	    d3.select(".custom-combobox-input")
+	    	.property("value","Search for counties")
 	})
 	dispatch.on("load.details", function(data){
 		d3.select(".detail.list")
@@ -469,7 +477,6 @@ function drawGraphic(containerWidth){
 	})
 
 	dispatch.on("changeAssistance.details", function(a){
-		// var totalWidth = d3.select("")
 		var year = getYear();
 		d3.selectAll(".display.bar")
 			.transition()
@@ -506,10 +513,7 @@ function drawGraphic(containerWidth){
 					return COLORS[quantize(asst)]
 				}
 			})
-})
-
-	// pymChild.sendHeight();
-	// console.log(d3.select(".detail.list"))
+		})
 }
 
        var stylesheet = $('style[name=impostor_size]')[0].sheet,
