@@ -85,6 +85,9 @@ function drawGraphic(containerWidth){
 			.append("div")
 			.attr("class","scatter container")
 
+		containers.append("h2")
+			.text(function(d){ return d.properties.name })
+
 		var x = d3.scale.linear()
 				.range([30,170])
 				.domain([1999.5,2013.5])
@@ -96,7 +99,7 @@ function drawGraphic(containerWidth){
 	 //    	.x(function(d) { return x(d.date); })
 	 //    	.y(function(d) { return y(d.close); });
 
-	 console.log(data)
+	 // console.log(data)
 
 		var xAxis = d3.svg.axis()
 		    .scale(x)

@@ -2,16 +2,32 @@
 <meta charset="utf-8">
 <head>
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
   <style name="impostor_size">
     .marker + li { border-top-width:0px; }
   </style>
 </head>
 <body>
-<div class = "year button" id = "2000_button">2000</div>
-<div class = "year button" id = "2006_button">2006</div>
-<div class = "year button" id = "2012_button">2012</div>
-<div class = "year button active" id = "2013_button">2013</div>
-<div class = "assistance button on" id = "asst_button">Assistance</div>
+<div class = "header container">
+	<div class = "assistance container">
+		<span class = "assistance header label">Federal Assistance</span>
+		<div class = "help-button">
+			<img src = "/images/help-button.png">
+		</div>
+		<div class = "assistance button on" id = "asst_button">ON</div>
+		<div class = "assistance button off" id = "asst_button">OFF</div>
+	</div>
+
+	<div class = "year container">
+		<span class = "year header label">Year</span>
+		<div class = "year button" id = "2000_button"><span>2000</span></div>
+		<div class = "year button" id = "2006_button"><span>2006</span></div>
+		<div class = "year button" id = "2012_button"><span>2012</span></div>
+		<div class = "year button active" id = "2013_button"><span>2013</span></div>
+	</div>
+	<div class = "search container">
+	</div>
+</div>
 <div class = "map container"></div>
 <div class = "print button">Print!</div>
 <div class = "detail container swing"><ul id="holder" class = "detail list"></ul></div>

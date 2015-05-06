@@ -1,3 +1,4 @@
+var STATES = { "Alabama": "AL", "Alaska": "AK", "American Samoa": "AS", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District Of Columbia": "DC", "Federated States Of Micronesia": "FM", "Florida": "FL", "Georgia": "GA", "Guam": "GU", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Marshall Islands": "MH", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Northern Mariana Islands": "MP", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Palau": "PW", "Pennsylvania": "PA", "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virgin Islands": "VI", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "WY": "Wyoming" }
 var pymChild = null;
 var selectedCounties = [];
 var BAR_WIDTH = 200.0;
@@ -79,7 +80,7 @@ function drawGraphic(containerWidth){
 			.transition()
 			.style("fill", function(d){ return COLORS[quantize(d.properties[asst + year])]; })
 	});
- 	dispatch.on("load.map", function(data){
+ 	// dispatch.on("load.map", function(data){
 		d3.selectAll("svg").remove()
 		var width = containerWidth,
     	height = containerWidth/2,
@@ -111,6 +112,8 @@ function drawGraphic(containerWidth){
 				// .call(zoom);
 
 		d3.json("data/data.json", function(error, us) {
+			dispatch.load(topojson.feature(us, us.objects.UScounties).features);
+
 		g.append("g")
 		    .attr("id", "counties")
 		    .selectAll("path")
@@ -154,7 +157,8 @@ function drawGraphic(containerWidth){
 
 
 		function clicked(d) {
-		  dispatch.selectCounty(d);
+		  		  console.log("foo")
+
 		  // console.log("test", d)
 		  var x, y, k;
 
@@ -173,20 +177,183 @@ function drawGraphic(containerWidth){
 
 		  g.selectAll("path")
 		      .classed("active", centered && function(d) { return d === centered; });
+		  // console.log(d3.selectAll("path").classed("active"))
 
 		  g.transition()
 		      .duration(750)
 		      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
 		      .style("stroke-width", 1.5 / k + "px");
+		  dispatch.selectCounty(d);
 		}
 		// function zoomed() {
   // 			projection.translate(d3.event.translate).scale(d3.event.scale);
  	// 		g.selectAll("path").attr("d", path);
 		// }
-	});
+	// });
 	// dispatch.on("load.key", function(data){
 	// 	console.log(svg);
 	// })
+
+	dispatch.on("load.menu", function(data){
+		var lookup = {};
+		for (var i = 0; i<data.length; i++) {
+	    	lookup[data[i].id] = data[i];
+		}
+
+	    (function( $ ) {
+	      $.widget( "custom.combobox", {
+	        _create: function() {
+	          this.wrapper = $( "<span>" )
+	            .addClass( "custom-combobox" )
+	            .insertAfter( this.element );
+	   
+	          this.element.hide();
+	          this._createAutocomplete();
+	          this._createShowAllButton();
+	        },
+	 
+	        _createAutocomplete: function() {
+	          var selected = this.element.children( ":selected" ),
+	            value = selected.val() ? selected.text() : "";
+	   
+	          this.input = $( "<input>" )
+	            .appendTo( this.wrapper )
+	            .val( value )
+	            .attr( "title", "" )
+	            .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+	            .autocomplete({
+	              delay: 0,
+	              minLength: 0,
+	              source: $.proxy( this, "_source" )
+	            })
+	            .tooltip({
+	              tooltipClass: "ui-state-highlight"
+	            });
+	 
+	          this._on( this.input, {
+	            autocompleteselect: function( event, ui ) {
+	              ui.item.option.selected = true;
+	              this._trigger( "select", event, {
+	                item: ui.item.option
+	              });
+	              // dispatch.clickEntity(this, data.get(ui.item.option.value))
+	              // console.log(ui.item.option.value)
+	              clicked(lookup[ui.item.option.value])
+	            },
+	   
+	            autocompletechange: "_removeIfInvalid"
+	          });
+	        },
+	 
+	        _createShowAllButton: function() {
+	          var input = this.input,
+	            wasOpen = false;
+	   
+	          $( "<a>" )
+	            .attr( "tabIndex", -1 )
+	            .appendTo( this.wrapper )
+	            .button({
+	              icons: {
+	                primary: "ui-icon-triangle-1-s"
+	              },
+	              text: false
+	            })
+	            .removeClass( "ui-corner-all" )
+	            .addClass( "custom-combobox-toggle ui-corner-right" )
+	            .mousedown(function() {
+	              wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+	            })
+	            .click(function() {
+	              input.focus();
+	   
+	              // Close if already visible
+	              if ( wasOpen ) {
+	                return;
+	              }
+	   
+	              // Pass empty string as value to search for, displaying all results
+	              input.autocomplete( "search", "" );
+	            });
+	        },
+	 
+	        _source: function( request, response ) {
+	          var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+	          response( this.element.children( "option" ).map(function() {
+	            var text = $( this ).text();
+	            if ( this.value && ( !request.term || matcher.test(text) ) )
+	              return {
+	                label: text,
+	                value: text,
+	                option: this
+	              };
+	          }) );
+	        },
+	 
+	        _removeIfInvalid: function( event, ui ) {
+	   
+	          // Selected an item, nothing to do
+	          if ( ui.item ) {
+	            return;
+	          }
+	   
+	          // Search for a match (case-insensitive)
+	          var value = this.input.val(),
+	            valueLowerCase = value.toLowerCase(),
+	            valid = false;
+	          this.element.children( "option" ).each(function() {
+	            if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+	              this.selected = valid = true;
+	              return false;
+	            }
+	          });
+	   
+	          // Found a match, nothing to do
+	          if ( valid ) {
+	            return;
+	          }
+	   
+	          // Remove invalid value
+	          this.input
+	            .val( "" )
+	            .attr( "title", value + " didn't match any item" )
+	            .tooltip( "open" );
+	          this.element.val( "" );
+	          this._delay(function() {
+	            this.input.tooltip( "close" ).attr( "title", "" );
+	          }, 2500 );
+	          this.input.autocomplete( "instance" ).term = "";
+	        },
+	 
+	        _destroy: function() {
+	          this.wrapper.remove();
+	          this.element.show();
+	        }
+	      });
+	    }) (jQuery)
+
+		var select = d3.select(".search.container")
+	      .append("div")
+	      .classed("ui-widget top-combo", true)
+	      .append("select")
+	      .attr("id", "combobox")
+	      .on("change", function() {  
+	        dispatch.selectCounty(function(d){ return this.value });
+	      });
+	    // console.log(data)
+	    select.selectAll("option")
+	      .data(data)
+	      .enter().append("option")
+	      .attr("value", function(d) { return d.id; })
+	      .text(function(d) { return d.properties.name + ", " + STATES[d.properties.state]; });
+	 
+	    $(function() {
+	      $( "#combobox" ).combobox();
+	      $( "#bottomCombobox" ).combobox();
+	    }); 
+	    $(".custom-combobox input").click(function(){
+	     $(this).focus().val('')
+	    })
+	})
 	dispatch.on("load.details", function(data){
 		d3.select(".detail.list")
 			.append("li")
@@ -197,9 +364,9 @@ function drawGraphic(containerWidth){
 	})
 	dispatch.on("selectCounty.details", function(d){
 		d3.selectAll(".garbage").remove();
-		console.log(d)
-		console.log(getYear())
-		console.log(getAssistance())
+		// console.log(d)
+		// console.log(getYear())
+		// console.log(getAssistance())
 		var year = getYear();
 		var assistance = getAssistance();
 		var identifier = (typeof(d) == "undefined") ? null : assistance +  year + "_" + d.id;
@@ -219,8 +386,9 @@ function drawGraphic(containerWidth){
 				.style("opacity", 0)
 			wrapper.append("div")
 				.attr("class", "detail county close-button")
-				.text("X")
-				.on("click", function(){dispatch.deselectCounty(identifier)});
+				.on("click", function(){dispatch.deselectCounty(identifier)})
+				.append("img")
+				.attr("src","/images/close-button.png");
 
 			wrapper.append("div")
 				.attr("class", "detail county name")
@@ -340,7 +508,6 @@ function drawGraphic(containerWidth){
 			})
 })
 
-	dispatch.load(data);
 	// pymChild.sendHeight();
 	// console.log(d3.select(".detail.list"))
 }

@@ -1,33 +1,39 @@
 body{font: 12pt Lato;}
 /*Map controls*/
 .button{
+  font: 14px Lato;
+  color: #cccccc;
+  font-weight: 900;
   float:left;
-  margin-left: 15px;
-  background-attachment: scroll;
-  background-clip: border-box;
-  background-color: #00a6d2;
-  background-image: none;
-  background-origin: padding-box;
-  background-position: 0 0;
-  background-repeat: repeat;
-  background-size: auto auto;
-  font-weight: 500;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 10px;
+  background-color: #999999;
   text-align: center;
+  border-right: 1px solid #888;
+
+}
+
+.year.button{
+  width: 75px;
+  height: 28px;
+  vertical-align: middle;
+}
+
+.year.button span{
+  position: relative;
+  top: 5px;
 }
 
 .button.on{
+  color: #fff;
   background-color: #00a6d2;
 }
 .button.off{
-  background-color: #ccc;
+  color: #cccccc;
+  background-color: #999999;
 }
 
 .button.active{
-	background-color: orange;
+  color: #ffffff;
+	background-color: #00a6d2;
 }
 
 .background {
@@ -56,21 +62,13 @@ body{font: 12pt Lato;}
   fill: none !important;
 }
 
-#states .active {
-  fill: orange !important;
-}
-
-
-
 #counties .active {
   fill: orange !important;
 }
 #state-borders {
   fill: none;
   stroke: #000;
-  stroke-width: 1.5px;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+  stroke-width: 1px;
   pointer-events: none;
 }
 
@@ -154,6 +152,10 @@ li {
 /*Detail view layout*/
 .close-button{
   cursor: pointer;
+}
+.close-button img{
+  width: 29px;
+  /*height: 29px;*/
 }
 .detail.container{
   /*border: solid;*/
