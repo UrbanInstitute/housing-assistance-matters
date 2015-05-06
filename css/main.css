@@ -189,8 +189,8 @@ li {
 }
 .asst.bar{
   height: 20px;
-  background: #ccc;
-  border: 1px solid #ccc;
+  background: #e6e6e6;
+  border: 1px solid #e6e6e6;
   display: inline-block;
   position: absolute;
   top: -1px; 

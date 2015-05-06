@@ -154,13 +154,9 @@ function drawGraphic(containerWidth){
 				.attr("cy", function(d){ return y(d.properties["noAsst" + years[i]])})
 				.attr("r",4)
 		}
-
-
-
-
-
-				      // .data(topojson.feature(us, us.objects.UScounties).features)
-	});	
+		containers.append("div")
+			.attr("class","page-break")
+	});
 }
 
 pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
