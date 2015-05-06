@@ -103,6 +103,9 @@ body{font: 12pt Lato;}
 
 }
 */
+.detail.container{
+  margin-top: 50px;
+}
 li {
  display:block;
  position:relative;

@@ -53,6 +53,18 @@ function drawGraphic(containerWidth){
 		}
 		
 	});
+	d3.select(".print.button")
+		.on("click", function(){
+			// console.log(selectedCounties)
+			var url = "/detail.html?fips=";
+			for(var i = 0; i<selectedCounties.length; i++){
+				url += selectedCounties[i].split("_")[1];
+				if (i < (selectedCounties.length - 1)){
+					url += ",";
+				}
+			}
+			window.open(url);
+		});
 
 	dispatch.on("changeAssistance.map", function(asst){
 		var year = getYear();
