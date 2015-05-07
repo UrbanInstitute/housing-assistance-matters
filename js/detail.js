@@ -1,3 +1,4 @@
+var NATIONAL_VALUES = {"3004106":"2000", "3104458":"2013", "3285639":"2012", "3205087":"2006"}
 if (!Array.prototype.filter) {
   Array.prototype.filter = function(fun/*, thisArg*/) {
     'use strict';
@@ -50,10 +51,6 @@ function getUrlVars()
     }
     return vars;
 }
-
-
-
-var BAR_WIDTH = 200.0;
 
 function drawGraphic(containerWidth){
 	var params = getUrlVars();
@@ -175,22 +172,25 @@ function drawGraphic(containerWidth){
 		headers.append("th")
 			.text("")
  		headers.append("th")
-			.text("	Housing gap")
+			.text("AAA units per 100 renters")
+			.attr("class","asst")
+ 		headers.append("th")
+			.text("Total AAA units")
+ 		headers.append("th")
+			.text("Units per 100 renters (assistance off)")
+			.attr("class","noAsst")
+ 		headers.append("th")
+			.text("Total AAA units (assistance off)")
  		headers.append("th")
 			.text("Total ELI renters")
  		headers.append("th")
-			.text("Housing gap (asst off)")
+			.text("Number of HUD assissted units")
  		headers.append("th")
-			.text("Units per 100 renters")
- 		headers.append("th")
-			.text("Units per 100 renters (asst off)")
- 		headers.append("th")
-			.text("Number of HUD asst units")
- 		headers.append("th")
-			.text("AAA units")
+			.text("Housing Gap")
 		headers.append("th")
-			.text("AAA units (asst off)")
-		var heads =["Housing gap", "Total ELI renters", "Housing gap (asst off)", "Units per 100 renters", "Units per 100 renters (asst off)", "Number of HUD asst units", "AAA units","AAA units (asst off)"]
+			.text("Housing Gap (assistance off)")
+		var heads =["Units per 100 renters","AAA units", "Units per 100 renters (asst off)", "AAA units (asst off)", "Total ELI renters", "Number of HUD asst units", "Housing gap", "Housing gap (asst off)"]
+		
 		for(var y = 0; y < years.length; y++){
 			var year = years[y]
 			d3.csv("data/source/HAI_commsoutput_" + year + ".csv")
@@ -205,8 +205,10 @@ function drawGraphic(containerWidth){
 			    })
 			    .get(function(error, rows) {
 	  		      var row = table.append("tr")
+//This is the hackiest nonsense EVER. So bc of async stuff, year isn't being tracked in this func, so instead of modifying the csv source file (to add a "year" column)
+//I have an global obj w/ the value by year of "AAA units"...if data updates this needs to update...ugh
 				  row.append("td")
-					.text("year")
+					.text(NATIONAL_VALUES[rows[0]["National"]["AAA units"]])
 				for(var j = 0; j<heads.length; j++){
 				  row.append("td")
 				  	.text(function(d){
@@ -214,7 +216,12 @@ function drawGraphic(containerWidth){
 				      	return Object.keys(obj)[0] == d.id;
 		 		      });
 		 		      return test[0][d.id][heads[j]]
-				   });
+				   })
+				  .attr("class", function(){
+				  	if(heads[j] == "Units per 100 renters"){ return "asst"}
+				  	else if(heads[j] == "Units per 100 renters (asst off)"){ return "noAsst"}
+				  	else{ return ""}
+				  })
 				 }
 			    });
 		}
@@ -239,7 +246,7 @@ function drawGraphic(containerWidth){
 			.attr("class","page-break")
 
 	});
+	
 }
-
 pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
 

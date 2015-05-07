@@ -10,18 +10,14 @@ function drawGraphic(containerWidth){
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
-		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+		.range(d3.range(5).map(function(i) { return "q" + i + "-5"; }));
 	var COLORS = 
 		{
-			"q0-9": "rgb(255,255,255)",
-			"q1-9": "rgb(222,235,247)",
-			"q2-9": "rgb(198,219,239)",
-			"q3-9": "rgb(158,202,225)",
-			"q4-9": "rgb(107,174,214)",
-			"q5-9": "rgb(66,146,198)",
-			"q6-9": "rgb(33,113,181)",
-			"q7-9": "rgb(8,81,156)",
-			"q8-9": "rgb(8,48,107)"
+			"q0-5": "#b0d5f1",
+			"q1-5": "#82c4e9",
+			"q2-5": "#1696d2",
+			"q3-5": "#00578b",
+			"q4-5": "#000000",
 		}
 	var getAssistance = function(){
 		var btn = d3.select(".assistance.button.active");
@@ -43,7 +39,6 @@ function drawGraphic(containerWidth){
 		.on("click", function(){
 		// var btn = d3.select(this)
 		var active = d3.select(".assistance.button.active")
-		console.log(active)
 		if(active.classed("turnOn")){
 			active.classed("active", false);
 			d3.select(".assistance.button.turnOff")
@@ -71,10 +66,13 @@ function drawGraphic(containerWidth){
 	});
 	d3.select(".print.button")
 		.on("click", function(){
+			var counties = d3.selectAll("#holder li")[0].filter(function(obj){
+				return d3.select(obj).classed("garbage") === false && d3.select(obj).classed("national") === false;
+			})
 			var url = "/detail.html?fips=";
-			for(var i = 0; i<selectedCounties.length; i++){
-				url += selectedCounties[i].split("_")[1];
-				if (i < (selectedCounties.length - 1)){
+			for(var i = 0; i<counties.length; i++){
+				url += d3.select(counties[i]).attr("id").split("_")[1];
+				if (i < (counties.length - 1)){
 					url += ",";
 				}
 			}
@@ -89,10 +87,11 @@ function drawGraphic(containerWidth){
 	});
 
 	dispatch.on("changeYear.map", function(year){
-		var asst = getAssistance();
+		var a = getAssistance();
+		var year = getYear();
 		d3.selectAll("#counties path")
 			.transition()
-			.style("fill", function(d){ return COLORS[quantize(d.properties[asst + year])]; })
+			.style("fill", function(d){return COLORS[quantize(d.properties[a + year])]; })
 	});
 
 	d3.selectAll("svg").remove();
@@ -160,37 +159,47 @@ function drawGraphic(containerWidth){
 
 
 	function clicked(d) {
-	//dropdown class styled same as active class, but doesn't get overwritten
-	  d3.selectAll(".dropdown").classed("dropdown", false)
+		var fips = d3.select(this).attr("class").replace("fips_","").replace("active","").trim()
+//3 counties in SE Alaska aren't in dataset, so no interaction on them
+		if(fips != "2201" && fips != "2130" && fips != "2280"){
+			var unclicking = false;
+//If county is selected from dropdown, add dropdown class
+			  if(typeof(this.tagName) == "undefined" || this.tagName == "path"){
+			  	d3.selectAll("path.fips_" + d.id)
+			  		.classed("dropdown",true);
+			  }
+			  var x, y, k;
 
-	//If county is selected from dropdown, add dropdown class
-	  if(typeof(this.tagName) == "undefined"){
-	  	d3.selectAll("path.fips_" + d.id)
-	  		.classed("dropdown",true);
-	  }
-	  var x, y, k;
+			  if (d && centered !== d) {
+			    var centroid = path.centroid(d);
+			    x = centroid[0];
+			    y = centroid[1];
+			    k = 4;
+			    centered = d;
+			  } else {
+			  	if(this.tagName == "path"){
+//When clicking on a county that is already selected, deselect it and zoom out
+					var year = getYear();
+					var assistance = getAssistance();
+					var identifier = assistance +  year + "_" + d.id;
+			  		dispatch.deselectCounty(identifier);
+			  		unclicking = true; 
+			  	}
+			    x = width / 2;
+			    y = height / 2;
+			    k = 1;
+			    centered = null;
+			  }
 
-	  if (d && centered !== d) {
-	    var centroid = path.centroid(d);
-	    x = centroid[0];
-	    y = centroid[1];
-	    k = 4;
-	    centered = d;
-	  } else {
-	    x = width / 2;
-	    y = height / 2;
-	    k = 1;
-	    centered = null;
-	  }
+			  g.selectAll("path")
+			      .classed("active", centered && function(d) { return d === centered; });
+			  g.transition()
+			      .duration(750)
+			      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+			      .style("stroke-width", 1.5 / k + "px");
 
-	  g.selectAll("path")
-	      .classed("active", centered && function(d) { return d === centered; });
-	  g.transition()
-	      .duration(750)
-	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-	      .style("stroke-width", 1.5 / k + "px");
-
-	  dispatch.selectCounty(d);
+			 if (!unclicking){dispatch.selectCounty(d);}
+		}
 	}
 
 	dispatch.on("load.menu", function(data){
@@ -235,8 +244,6 @@ function drawGraphic(containerWidth){
 	              this._trigger( "select", event, {
 	                item: ui.item.option
 	              });
-	              // dispatch.clickEntity(this, data.get(ui.item.option.value))
-	              // console.log(ui.item.option.value)
 	              clicked(lookup[ui.item.option.value])
 	            },
 	   
@@ -338,7 +345,6 @@ function drawGraphic(containerWidth){
 	      .on("change", function() {  
 	        dispatch.selectCounty(function(d){ return this.value });
 	      });
-	    // console.log(data)
 	    select.selectAll("option")
 	      .data(data)
 	      .enter().append("option")
@@ -362,6 +368,10 @@ function drawGraphic(containerWidth){
 	    d3.select(".custom-combobox-input")
 	    	.property("value","Search for counties")
 	})
+	dispatch.on("deselectCounty.map", function(identifier){
+		var id = "fips_" + identifier.split("_")[1]
+		d3.select("path." +  id).classed("active",false).classed("dropdown",false)
+	})
 	dispatch.on("load.details", function(data){
 		d3.select(".detail.list")
 			.append("li")
@@ -372,15 +382,11 @@ function drawGraphic(containerWidth){
 	})
 	dispatch.on("selectCounty.details", function(d){
 		d3.selectAll(".garbage").remove();
-		// console.log(d)
-		// console.log(getYear())
-		// console.log(getAssistance())
 		var year = getYear();
 		var assistance = getAssistance();
 		var identifier = (typeof(d) == "undefined") ? null : assistance +  year + "_" + d.id;
 		var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + year]
 		var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + year]
-
 		if(typeof(d) != "undefined" && selectedCounties.indexOf(identifier) === -1){
 			selectedCounties.push(identifier)
 			var li = d3.select(".detail.list")
@@ -410,7 +416,8 @@ function drawGraphic(containerWidth){
 
 			total.append("div")
 				.attr("class", "asst bar")
-				.style("width", asst + "%");
+				.datum(d)
+				.style("width", (parseFloat(asst/100.0) * BAR_WIDTH) + "px");
 
 			total.append("div")
 				.datum(d)
@@ -444,7 +451,7 @@ function drawGraphic(containerWidth){
 			total.append("div")
 				.datum(d)
 				.attr("class", "bar marker")
-								.style("width", function(){
+				.style("width", function(){
 					if(assistance == "noAsst"){
 						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
 					}
@@ -463,6 +470,9 @@ function drawGraphic(containerWidth){
 
 	});
 	dispatch.on("deselectCounty.details", function(identifier){
+//Note: indexOf not supported in IE 7 and 8
+		var index = selectedCounties.indexOf(identifier)
+		selectedCounties.splice(index)
 		var li = d3.select("#" + identifier)
 		li.transition()
 	 		.duration(200)
@@ -475,13 +485,12 @@ function drawGraphic(containerWidth){
 
 		pymChild.sendHeight();
 	})
-
-	dispatch.on("changeAssistance.details", function(a){
-		var year = getYear();
+	dispatch.on("changeYear.details", function(year){
+		var a = getAssistance();
 		d3.selectAll(".display.bar")
 			.transition()
 			.style("width", function(d){
-				var year = d3.select(this).attr("data-year")
+				// var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -492,7 +501,7 @@ function drawGraphic(containerWidth){
 				}
 			})
 			.style("background", function(d){
-				var year = d3.select(this).attr("data-year")
+				// var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -503,7 +512,64 @@ function drawGraphic(containerWidth){
 				}
 			})
 			.style("border-color", function(d){
-				var year = d3.select(this).attr("data-year")
+				// var year = d3.select(this).attr("data-year")
+				var asst = d.properties["asst" + year]
+				var noAsst = d.properties["noAsst" + year]
+				if(a == "noAsst"){
+					return COLORS[quantize(noAsst)]
+				}
+				else{
+					return COLORS[quantize(asst)]
+				}
+			})
+			d3.selectAll(".asst.bar")
+				.transition()
+				.style("width", function(d){
+					var asst = d.properties["asst" + year]
+					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.selectAll(".bar.marker")
+				.transition()
+				.style("width", function(d){
+					var asst = d.properties["asst" + year]
+					var noAsst = d.properties["noAsst" + year]
+					if(a == "noAsst"){
+						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+					}
+					else{
+						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+					}
+				})
+
+	})
+	dispatch.on("changeAssistance.details", function(a){
+		var year = getYear();
+		d3.selectAll(".display.bar")
+			.transition()
+			.style("width", function(d){
+				// var year = d3.select(this).attr("data-year")
+				var asst = d.properties["asst" + year]
+				var noAsst = d.properties["noAsst" + year]
+				if(a == "noAsst"){
+					return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+				}
+				else{
+					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+				}
+			})
+			.style("background", function(d){
+				// var year = d3.select(this).attr("data-year")
+				var asst = d.properties["asst" + year]
+				var noAsst = d.properties["noAsst" + year]
+				if(a == "noAsst"){
+					return COLORS[quantize(noAsst)]
+				}
+				else{
+					return COLORS[quantize(asst)]
+				}
+			})
+			.style("border-color", function(d){
+				// var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){

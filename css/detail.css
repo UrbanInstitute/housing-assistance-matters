@@ -1,5 +1,6 @@
 body{
 	font-family: Lato;
+	font-size: 10pt;
 }
 @media screen{}
 @media print {
@@ -80,10 +81,23 @@ table{
 }
 tr{
 	height: 65px;
+	border-bottom: 1px solid black;
 }
 td, th{
-	border: 1pt solid black;
+	width: 100px;
+	/*border: 1pt solid black;*/	
 }
+td{
+	text-indent: 20px;
+}
+td.asst, th.asst{
+	background: #1696d2;
+	color: white;
+}
+td.noAsst, th.noAsst{
+	background: #c6c6c6;
+}
+
 /*.scatter .text{
 	color: white;
 	font: 12pt Helvetica;

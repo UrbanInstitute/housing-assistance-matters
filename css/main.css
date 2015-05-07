@@ -113,7 +113,7 @@ input.custom-combobox-input{
   pointer-events: all;
 }
 #counties {
-  fill: red;
+  fill: #ccc;
 }
 
 
@@ -140,7 +140,7 @@ input.custom-combobox-input{
 #state-borders {
   fill: none;
   stroke: #000;
-  stroke-width: 1px;
+  stroke-width: .5px;
   pointer-events: none;
 }
 
