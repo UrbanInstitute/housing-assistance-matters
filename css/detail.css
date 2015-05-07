@@ -1,14 +1,25 @@
-@media screen {
-    /*.page-break	{ height:10px; background:url(img/page-break.gif) 0 center repeat-x; border-top:1px dotted #999; margin-bottom:13px; }*/
+body{
+	font-family: Lato;
 }
+@media screen{}
 @media print {
     .page-break { height:0; page-break-after:always; margin:0; border-top:none; }
 }
- .page-break { height:0; page-break-after:always; margin:0; border-top:none; }
+/*.page-break { height:0; page-break-after:always; margin:0; border-top:none; }*/
+
+h2{
+  font-size: 28pt;
+  padding: 0px;
+  margin: 0px;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 
 .scatter.container{
 	width: 8in;
-	height: 9in;
+	/*height: 2in;*/
 	border-bottom: 1px solid #ccc;
 	/*background: orange;*/
 }
@@ -20,17 +31,32 @@
   shape-rendering: crispEdges;
 }
 
-.x.axis path {
+.y.axis path {
   display: none;
 }
-
+.y.axis line{
+	display: none
+}
+.grid-line{
+	fill: none;
+	stroke: #d9d9d9;
+	stroke-dasharray: 2, 2;
+}
 
 .dot{
 
 }
 .line{
 	fill: none;
-	stroke-width: 1px;
+	stroke-width: 3px;
+}
+
+/*See Teton County for need for dotted line*/
+.asst.line{
+	stroke-dasharray: 5,4;
+}
+.noAsst.line{
+	stroke-dasharray: 4, 4;
 }
 
 .asst.dot{
@@ -45,6 +71,15 @@
 }
 .noAsst.line{
 	stroke: #c6c6c6;
+}
+
+
+/*Table*/
+table{
+	margin-top: 150px;
+}
+tr{
+	height: 65px;
 }
 /*.scatter .text{
 	color: white;

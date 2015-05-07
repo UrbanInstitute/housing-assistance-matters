@@ -58,8 +58,9 @@ var BAR_WIDTH = 200.0;
 function drawGraphic(containerWidth){
 	var params = getUrlVars();
 	var fips = params.fips
-	var width = 200;
-	var height = 200;
+	var width = 800;
+	var height = 400;
+	var margin = {left:50, right:30, top:30, bottom: 30}
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
 		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
@@ -89,10 +90,10 @@ function drawGraphic(containerWidth){
 			.text(function(d){ return d.properties.name })
 
 		var x = d3.scale.linear()
-				.range([30,170])
+				.range([margin.left,width-margin.left])
 				.domain([1999.5,2013.5])
 		var y = d3.scale.linear()
-				.range([170,0])
+				.range([height-margin.bottom,margin.bottom])
 				.domain([0,100])
 		var years = [2000,2006,2012,2013]
 		// var line = d3.svg.line()
@@ -103,24 +104,36 @@ function drawGraphic(containerWidth){
 
 		var xAxis = d3.svg.axis()
 		    .scale(x)
-		    .orient("bottom");
+		    .orient("bottom")
+		    .tickValues([2000,2006,2012,2013])
+		    .tickFormat(d3.format("0"))
+		    .outerTickSize(0);
 
 		var yAxis = d3.svg.axis()
 		    .scale(y)
-		    .orient("left");
+		    .orient("left")
+		    .ticks(5);
 
 		var svg = containers.append("svg")
-				.attr("height",200)
-				.attr("width",700)
+				.attr("height",height)
+				.attr("width",width)
 				.append("g");
+		for(var t= 1; t <= 5; t++){
+			svg.append("line")
+				.attr("class", "grid-line")
+				.attr("x1", x(1999.5))
+				.attr("x2", x(2013.5))
+				.attr("y1", y(t*20))
+				.attr("y2", y(t*20));
+		}
 		svg.append("g")
 		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + 170 + ")")
+		      .attr("transform", "translate(0," + (height-margin.bottom) + ")")
 		      .call(xAxis);
 
 		svg.append("g")
 		      .attr("class", "y axis")
-		      .attr("transform", "translate(30,0)")
+		      .attr("transform", "translate(" + margin.left + ",0)")
 		      .call(yAxis)
 		    .append("text")
 		      .attr("transform", "rotate(-90)")
@@ -157,8 +170,77 @@ function drawGraphic(containerWidth){
 				.attr("cy", function(d){ return y(d.properties["noAsst" + years[i]])})
 				.attr("r",4)
 		}
+		var table = containers.append("table")
+		headers = table.append("tr")
+		headers.append("th")
+			.text("")
+ 		headers.append("th")
+			.text("	Housing gap")
+ 		headers.append("th")
+			.text("Total ELI renters")
+ 		headers.append("th")
+			.text("Housing gap (asst off)")
+ 		headers.append("th")
+			.text("Units per 100 renters")
+ 		headers.append("th")
+			.text("Units per 100 renters (asst off)")
+ 		headers.append("th")
+			.text("Number of HUD asst units")
+ 		headers.append("th")
+			.text("AAA units")
+		headers.append("th")
+			.text("AAA units (asst off)")
+		      // console.log(table.data())
+		var heads =["Housing gap", "Total ELI renters", "Housing gap (asst off)", "Units per 100 renters", "Units per 100 renters (asst off)", "Number of HUD asst units", "AAA units","AAA units (asst off)"]
+		d3.csv("data/source/HAI_commsoutput_2000.csv")
+		    .row(function(d) {
+		    	var r = {};
+		    	var vals = {}
+		    	for(var h = 0; h<heads.length; h++){
+		    		vals[heads[h]] = d[heads[h]]
+		    	}
+		    	r[d.county] = vals;
+		    	// console.log(d.county, vals)
+		    	// r["key"] =  d.county;
+		    	// r["data"] = vals;
+		    	return r;
+		    })
+		    .get(function(error, rows) {
+		      var test = rows.filter(function(obj){
+		      	// console.log(Object.keys(obj))
+		      	return Object.keys(obj)[0] == "National"
+ 		      });
+		      console.log(test[0]);
+		      // console.log(rows)
+		      row2000 = table.append("tr")
+			  row2000.append("td")
+				.text("2000")
+
+			  // row2000.append("td")
+			  	// .text(function(d){console.log(rows)})
+		      // myData = rows;// Now you can assign it
+		      // myDataIsReady()// Now you can draw it
+		    });
+
+		row2000 = table.append("tr")
+		row2000.append("td")
+			.text("2000")
+
+		row2006 = table.append("tr")
+		row2006.append("td")
+			.text("2006")
+
+		row2012 = table.append("tr")
+		row2012.append("td")
+			.text("2012")
+
+		row2013 = table.append("tr")
+		row2013.append("td")
+			.text("2013")
+
 		containers.append("div")
 			.attr("class","page-break")
+
 	});
 }
 
