@@ -190,53 +190,50 @@ function drawGraphic(containerWidth){
 			.text("AAA units")
 		headers.append("th")
 			.text("AAA units (asst off)")
-		      // console.log(table.data())
 		var heads =["Housing gap", "Total ELI renters", "Housing gap (asst off)", "Units per 100 renters", "Units per 100 renters (asst off)", "Number of HUD asst units", "AAA units","AAA units (asst off)"]
-		d3.csv("data/source/HAI_commsoutput_2000.csv")
-		    .row(function(d) {
-		    	var r = {};
-		    	var vals = {}
-		    	for(var h = 0; h<heads.length; h++){
-		    		vals[heads[h]] = d[heads[h]]
-		    	}
-		    	r[d.county] = vals;
-		    	// console.log(d.county, vals)
-		    	// r["key"] =  d.county;
-		    	// r["data"] = vals;
-		    	return r;
-		    })
-		    .get(function(error, rows) {
-		      var test = rows.filter(function(obj){
-		      	// console.log(Object.keys(obj))
-		      	return Object.keys(obj)[0] == "National"
- 		      });
-		      console.log(test[0]);
-		      // console.log(rows)
-		      row2000 = table.append("tr")
-			  row2000.append("td")
-				.text("2000")
+		for(var y = 0; y < years.length; y++){
+			var year = years[y]
+			d3.csv("data/source/HAI_commsoutput_" + year + ".csv")
+			    .row(function(d) {
+			    	var r = {};
+			    	var vals = {}
+			    	for(var h = 0; h<heads.length; h++){
+			    		vals[heads[h]] = d[heads[h]]
+			    	}
+			    	r[d.county] = vals;
+			    	return r;
+			    })
+			    .get(function(error, rows) {
+	  		      var row = table.append("tr")
+				  row.append("td")
+					.text("year")
+				for(var j = 0; j<heads.length; j++){
+				  row.append("td")
+				  	.text(function(d){
+				      var test = rows.filter(function(obj){
+				      	return Object.keys(obj)[0] == d.id;
+		 		      });
+		 		      return test[0][d.id][heads[j]]
+				   });
+				 }
+			    });
+		}
 
-			  // row2000.append("td")
-			  	// .text(function(d){console.log(rows)})
-		      // myData = rows;// Now you can assign it
-		      // myDataIsReady()// Now you can draw it
-		    });
+		// row2000 = table.append("tr")
+		// row2000.append("td")
+		// 	.text("2000")
 
-		row2000 = table.append("tr")
-		row2000.append("td")
-			.text("2000")
+		// row2006 = table.append("tr")
+		// row2006.append("td")
+		// 	.text("2006")
 
-		row2006 = table.append("tr")
-		row2006.append("td")
-			.text("2006")
+		// row2012 = table.append("tr")
+		// row2012.append("td")
+		// 	.text("2012")
 
-		row2012 = table.append("tr")
-		row2012.append("td")
-			.text("2012")
-
-		row2013 = table.append("tr")
-		row2013.append("td")
-			.text("2013")
+		// row2013 = table.append("tr")
+		// row2013.append("td")
+		// 	.text("2013")
 
 		containers.append("div")
 			.attr("class","page-break")

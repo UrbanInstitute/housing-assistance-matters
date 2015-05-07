@@ -81,6 +81,9 @@ table{
 tr{
 	height: 65px;
 }
+td, th{
+	border: 1pt solid black;
+}
 /*.scatter .text{
 	color: white;
 	font: 12pt Helvetica;
