@@ -173,6 +173,10 @@ input.custom-combobox-input{
   margin-right: 3%;
 }
 
+.zoom{
+  pointer-events: all;
+}
+
 /*Detail view animations*/
 /*.swing {
   perspective: 100px;

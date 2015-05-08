@@ -24,8 +24,8 @@ function dragended(d) {
   d3.select(this).classed("dragging", false);
 }
 
-	
-	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty");
+
+	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
@@ -221,6 +221,15 @@ function dragended(d) {
 	      .style("stroke-width", 1.5 / k + "px");
 	}
 
+	dispatch.on("zoomIn", function(){
+		console.log(width, height, g)
+		console.log(path)
+				  // g.transition()
+	     //  .duration(750)
+	     //  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+	     //  .style("stroke-width", 1.5 / k + "px");
+	})
+
 	dispatch.on("load.tooltip", function(data){
 		d3.selectAll(".tooltip").remove();
 		var width = 26;
@@ -246,7 +255,13 @@ function dragended(d) {
 			.text("X renters")
 
 		sidebar.append("div")
-			.attr("class", "zoom")
+			.attr("class", "zoom in")
+			.text("+")
+			.on("click", function(){ dispatch.zoomIn() })
+		sidebar.append("div")
+			.attr("class", "zoom out")
+			.text("-")
+			.on("click", function(){ dispatch.zoomOut() })
 
 
 	})
