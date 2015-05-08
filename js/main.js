@@ -6,6 +6,25 @@ var drawDetail = function(d){
 	var detail;
 }
 function drawGraphic(containerWidth){
+var drag = d3.behavior.drag()
+    .origin(function(d) { return d; })
+    .on("dragstart", dragstarted)
+    .on("drag", dragged)
+    .on("dragend", dragended);
+function dragstarted(d) {
+  d3.event.sourceEvent.stopPropagation();
+  d3.select(this).classed("dragging", true);
+}
+
+function dragged(d) {
+  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+}
+
+function dragended(d) {
+  d3.select(this).classed("dragging", false);
+}
+
+	
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
@@ -95,6 +114,8 @@ function drawGraphic(containerWidth){
 	});
 
 	d3.selectAll("svg").remove();
+	d3.selectAll(".tooltip").remove();
+	// d3.selectAll(".text.container").remove();
 	d3.selectAll(".custom-combobox").remove();
 	d3.selectAll("#combobox").remove();
 	var width = containerWidth,
@@ -171,6 +192,10 @@ function drawGraphic(containerWidth){
 			var identifier = assistance +  year + "_" + d.id;
 			console.log(selectedCounties)
 			if(d3.select("path.fips_" + d.id).classed("active") == false){
+				d3.select(".tooltip")
+					.transition()
+					.style("background","rgba(255,255,255,.9)")
+					// .style("opacity",".5")
 				console.log("sweet")
 				d3.select("path.fips_" + d.id).classed("active",true)
 				dispatch.selectCounty(d)
@@ -180,6 +205,10 @@ function drawGraphic(containerWidth){
 			    k = 4;
 			}
 			else{
+				d3.select(".tooltip")
+					.transition()
+					.style("background", "rgba(255,255,255,0)")
+					// .style("opacity", "0")
 				dispatch.deselectCounty(identifier);
 		    	x = width / 2;
 		    	y = height / 2;
@@ -191,6 +220,36 @@ function drawGraphic(containerWidth){
 	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
 	      .style("stroke-width", 1.5 / k + "px");
 	}
+
+	dispatch.on("load.tooltip", function(data){
+		d3.selectAll(".tooltip").remove();
+		var width = 26;
+		var sidebar = d3.select(".map.container")
+			.append("div")
+			.attr("class","tooltip")
+			.style("width", width + "%")
+			.style("height", containerWidth/2 + "px")
+			.style("left",(100-width) + "%")
+		var container = sidebar.append("div")
+			.attr("class", "text container")
+		container.append("div")
+			.attr("class", "county-name")
+			.text("Matanuska-Susitna Borough")
+		container.append("div")
+			.attr("class", "state-name")
+			.text("Alaska")
+		container.append("div")
+			.attr("class", "relative number")
+			.text("2 units for every 100 ELI renters")
+		container.append("div")
+			.attr("class", "absolute number")
+			.text("X renters")
+
+		sidebar.append("div")
+			.attr("class", "zoom")
+
+
+	})
 
 	dispatch.on("load.menu", function(data){
 		var lookup = {};
