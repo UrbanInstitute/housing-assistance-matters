@@ -159,47 +159,37 @@ function drawGraphic(containerWidth){
 
 
 	function clicked(d) {
-		var fips = d3.select(this).attr("class").replace("fips_","").replace("active","").trim()
-//3 counties in SE Alaska aren't in dataset, so no interaction on them
-		if(fips != "2201" && fips != "2130" && fips != "2280"){
-			var unclicking = false;
-//If county is selected from dropdown, add dropdown class
-			  if(typeof(this.tagName) == "undefined" || this.tagName == "path"){
-			  	d3.selectAll("path.fips_" + d.id)
-			  		.classed("dropdown",true);
-			  }
-			  var x, y, k;
-
-			  if (d && centered !== d) {
+		var x,y,k;
+		if(typeof(d) == "undefined"){
+		    x = width / 2;
+		    y = height / 2;
+		    k = 1;
+		}
+		else{
+			var year = getYear();
+			var assistance = getAssistance();
+			var identifier = assistance +  year + "_" + d.id;
+			console.log(selectedCounties)
+			if(d3.select("path.fips_" + d.id).classed("active") == false){
+				console.log("sweet")
+				d3.select("path.fips_" + d.id).classed("active",true)
+				dispatch.selectCounty(d)
 			    var centroid = path.centroid(d);
 			    x = centroid[0];
 			    y = centroid[1];
 			    k = 4;
-			    centered = d;
-			  } else {
-			  	if(this.tagName == "path"){
-//When clicking on a county that is already selected, deselect it and zoom out
-					var year = getYear();
-					var assistance = getAssistance();
-					var identifier = assistance +  year + "_" + d.id;
-			  		dispatch.deselectCounty(identifier);
-			  		unclicking = true; 
-			  	}
-			    x = width / 2;
-			    y = height / 2;
-			    k = 1;
-			    centered = null;
-			  }
-
-			  g.selectAll("path")
-			      .classed("active", centered && function(d) { return d === centered; });
-			  g.transition()
-			      .duration(750)
-			      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-			      .style("stroke-width", 1.5 / k + "px");
-
-			 if (!unclicking){dispatch.selectCounty(d);}
+			}
+			else{
+				dispatch.deselectCounty(identifier);
+		    	x = width / 2;
+		    	y = height / 2;
+		    	k = 1;		
+			}
 		}
+		  g.transition()
+	      .duration(750)
+	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+	      .style("stroke-width", 1.5 / k + "px");
 	}
 
 	dispatch.on("load.menu", function(data){
