@@ -11,18 +11,18 @@ var drag = d3.behavior.drag()
     .on("dragstart", dragstarted)
     .on("drag", dragged)
     .on("dragend", dragended);
-function dragstarted(d) {
-  d3.event.sourceEvent.stopPropagation();
-  d3.select(this).classed("dragging", true);
-}
+	function dragstarted(d) {
+	  d3.event.sourceEvent.stopPropagation();
+	  d3.select(this).classed("dragging", true);
+	}
 
-function dragged(d) {
-  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-}
+	function dragged(d) {
+	  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+	}
 
-function dragended(d) {
-  d3.select(this).classed("dragging", false);
-}
+	function dragended(d) {
+	  d3.select(this).classed("dragging", false);
+	}
 
 
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut");
@@ -38,6 +38,25 @@ function dragended(d) {
 			"q3-5": "#00578b",
 			"q4-5": "#000000",
 		}
+
+	var GREYS = 
+		{
+			"q0-5": "#ccc",
+			"q1-5": "#aaa",
+			"q2-5": "#777",
+			"q3-5": "#444",
+			"q4-5": "#111",
+		}
+
+	// var GREYS = 
+	// 	{
+	// 		"q0-5": "#b0d5f1",
+	// 		"q1-5": "#82c4e9",
+	// 		"q2-5": "#1696d2",
+	// 		"q3-5": "#00578b",
+	// 		"q4-5": "#000000",
+	// 	}
+
 	var getAssistance = function(){
 		var btn = d3.select(".assistance.button.active");
 		if (btn.classed("turnOn")){return "asst"}
@@ -102,7 +121,10 @@ function dragended(d) {
 		var year = getYear();
 		d3.selectAll("#counties path")
 			.transition()
-			.style("fill", function(d){ return COLORS[quantize(d.properties[asst +  year])]; })
+			.style("fill", function(d){
+					if(d.properties.ignore != "1") {return COLORS[quantize(d.properties[asst +  year])];}
+					else{ return GREYS[quantize(d.properties[asst +  year])]; }
+				});
 	});
 
 	dispatch.on("changeYear.map", function(year){
@@ -110,7 +132,10 @@ function dragended(d) {
 		var year = getYear();
 		d3.selectAll("#counties path")
 			.transition()
-			.style("fill", function(d){return COLORS[quantize(d.properties[a + year])]; })
+			.style("fill", function(d){
+					if(d.properties.ignore != "1") {return COLORS[quantize(d.properties[a +  year])];}
+					else{ return GREYS[quantize(d.properties[a +  year])]; }
+			})
 	});
 
 	d3.selectAll("svg").remove();
@@ -140,7 +165,15 @@ function dragended(d) {
 
 	var g = svg.append("g")
 
+//broad scope variables to store zoom level (k) and last county clicked, as well as default center county
+	var lastClicked;
+	var centerCounty;
+	var lastK = 1;
+
 	d3.json("data/data.json", function(error, us) {
+//Save object corresponding to county containing geographic center of USA, for default zoom in (Smith County, KS)
+		centerCounty = topojson.feature(us, us.objects.UScounties).features.filter(function(obj){return obj.id == 20183})[0]
+		lastClicked = centerCounty;
 		dispatch.load(topojson.feature(us, us.objects.UScounties).features);
 
 	g.append("g")
@@ -149,7 +182,14 @@ function dragended(d) {
 	      .data(topojson.feature(us, us.objects.UScounties).features)
 	    .enter().append("path")
 	      .attr("d", path)
-	      .style("fill", function(d){ return COLORS[quantize(d.properties.asst2013)]; })
+	      .style("fill", function(d){
+	      	if(d.properties.ignore !== "1"){
+	      		return COLORS[quantize(d.properties.asst2013)];
+	      	}
+	      	else{
+	      		return GREYS[quantize(d.properties.asst2013)]
+	      	}
+	      })
 	          .attr("class", function(d) {
 	          	var ignored = (d.properties.ignore == "1") ? " ignored" : "";
 	          	var fips = "fips_" + d.id
@@ -178,10 +218,15 @@ function dragended(d) {
 	var legend = g.append("g")
 		.attr("id", "legend")
 
-
 	function clicked(d) {
+		console.log(d)
 		var x,y,k;
 		if(typeof(d) == "undefined"){
+			d3.select(".tooltip")
+				.transition()
+				.style("background", "rgba(255,255,255,0)")
+			lastClicked = centerCounty;
+			lastK = 1;
 		    x = width / 2;
 		    y = height / 2;
 		    k = 1;
@@ -190,8 +235,8 @@ function dragended(d) {
 			var year = getYear();
 			var assistance = getAssistance();
 			var identifier = assistance +  year + "_" + d.id;
-			console.log(selectedCounties)
 			if(d3.select("path.fips_" + d.id).classed("active") == false){
+				lastClicked = d;
 				d3.select(".tooltip")
 					.transition()
 					.style("background","rgba(255,255,255,.9)")
@@ -203,6 +248,7 @@ function dragended(d) {
 			    x = centroid[0];
 			    y = centroid[1];
 			    k = 4;
+			    lastK = 4;
 			}
 			else{
 				d3.select(".tooltip")
@@ -212,7 +258,8 @@ function dragended(d) {
 				dispatch.deselectCounty(identifier);
 		    	x = width / 2;
 		    	y = height / 2;
-		    	k = 1;		
+		    	k = 1;
+		    	lastK = 1;		
 			}
 		}
 		  g.transition()
@@ -221,14 +268,56 @@ function dragended(d) {
 	      .style("stroke-width", 1.5 / k + "px");
 	}
 
+	// var k = 1;
 	dispatch.on("zoomIn", function(){
-		console.log(width, height, g)
-		console.log(path)
-				  // g.transition()
-	     //  .duration(750)
-	     //  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-	     //  .style("stroke-width", 1.5 / k + "px");
+		d3.select(".tooltip")
+			.transition()
+			.style("background", "rgba(255,255,255,.9)")
+		// console.log(width, height, g)
+		// console.log(path)
+		var x,y;
+		lastK += 1;
+	    var centroid = path.centroid(lastClicked);
+	    x = centroid[0];
+	    y = centroid[1];
+		g.transition()
+	      .duration(750)
+	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+	      .style("stroke-width", 1.5 / lastK + "px");
 	})
+
+	dispatch.on("zoomOut", function(){
+		// console.log(width, height, g)
+		// console.log(path)
+		var x,y;
+		lastK -= 1;
+		if (lastK < 1){
+			lastK = 1
+		}
+		else{
+			if(lastK == 1){
+				d3.select(".tooltip")
+					.transition()
+					.style("background", "rgba(255,255,255,0)")
+					// .style("opacity", "0")
+				lastClicked = centerCounty;
+				x = width / 2;
+		    	y = height / 2;
+			}
+			else{
+			console.log(lastK)
+			    var centroid = path.centroid(lastClicked);
+			    x = centroid[0];
+			    y = centroid[1];
+			}
+			g.transition()
+		      .duration(750)
+		      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+		      .style("stroke-width", 1.5 / lastK + "px");
+		}
+	})
+
+
 
 	dispatch.on("load.tooltip", function(data){
 		d3.selectAll(".tooltip").remove();

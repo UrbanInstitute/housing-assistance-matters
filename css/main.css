@@ -128,7 +128,11 @@ input.custom-combobox-input{
 .q7-9 { fill:rgb(8,81,156) !important; }
 .q8-9 { fill:rgb(8,48,107) !important; }
 
-/*.ignored{ fill: #ccc !important;}*/
+.ignored{
+opacity: .8 !important;
+/*fill: #ccc !important;*/
+/*webkit-filter: grayscale(100%);*/
+}
 
 #states {
   fill: none !important;
