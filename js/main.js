@@ -39,23 +39,23 @@ var drag = d3.behavior.drag()
 			"q4-5": "#000000",
 		}
 
-	var GREYS = 
-		{
-			"q0-5": "#ccc",
-			"q1-5": "#aaa",
-			"q2-5": "#777",
-			"q3-5": "#444",
-			"q4-5": "#111",
-		}
-
 	// var GREYS = 
 	// 	{
-	// 		"q0-5": "#b0d5f1",
-	// 		"q1-5": "#82c4e9",
-	// 		"q2-5": "#1696d2",
-	// 		"q3-5": "#00578b",
-	// 		"q4-5": "#000000",
+	// 		"q0-5": "#ccc",
+	// 		"q1-5": "#aaa",
+	// 		"q2-5": "#777",
+	// 		"q3-5": "#444",
+	// 		"q4-5": "#111",
 	// 	}
+
+	var GREYS = 
+		{
+			"q0-5": "#b0d5f1",
+			"q1-5": "#82c4e9",
+			"q2-5": "#1696d2",
+			"q3-5": "#00578b",
+			"q4-5": "#000000",
+		}
 
 	var getAssistance = function(){
 		var btn = d3.select(".assistance.button.active");
@@ -163,7 +163,32 @@ var drag = d3.behavior.drag()
 	    .attr("height", height)
 	    .on("click", clicked);
 
+// var zoom = d3.behavior.zoom()
+//     .translate(projection.translate())
+//     .scale(projection.scale())
+//     .scaleExtent([height, 8 * height])
+//     .on("zoom", zoomed)
+
+// function zoomed() {
+//   projection.translate(d3.event.translate).scale(d3.event.scale);
+//   g.selectAll("path").attr("d", path);
+// }
+
+	var drag = d3.behavior.drag()
+	    .origin(function(d) {return d; })
+	    .on("drag", dragmove);
+
 	var g = svg.append("g")
+	// .call(drag)
+
+	function dragmove(d) {
+		var centroid = path.centroid(d);
+		x = centroid[0];
+		y = centroid[1];
+	 	g.transition()
+	     	  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+	}
+
 
 //broad scope variables to store zoom level (k) and last county clicked, as well as default center county
 	var lastClicked;
@@ -195,7 +220,8 @@ var drag = d3.behavior.drag()
 	          	var fips = "fips_" + d.id
 	          	return ignored + " " + fips;
 	          })
-	      .on("click", clicked);
+	      .on("click", clicked)
+	      .call(drag);
 	  g.append("path")
 	      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
 	      .attr("id", "county-borders")
