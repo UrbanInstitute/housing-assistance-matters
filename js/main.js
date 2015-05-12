@@ -6,25 +6,10 @@ var drawDetail = function(d){
 	var detail;
 }
 function drawGraphic(containerWidth){
-var drag = d3.behavior.drag()
-    .origin(function(d) { return d; })
-    .on("dragstart", dragstarted)
-    .on("drag", dragged)
-    .on("dragend", dragended);
-	function dragstarted(d) {
-	  d3.event.sourceEvent.stopPropagation();
-	  d3.select(this).classed("dragging", true);
-	}
-
-	function dragged(d) {
-	  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-	}
-
-	function dragended(d) {
-	  d3.select(this).classed("dragging", false);
-	}
-
-
+//get widths for gutters, max width of details below is 897px
+var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
+var gutterWidth = (headerWidth - 897)/2.0
+d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
@@ -64,14 +49,14 @@ var drag = d3.behavior.drag()
 	}
 
 	var getYear = function(){
-		return d3.select(".year.button.active").attr("id").replace("_button","")
+		return d3.select(".year.button.active").attr("id").replace("button_","")
 	}
 
 	d3.selectAll(".year.button")
 		.on("click", function(){ 
 			d3.select(".year.button.active").classed("active",false)
 			d3.select(this).classed("active", true)
-			dispatch.changeYear(d3.select(this).attr("id").replace("_button","")); 
+			dispatch.changeYear(d3.select(this).attr("id").replace("button_","")); 
 		})
 	d3.selectAll(".assistance.button")
 		.on("click", function(){
@@ -176,17 +161,23 @@ var drag = d3.behavior.drag()
 
 	var drag = d3.behavior.drag()
 	    .origin(function(d) {return d; })
-	    .on("drag", dragmove);
+	    .on("drag", dragmove)
+	    .on("dragend", dragend);
 
 	var g = svg.append("g")
 	// .call(drag)
 
 	function dragmove(d) {
+		d3.selectAll("#counties").classed("grabbing", true);
 		var centroid = path.centroid(d);
 		x = centroid[0];
 		y = centroid[1];
 	 	g.transition()
 	     	  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+	}
+
+	function dragend(d){
+		d3.selectAll("#counties").classed("grabbing", false);
 	}
 
 
@@ -200,12 +191,11 @@ var drag = d3.behavior.drag()
 		centerCounty = topojson.feature(us, us.objects.UScounties).features.filter(function(obj){return obj.id == 20183})[0]
 		lastClicked = centerCounty;
 		dispatch.load(topojson.feature(us, us.objects.UScounties).features);
-
-	g.append("g")
-	    .attr("id", "counties")
-	    .selectAll("path")
+		g.append("g")
+	      .attr("id", "counties")
+	      .selectAll("path")
 	      .data(topojson.feature(us, us.objects.UScounties).features)
-	    .enter().append("path")
+	      .enter().append("path")
 	      .attr("d", path)
 	      .style("fill", function(d){
 	      	if(d.properties.ignore !== "1"){
@@ -245,7 +235,6 @@ var drag = d3.behavior.drag()
 		.attr("id", "legend")
 
 	function clicked(d) {
-		console.log(d)
 		var x,y,k;
 		if(typeof(d) == "undefined"){
 			d3.select(".tooltip")
@@ -267,7 +256,6 @@ var drag = d3.behavior.drag()
 					.transition()
 					.style("background","rgba(255,255,255,.9)")
 					// .style("opacity",".5")
-				console.log("sweet")
 				d3.select("path.fips_" + d.id).classed("active",true)
 				dispatch.selectCounty(d)
 			    var centroid = path.centroid(d);
@@ -299,8 +287,6 @@ var drag = d3.behavior.drag()
 		d3.select(".tooltip")
 			.transition()
 			.style("background", "rgba(255,255,255,.9)")
-		// console.log(width, height, g)
-		// console.log(path)
 		var x,y;
 		lastK += 1;
 	    var centroid = path.centroid(lastClicked);
@@ -313,8 +299,6 @@ var drag = d3.behavior.drag()
 	})
 
 	dispatch.on("zoomOut", function(){
-		// console.log(width, height, g)
-		// console.log(path)
 		var x,y;
 		lastK -= 1;
 		if (lastK < 1){
@@ -331,7 +315,6 @@ var drag = d3.behavior.drag()
 		    	y = height / 2;
 			}
 			else{
-			console.log(lastK)
 			    var centroid = path.centroid(lastClicked);
 			    x = centroid[0];
 			    y = centroid[1];
@@ -552,11 +535,12 @@ var drag = d3.behavior.drag()
 		d3.select("path." +  id).classed("active",false).classed("dropdown",false)
 	})
 	dispatch.on("load.details", function(data){
-		d3.select(".detail.list")
-			.append("li")
+		var ul = d3.select(".detail.list")
+		ul.append("li")
 			.classed("national", true)
 			.classed("show", true)
 			.text("The USA data goes here")
+		ul.append("li")
 		// pymChild.sendHeight();
 	})
 	dispatch.on("selectCounty.details", function(d){
@@ -569,7 +553,7 @@ var drag = d3.behavior.drag()
 		if(typeof(d) != "undefined" && selectedCounties.indexOf(identifier) === -1){
 			selectedCounties.push(identifier)
 			var li = d3.select(".detail.list")
-				 .insert("li",":first-child")
+				 .insert("li",":nth-child(2)")
  				.attr("id", identifier)
  				// .classed("ui-state-default", true);
 
@@ -580,8 +564,8 @@ var drag = d3.behavior.drag()
 			wrapper.append("div")
 				.attr("class", "detail county close-button")
 				.on("click", function(){dispatch.deselectCounty(identifier)})
-				.append("img")
-				.attr("src","/images/close-button.png");
+				// .append("img")
+				// .attr("src","/images/close-button.png");
 
 			wrapper.append("div")
 				.attr("class", "detail county name")

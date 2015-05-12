@@ -20,17 +20,39 @@
 
 	<div class = "year container">
 		<div class = "year header label">Year</div>
-		<div class = "year button" id = "2000_button"><span>2000</span></div>
-		<div class = "year button" id = "2006_button"><span>2006</span></div>
-		<div class = "year button" id = "2012_button"><span>2012</span></div>
-		<div class = "year button active" id = "2013_button"><span>2013</span></div>
+		<div class = "year button" id = "button_2000"><span>2000</span></div>
+		<div class = "year button" id = "button_2006"><span>2006</span></div>
+		<div class = "year button active" id = "button_2013"><span>2013</span></div>
 	</div>
 	<div class = "search container">
 	</div>
 </div>
 <div class = "map container"></div>
-<div class = "print button">Print!</div>
+<div class = "print button"><img src = "images/print-icon.png"/><span>Print county details</span></div>
+<div class = "headerRow">
+	<div class = "header left gutter"></div>
+	<div class = "location header">LOCATION</div>
+	<div class = "population header">ELI POPULATION</div>
+	<div class = "per100 header">UNITS PER 100</div>
+	<div class = "total header">TOTAL UNITS</div>
+	<div class = "header right gutter"></div>
+</div>
 <div class = "detail container swing"><ul id="holder" class = "detail list"></ul></div>
+<div class = "footerRow">
+	<div class = "left footer">
+		<div class = "footer title">ABOUT</div>
+		<div class = "footer text">The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renters at the county level in the U.S. The data analyzed come from multiple sources – the American Community Survey (ACS) Public Use Microdata Sample (PUMS) from the Census (via the Integrated Public Use Microdata Series from the Minnesota Population Center), the US Department of Housing and Urban Development (HUD) Picture of Subsidized Housing (PSH), the HUD Section 8 Income Limits, and ACS pre-tabulated data from the Census.</div>
+	</div>
+	<div class = "right footer">
+		<div class = "buttonRow">
+			<div class = "footer read">Read report</div>
+			<div class = "footer data"><img src = "images/download-icon.png"/>Download Data</div>
+			<div class = "footer print"><img src = "images/print-icon.ong"/>Print county details</div>
+		</div>
+		<div class = "footer title">CREDITS</div>
+		<div class = "footer text">Erika / the Coolest; Pam & Liza/ Researchers; Ben Chartoff/ Data visualization developer; Christina Baird/ Web Designer; Fiona Bradshaw/ Editorial</div>
+	</div>
+</div>
 
 <script src="js/vendor/d3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>

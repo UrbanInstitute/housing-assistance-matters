@@ -1,6 +1,6 @@
 body{
   margin: 0;
-  font: 12pt Lato;
+  font: 12px Lato;
 }
 
 /*Header*/
@@ -10,9 +10,9 @@ body{
 .header.container{
   height: 59px;
   width: 100%;
-  border-bottom: 2pt solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
-.button{
+.header .button{
   font: 14px Lato;
   color: #cccccc;
   font-weight: 900;
@@ -47,7 +47,7 @@ body{
 }
 
 .assistance.container, .year.container{
-  border-right: 2px solid #ccc;
+  border-right: 1px solid #ccc;
   height: 43px;
   padding-top: 16px;
   padding-left: 5px;
@@ -66,6 +66,10 @@ body{
   width: 75px;
   height: 28px;
   vertical-align: middle;
+}
+
+#button_2013, .assistance.button.turnOff{
+  border-right: none;
 }
 
 div.ui-widget{
@@ -114,6 +118,11 @@ input.custom-combobox-input{
 }
 #counties {
   fill: #ccc;
+  cursor: pointer;
+}
+
+#counties.grabbing{
+  cursor: -webkit-grabbing;
 }
 
 
@@ -138,7 +147,7 @@ input.custom-combobox-input{
 }
 
 #counties .active, .dropdown{
-  fill: orange !important;
+  fill: #fdbf11 !important;
 }
 #state-borders {
   fill: none;
@@ -209,7 +218,7 @@ li {
  padding:12px 6px;
  z-index:1;
  /*height: 36px;*/
- border-bottom: 1pt solid #cccccc;
+ border-bottom: 1px solid #cccccc;
  background: #ffffff;
 }
 
@@ -251,14 +260,26 @@ li {
 /*Detail view layout*/
 .close-button{
   cursor: pointer;
+  background: url('../images/close-button.png');
+  width: 29px;
+  height: 29px;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
-.close-button img{
+.close-button:hover{
+  background: url('../images/close-button_hover.png');
+  width: 29px;
+  height: 29px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+/*.close-button img{
   width: 29px;
   /*height: 29px;*/
-}
+}*/
 .detail.container{
   /*border: solid;*/
-  /*border-width: 1pt;*/
+  /*border-width: 1px;*/
 }
 
 .detail.county{
@@ -307,4 +328,74 @@ li {
   position: absolute;
   left: 0;
   top: -1px;
+}
+
+/*Header detail labels*/
+.print.button{
+  background: #333;
+  color: white;
+  font: 13px Lato;
+  font-weight: 900;
+  width: 184px;
+  height: 36px;
+  float: right;
+  position: relative;
+  bottom: 36px;
+  right: 84px;
+  cursor: pointer;
+}
+.print.button img{
+  height: 17px;
+  padding-top: 12px;
+  padding-left: 18px;
+  padding-right: 12px;
+}
+.print.button span{
+  top: -5px
+}
+.headerRow{
+  width: 100%;
+  height: 28px;
+  position: absolute;
+  background: #b3b3b3;
+  font: 14px Lato;
+  font-weight: 900;
+  border-top: 3px solid #333;
+}
+
+.headerRow .header{
+  color: #fff;
+  float: left;
+  height: 28px;
+  padding-top: 6px;
+  text-align: left;
+  text-indent: 19px;
+  border-right: 1px solid #fff;
+}
+
+.left.gutter.header{
+  border-right: none;
+}
+.location.header{
+  width: 267px;
+}
+.population.header{
+  width: 153px;
+}
+.per100.header{
+  width: 300px;
+}
+.total.header{
+  width: 177px;
+  border-right: none;
+}
+
+/*Footer*/
+.footerRow{
+  background: #333;
+  color: white;
+}
+
+.footer.text{
+  font: 13px Lato #fff;
 }
