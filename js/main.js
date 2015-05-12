@@ -567,21 +567,26 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				// .append("img")
 				// .attr("src","/images/close-button.png");
 
-			wrapper.append("div")
+			var name = wrapper.append("div")
 				.attr("class", "detail county name")
 				.text(d.properties.name)
+			name.append("div")
+				.attr("class","detail year label")
+				.text(year)
+			name.append("div")
+				.attr("class", "expand years")
+				.text("expand years")
+			var comma = d3.format("000,000")
 			wrapper.append("div")
-				.attr("");
-
+				.attr("class", "detail totalPop")
+				.text(comma(d["properties"]["totalPop" + year]))
 			var total = wrapper.append("div")
 				.attr("class", "detail county total bar")
 				.classed(year, true);	
-
 			total.append("div")
 				.attr("class", "asst bar")
 				.datum(d)
 				.style("width", (parseFloat(asst/100.0) * BAR_WIDTH) + "px");
-
 			total.append("div")
 				.datum(d)
 				.attr("class", "display bar")
@@ -610,7 +615,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 						return "1px solid " + COLORS[quantize(asst)]
 					}
 				})
-
 			total.append("div")
 				.datum(d)
 				.attr("class", "bar marker")
@@ -622,6 +626,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
 					}
 				})
+			wrapper.append("div")
 
 		 	wrapper
 			 	.transition()
@@ -650,6 +655,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	})
 	dispatch.on("changeYear.details", function(year){
 		var a = getAssistance();
+		d3.selectAll(".detail.year.label")
+			.text(year)
 		d3.selectAll(".display.bar")
 			.transition()
 			.style("width", function(d){

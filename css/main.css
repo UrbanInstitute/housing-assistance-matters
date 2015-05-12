@@ -291,6 +291,11 @@ li {
   width: 150px;
 }
 
+.detail.totalPop{
+  width: 100px;
+  float: left;
+}
+
 .total.bar{
   width: 200px;
   height: 20px;
