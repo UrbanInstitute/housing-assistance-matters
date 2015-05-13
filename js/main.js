@@ -587,13 +587,13 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			.classed("national", true)
 			.classed("show", true)
 			.text("The USA data goes here")
-		ul.append("li")
+		ul.append("li").style("display","none")
 		// pymChild.sendHeight();
 	})
 	dispatch.on("selectCounty.details", function(d){
 		d3.selectAll(".garbage").remove();
-		var currentYear = getYear();
 		var assistance = getAssistance();
+		var currentYear = getYear();
 		var identifier = (typeof(d) == "undefined") ? null : assistance +  currentYear + "_" + d.id;
 		var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + currentYear]
 		var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + currentYear]
@@ -609,11 +609,13 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
  						.attr("class", "expanded")
 
 	 		function drawDetail(listItem, expand, year){
+				assistance = getAssistance();
+
 				// d.year = year;
 	 			var type  = (expand) ? "expand":"detail";
 				var wrapper = listItem.append("div")
 					.datum(d)
-					.attr("class", type + " container")
+					.attr("class", type + " container " + "fips_" +  d.id)
 					.style("height", 0)
 					.style("opacity", 0)
 				wrapper.append("div")
@@ -628,23 +630,51 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					.attr("class", type + " fullName")
 					.text(d.properties.name)
 				name.append("div")
-					.attr("class",type + " year label")
+					.attr("class",type + " year label hideOnExpand fips_" + d.id)
 					.text(year)
 				name.append("div")
-					.attr("class", type + " expand_years")
+					.attr("class", type + " expand_years collapsed")
 					.text("expand years")
 					.on("click", function(){
-						drawDetail(under, true, "2000");
-						drawDetail(under, true, "2006");
-						drawDetail(under, true, "2013");
+						var collapsed = d3.select(this).classed("collapsed")
+						if(collapsed){
+							d3.select(this)
+								.classed("collapsed", false)
+								.text("collapse years")
+							drawDetail(under, true, "2000");
+							drawDetail(under, true, "2006");
+							drawDetail(under, true, "2013");
+							d3.selectAll(".detail.hideOnExpand.fips_" + d.id)
+								.style("display", "none")
+						}
+						else{
+							d3.select(this)
+								.classed("collapsed", true)
+								.text("expand years");
+							d3.selectAll(".expand.container.fips_" + d.id)
+								.remove()
+							d3.selectAll(".detail.hideOnExpand.fips_" + d.id)
+								.style("display", "block")
+							// d3.selectAll(".expanded")
+							// 	.transition()
+							// 	.style("height",0)
+							// 	.style("opacity",0);
+							// 	// .remove()
+							// d3.selectAll(".expanded")
+							// 	.remove();
+						}
 					})
+				// drawDetail(under, true, "2000");
+				// drawDetail(under, true, "2006");
+				// drawDetail(under, true, "2013");
+
 				var comma = d3.format("000,000")
 				wrapper.append("div")
-					.attr("class", type + " totalPop")
+					.attr("class", type + " hideOnExpand totalPop + fips_" + d.id)
 					.text(comma(d["properties"]["totalPop" + year]))
 				var total = wrapper.append("div")
 					.datum(d)
-					.attr("class", type + " county total bar fips_" + d.id)
+					.attr("class", type + " hideOnExpand county total bar fips_" + d.id + " y" + year)
 					.on("click", function(){
 						assistance = getAssistance();
 						if(assistance == "asst"){
@@ -658,14 +688,16 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					})
 					.classed(year, true);	
 				total.append("div")
-					.attr("class", "asst bar")
+					.attr("class", "asst bar" + " y" + year)
+					.attr("data-year", year)
 					.datum(d)
 					.style("width", (parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH) + "px")
 					.on("mouseover", highlightAsst)
 					.on("mouseout", deHover);
 				total.append("div")
 					.datum(d)
-					.attr("class", "display bar")
+					.attr("data-year", year)
+					.attr("class", "display bar" + " y" + year)
 					.attr("data-year", year)
 					.style("width", function(){
 						if(assistance == "noAsst"){
@@ -695,9 +727,10 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					})
 				total.append("div")
 					.datum(d)
+					.attr("data-year", year)
 					.on("mouseover", highlightNoAsst)
 					.on("mouseout", deHover)
-					.attr("class", "bar marker")
+					.attr("class", "bar marker" + " y" + year)
 					.style("width", function(){
 						if(assistance == "noAsst"){
 							return (parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH) + "px"
@@ -708,7 +741,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					})
 				wrapper.append("div")
 					.attr("data-year", year)
-					.attr("class", type + " bar text fips_" + d.id)
+					.attr("class", type + " hideOnExpand bar text fips_" + d.id + " y" + year)
 					.datum(d)
 					.text(function(d){
 						if(assistance == "noAsst"){
@@ -720,7 +753,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					})
 				wrapper.append("div")
 					.datum(d)
-					.attr("class", type + " total units fips_" + d.id)
+					.attr("class", type + " hideOnExpand total units fips_" + d.id + " y" + year)
 					.attr("data-year", year)
 					.text(comma(d["properties"][assistance + "Num" + year]))
 
@@ -734,31 +767,39 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		}
 
 	function highlightNoAsst(d){
-		var year = getYear();
+		console.log(this)
+		// var year = getYear();
+		var year = d3.select(this).attr("data-year")
+		console.log(year)
 		var a = "noAsst";
-		d3.select(".fips_" + d.id + ".bar.text")
+		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return d["properties"][a + year]});
-		d3.select(".fips_" + d.id + ".total.units")
+		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return d["properties"][a + "Num" + year]});
-		d3.select(".fips_" + d.id + " .marker.bar").classed("hover", true)
+		d3.selectAll(".fips_" + d.id + " .marker.bar" + ".y" + year).classed("hover", true)
 	}
 	function highlightAsst(d){
-		var year = getYear();
+		console.log(this)
+		// var year = getYear();
+		var year = d3.select(this).attr("data-year")
+		console.log(year)
 		var a = "asst";
-		d3.select(".fips_" + d.id + ".bar.text")
+		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return d["properties"][a + year]});
-		d3.select(".fips_" + d.id + ".total.units")
+		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return d["properties"][a + "Num" + year]});
-		d3.select(".fips_" + d.id + " .asst.bar").classed("hover", true);
+		d3.selectAll(".fips_" + d.id + " .asst.bar" + ".y" + year).classed("hover", true);
 	}
 	function deHover(){
-		var year = getYear();
+		// var year = getYear();
+		var year = d3.select(this).attr("data-year")
+		console.log(year)
 		var a = getAssistance();
-		d3.select(".fips_" + d.id + ".bar.text")
+		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return d["properties"][a + year]});
-		d3.select(".fips_" + d.id + ".total.units")
+		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return d["properties"][a + "Num" + year]});
-		d3.selectAll(".bar.hover").classed("hover",false);
+		d3.selectAll(".bar.hover" + ".y" + year).classed("hover",false);
 	}
 
 	});
