@@ -296,6 +296,22 @@ li {
   float: left;
 }
 
+.bar.hover{
+  background: #fdbf11 !important;
+  border: 1px solid #fdbf11 !important;
+  opacity: 1;
+  z-index: 2;
+}
+
+.bar.marker.hover{
+  opacity: 1;
+  background: #fdbf11 !important;
+  height: 20px;
+  border: 1px solid #fdbf11;
+  left: -1px;
+  top: -1px;
+}
+
 .total.bar{
   width: 200px;
   height: 20px;
@@ -333,6 +349,14 @@ li {
   position: absolute;
   left: 0;
   top: -1px;
+}
+
+.bar.text{
+  float: left;
+  position: relative;
+  font: 30px Lato;
+  color: #0096d2;
+  font-weight: 700;
 }
 
 /*Header detail labels*/

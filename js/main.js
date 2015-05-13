@@ -87,6 +87,16 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		// }
 		
 	});
+	dispatch.on("changeAssistance", function(assistance){
+		if(assistance == "asst"){
+			d3.select(".assistance.button.turnOn").classed("active", true)
+			d3.select(".assistance.button.turnOff").classed("active", false)
+		}
+		else{
+			d3.select(".assistance.button.turnOn").classed("active", false)
+			d3.select(".assistance.button.turnOff").classed("active", true)
+		}
+	});
 	d3.select(".print.button")
 		.on("click", function(){
 			var counties = d3.selectAll("#holder li")[0].filter(function(obj){
@@ -558,6 +568,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
  				// .classed("ui-state-default", true);
 
 			var wrapper = li.append("div")
+				.datum(d)
 				.attr("class", "detail container")
 				.style("height", 0)
 				.style("opacity", 0)
@@ -581,12 +592,28 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				.attr("class", "detail totalPop")
 				.text(comma(d["properties"]["totalPop" + year]))
 			var total = wrapper.append("div")
-				.attr("class", "detail county total bar")
+				.attr("class", "detail county total bar fips_" + d.id)
+				.on("click", function(){
+					assistance = getAssistance();
+					// console.log(assistance + "foo");
+					if(assistance == "asst"){
+						assistance = "noAsst";
+						dispatch.changeAssistance("noAsst");
+						// console.log(assistance)
+					}
+					else{
+						assistance ="asst"
+						dispatch.changeAssistance("asst");
+						// console.log(assistance)
+					}
+				})
 				.classed(year, true);	
 			total.append("div")
 				.attr("class", "asst bar")
 				.datum(d)
-				.style("width", (parseFloat(asst/100.0) * BAR_WIDTH) + "px");
+				.style("width", (parseFloat(asst/100.0) * BAR_WIDTH) + "px")
+				.on("mouseover", highlightAsst)
+				.on("mouseout", deHover);
 			total.append("div")
 				.datum(d)
 				.attr("class", "display bar")
@@ -599,6 +626,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
 					}
 				})
+				.on("mouseover", highlightAsst)
+				.on("mouseout", deHover)
 				.style("background", function(){
 					if(assistance == "noAsst"){
 						return COLORS[quantize(noAsst)]
@@ -617,6 +646,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				})
 			total.append("div")
 				.datum(d)
+				.on("mouseover", highlightNoAsst)
+				.on("mouseout", deHover)
 				.attr("class", "bar marker")
 				.style("width", function(){
 					if(assistance == "noAsst"){
@@ -627,6 +658,18 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					}
 				})
 			wrapper.append("div")
+				.attr("class", "bar text fips_" + d.id)
+				.text(function(d){
+					if(assistance = "noAsst"){
+						return noAsst;
+					}
+					else{
+						return asst;
+					}
+				})
+			wrapper.append("div")
+				.attr("class", "total units fips_" + d.id)
+				.text(comma(d["properties"][assistance + "Num" + year]))
 
 		 	wrapper
 			 	.transition()
@@ -635,6 +678,34 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			 	.style("opacity", 1)
 			pymChild.sendHeight();
 		}
+
+	function highlightNoAsst(d){
+		var year = getYear();
+		var a = "noAsst";
+		d3.select(".fips_" + d.id + ".bar.text")
+			.text(function(d){ return d["properties"][a + year]});
+		d3.select(".fips_" + d.id + ".total.units")
+			.text(function(d){ return d["properties"][a + "Num" + year]});
+		d3.select(".fips_" + d.id + " .marker.bar").classed("hover", true)
+	}
+	function highlightAsst(d){
+		var year = getYear();
+		var a = "asst";
+		d3.select(".fips_" + d.id + ".bar.text")
+			.text(function(d){ return d["properties"][a + year]});
+		d3.select(".fips_" + d.id + ".total.units")
+			.text(function(d){ return d["properties"][a + "Num" + year]});
+		d3.select(".fips_" + d.id + " .asst.bar").classed("hover", true);
+	}
+	function deHover(){
+		var year = getYear();
+		var a = getAssistance();
+		d3.select(".fips_" + d.id + ".bar.text")
+			.text(function(d){ return d["properties"][a + year]});
+		d3.select(".fips_" + d.id + ".total.units")
+			.text(function(d){ return d["properties"][a + "Num" + year]});
+		d3.selectAll(".bar.hover").classed("hover",false);
+	}
 
 	});
 	dispatch.on("deselectCounty.details", function(identifier){
@@ -657,6 +728,12 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var a = getAssistance();
 		d3.selectAll(".detail.year.label")
 			.text(year)
+		d3.selectAll(".totalPop.detail")
+			.text(function(d){ return d["properties"]["totalPop" +  year]})
+		d3.selectAll(".bar.text")
+			.text(function(d){ return d["properties"][a + year]})
+		d3.selectAll(".total.units")
+			.text(function(d){ return d["properties"][a + "Num" + year]})
 		d3.selectAll(".display.bar")
 			.transition()
 			.style("width", function(d){
@@ -714,6 +791,10 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	})
 	dispatch.on("changeAssistance.details", function(a){
 		var year = getYear();
+		d3.selectAll(".bar.text")
+			.text(function(d){ return d["properties"][a + year]})
+		d3.selectAll(".total.units")
+			.text(function(d){ return d["properties"][a + "Num" + year]})
 		d3.selectAll(".display.bar")
 			.transition()
 			.style("width", function(d){
