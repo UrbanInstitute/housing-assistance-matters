@@ -372,6 +372,13 @@ li {
   color: #0096d2;
   font-weight: 700;
 }
+.caption{
+  font-size: 13px;
+  color: #333;
+  position: absolute;
+  top: 22px;
+  font-style: italic;
+}
 
 /*Header detail labels*/
 .print.button{

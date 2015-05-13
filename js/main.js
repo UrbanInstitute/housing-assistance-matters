@@ -739,6 +739,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 							return (parseFloat(d["properties"]["noAsst" + year]/100.0) * BAR_WIDTH) + "px"
 						}
 					})
+				total.append("div")
+					.attr("class", "fips_" + d.id + " caption y" + year)
 				wrapper.append("div")
 					.attr("data-year", year)
 					.attr("class", type + " hideOnExpand bar text fips_" + d.id + " y" + year)
@@ -772,6 +774,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var year = d3.select(this).attr("data-year")
 		console.log(year)
 		var a = "noAsst";
+		d3.selectAll(".fips_" + d.id + ".caption.y" + year)
+			.text("without assistance")
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return d["properties"][a + year]});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
@@ -784,6 +788,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var year = d3.select(this).attr("data-year")
 		console.log(year)
 		var a = "asst";
+		d3.selectAll(".fips_" + d.id + ".caption.y" + year)
+			.text("with assistance")
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return d["properties"][a + year]});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
@@ -795,6 +801,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var year = d3.select(this).attr("data-year")
 		console.log(year)
 		var a = getAssistance();
+		d3.selectAll(".fips_" + d.id + ".caption.y" + year)
+			.text("")
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return d["properties"][a + year]});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
@@ -822,14 +830,19 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	dispatch.on("changeYear.details", function(year){
 		var a = getAssistance();
 		d3.selectAll(".detail.year.label")
+			.attr("data-year", year)
 			.text(year)
 		d3.selectAll(".detail.totalPop.detail")
+			.attr("data-year", year)
 			.text(function(d){ return d["properties"]["totalPop" +  year]})
 		d3.selectAll(".detail.bar.text")
+			.attr("data-year", year)
 			.text(function(d){ return d["properties"][a + year]})
 		d3.selectAll(".detail.total.units")
+			.attr("data-year", year)
 			.text(function(d){ return d["properties"][a + "Num" + year]})
 		d3.selectAll(".detail.total.bar .display.bar")
+			.attr("data-year", year)
 			.transition()
 			.style("width", function(d){
 				// var year = d3.select(this).attr("data-year")
@@ -865,12 +878,14 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				}
 			})
 			d3.selectAll(".detail.total.bar .asst.bar")
+				.attr("data-year", year)
 				.transition()
 				.style("width", function(d){
 					var asst = d.properties["asst" + year]
 					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
 				})
 			d3.selectAll(".detail.total.bar .bar.marker")
+				.attr("data-year", year)
 				.transition()
 				.style("width", function(d){
 					var asst = d.properties["asst" + year]
