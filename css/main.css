@@ -127,23 +127,24 @@ input.custom-combobox-input{
 
 
 /*Map fill and stroke*/
-.q0-9 { fill:rgb(247,251,255) !important; }
-.q1-9 { fill:rgb(222,235,247) !important; }
-.q2-9 { fill:rgb(198,219,239) !important; }
-.q3-9 { fill:rgb(158,202,225) !important; }
-.q4-9 { fill:rgb(107,174,214) !important; }
-.q5-9 { fill:rgb(66,146,198) !important; }
-.q6-9 { fill:rgb(33,113,181) !important; }
+/*.q0-5 { fill:rgb(247,251,255) !important; }
+.q1-5 { fill:rgb(222,235,247) !important; }
+.q2-5 { fill:rgb(198,219,239) !important; }
+.q3-5 { fill:rgb(158,202,225) !important; }
+.q4-5 { fill:rgb(107,174,214) !important; }
+.q5-5 { fill:rgb(66,146,198) !important; }*/
+/*.q6-9 { fill:rgb(33,113,181) !important; }
 .q7-9 { fill:rgb(8,81,156) !important; }
 .q8-9 { fill:rgb(8,48,107) !important; }
-
+*/
 .ignored{
 /*fill: #ccc !important;*/
 /*webkit-filter: grayscale(100%);*/
 }
 
 #states {
-  fill: none !important;
+  fill: #ccc;
+  opacity: 0;
 }
 
 #counties .active, .dropdown{
@@ -151,7 +152,7 @@ input.custom-combobox-input{
 }
 #state-borders {
   fill: none;
-  stroke: #000;
+  stroke: #333;
   stroke-width: .5px;
   pointer-events: none;
 }
@@ -178,17 +179,22 @@ input.custom-combobox-input{
   pointer-events: none;
 }
 
-.text.container{
-  position: relative;
+/*.text.container{*/
+/*  position: relative;
   top: 73%;
   float: right;
   margin-right: 3%;
-}
+}*/
 
 .zoom{
   pointer-events: all;
 }
 
+.legend.key{
+  width: 22px;
+  height: 32px;
+  pointer-events: all;
+}
 /*Detail view animations*/
 /*.swing {
   perspective: 100px;
@@ -208,7 +214,7 @@ input.custom-combobox-input{
 
 }
 */
-.detail.container{
+.detail.container, .expand.container{
   margin-top: 50px;
 }
 ul#holder{ padding: 0;}
@@ -282,18 +288,26 @@ li {
   /*border-width: 1px;*/
 }
 
-.detail.county{
+.county{
   float: left;
   margin-left: 5px;
 }
 
-.county.name{
+.name{
   width: 150px;
 }
 
-.detail.totalPop{
+.totalPop{
   width: 100px;
   float: left;
+}
+
+/*All years detail*/
+.expanded .detail.container{
+  background: #F8F8F8;
+}
+.expand.county.close-button, .expand.expand_years, .expand.fullName{
+  display: none;
 }
 
 .bar.hover{

@@ -21,7 +21,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			"q1-5": "#82c4e9",
 			"q2-5": "#1696d2",
 			"q3-5": "#00578b",
-			"q4-5": "#000000",
+			"q4-5": "#061b5a",
 		}
 
 	// var GREYS = 
@@ -39,7 +39,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			"q1-5": "#82c4e9",
 			"q2-5": "#1696d2",
 			"q3-5": "#00578b",
-			"q4-5": "#000000",
+			"q4-5": "#061b5a",
 		}
 
 	var getAssistance = function(){
@@ -115,6 +115,12 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	dispatch.on("changeAssistance.map", function(asst){
 		var year = getYear();
 		d3.selectAll("#counties path")
+			.attr("class", function(d){
+				var active = (d3.select(this).classed("active")) ? "active ":"";
+			    var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+	          	var fips = "fips_" + d.id;
+	          	return active + ignored + " " + fips + " " + quantize(d["properties"][asst+year]);
+	         })
 			.transition()
 			.style("fill", function(d){
 					if(d.properties.ignore != "1") {return COLORS[quantize(d.properties[asst +  year])];}
@@ -126,6 +132,12 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var a = getAssistance();
 		var year = getYear();
 		d3.selectAll("#counties path")
+			.attr("class", function(d){
+				var active = (d3.select(this).classed("active")) ? "active ":"";
+			    var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+	          	var fips = "fips_" + d.id;
+	          	return active + ignored + " " + fips + " " + quantize(d["properties"][a+year]);
+	         })
 			.transition()
 			.style("fill", function(d){
 					if(d.properties.ignore != "1") {return COLORS[quantize(d.properties[a +  year])];}
@@ -201,8 +213,19 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		centerCounty = topojson.feature(us, us.objects.UScounties).features.filter(function(obj){return obj.id == 20183})[0]
 		lastClicked = centerCounty;
 		dispatch.load(topojson.feature(us, us.objects.UScounties).features);
+
+	g.append("g")
+	    .attr("id", "states")
+	    .selectAll("path")
+	      .data(topojson.feature(us, us.objects.cb_2013_us_state_500k).features)
+	    .enter().append("path")
+	      .attr("d", path)
+	      .on("click", clicked);
+
+
 		g.append("g")
 	      .attr("id", "counties")
+	      // .classed(quantize(d.properties.asst2013), true)
 	      .selectAll("path")
 	      .data(topojson.feature(us, us.objects.UScounties).features)
 	      .enter().append("path")
@@ -218,7 +241,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	          .attr("class", function(d) {
 	          	var ignored = (d.properties.ignore == "1") ? " ignored" : "";
 	          	var fips = "fips_" + d.id
-	          	return ignored + " " + fips;
+	          	return ignored + " " + fips + " " + quantize(d.properties.asst2013);
 	          })
 	      .on("click", clicked)
 	      .call(drag);
@@ -226,19 +249,13 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
 	      .attr("id", "county-borders")
 	      .attr("d", path);
-
-
-	g.append("g")
-	    .attr("id", "states")
-	    .selectAll("path")
-	      .data(topojson.feature(us, us.objects.cb_2013_us_state_500k).features)
-	    .enter().append("path")
-	      .attr("d", path)
-	      .on("click", clicked);
 	  g.append("path")
 	      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return a !== b; }))
 	      .attr("id", "state-borders")
 	      .attr("d", path);
+
+
+
 	});
 
 	var legend = g.append("g")
@@ -347,6 +364,26 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			.style("width", width + "%")
 			.style("height", containerWidth/2 + "px")
 			.style("left",(100-width) + "%")
+		
+		var legend = sidebar.append("div")
+			.attr("class","legend container")
+		for(var i = 0; i < 6; i += 1){
+			legend.append("div")
+				.attr("class", "legend key")
+				.style("background",COLORS["q" + i + "-5"])
+				.datum(i)
+				.on("mouseover", function(d){
+					d3.selectAll("#states").style("opacity",1)
+					for(var j = 0; j < 6; j += 1){
+						if(j != d){ d3.selectAll("path.q" + j + "-5").style("opacity",0); }
+					}
+				})
+				.on("mouseout", function(){
+					d3.selectAll("#states").style("opacity",0)
+					d3.selectAll("#counties path").style("opacity",1)
+
+				})
+		}
 		var container = sidebar.append("div")
 			.attr("class", "text container")
 		container.append("div")
@@ -555,127 +592,144 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	})
 	dispatch.on("selectCounty.details", function(d){
 		d3.selectAll(".garbage").remove();
-		var year = getYear();
+		var currentYear = getYear();
 		var assistance = getAssistance();
-		var identifier = (typeof(d) == "undefined") ? null : assistance +  year + "_" + d.id;
-		var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + year]
-		var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + year]
+		var identifier = (typeof(d) == "undefined") ? null : assistance +  currentYear + "_" + d.id;
+		var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + currentYear]
+		var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + currentYear]
 		if(typeof(d) != "undefined" && selectedCounties.indexOf(identifier) === -1){
 			selectedCounties.push(identifier)
 			var li = d3.select(".detail.list")
 				 .insert("li",":nth-child(2)")
  				.attr("id", identifier)
  				// .classed("ui-state-default", true);
+ 				// .append("li")
+ 			drawDetail(li, false, currentYear);
+ 			var under = li.append("div")
+ 						.attr("class", "expanded")
 
-			var wrapper = li.append("div")
-				.datum(d)
-				.attr("class", "detail container")
-				.style("height", 0)
-				.style("opacity", 0)
-			wrapper.append("div")
-				.attr("class", "detail county close-button")
-				.on("click", function(){dispatch.deselectCounty(identifier)})
-				// .append("img")
-				// .attr("src","/images/close-button.png");
+	 		function drawDetail(listItem, expand, year){
+				// d.year = year;
+	 			var type  = (expand) ? "expand":"detail";
+				var wrapper = listItem.append("div")
+					.datum(d)
+					.attr("class", type + " container")
+					.style("height", 0)
+					.style("opacity", 0)
+				wrapper.append("div")
+					.attr("class", type + " county close-button")
+					.on("click", function(){dispatch.deselectCounty(identifier)})
+					// .append("img")
+					// .attr("src","/images/close-button.png");
 
-			var name = wrapper.append("div")
-				.attr("class", "detail county name")
-				.text(d.properties.name)
-			name.append("div")
-				.attr("class","detail year label")
-				.text(year)
-			name.append("div")
-				.attr("class", "expand years")
-				.text("expand years")
-			var comma = d3.format("000,000")
-			wrapper.append("div")
-				.attr("class", "detail totalPop")
-				.text(comma(d["properties"]["totalPop" + year]))
-			var total = wrapper.append("div")
-				.attr("class", "detail county total bar fips_" + d.id)
-				.on("click", function(){
-					assistance = getAssistance();
-					// console.log(assistance + "foo");
-					if(assistance == "asst"){
-						assistance = "noAsst";
-						dispatch.changeAssistance("noAsst");
-						// console.log(assistance)
-					}
-					else{
-						assistance ="asst"
-						dispatch.changeAssistance("asst");
-						// console.log(assistance)
-					}
-				})
-				.classed(year, true);	
-			total.append("div")
-				.attr("class", "asst bar")
-				.datum(d)
-				.style("width", (parseFloat(asst/100.0) * BAR_WIDTH) + "px")
-				.on("mouseover", highlightAsst)
-				.on("mouseout", deHover);
-			total.append("div")
-				.datum(d)
-				.attr("class", "display bar")
-				.attr("data-year", year)
-				.style("width", function(){
-					if(assistance == "noAsst"){
-						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-					}
-					else{
-						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-					}
-				})
-				.on("mouseover", highlightAsst)
-				.on("mouseout", deHover)
-				.style("background", function(){
-					if(assistance == "noAsst"){
-						return COLORS[quantize(noAsst)]
-					}
-					else{
-						return COLORS[quantize(asst)]
-					}
-				})
-				.style("border", function(){
-					if(assistance == "noAsst"){
-						return "1px solid " + COLORS[quantize(noAsst)]
-					}
-					else{
-						return "1px solid " + COLORS[quantize(asst)]
-					}
-				})
-			total.append("div")
-				.datum(d)
-				.on("mouseover", highlightNoAsst)
-				.on("mouseout", deHover)
-				.attr("class", "bar marker")
-				.style("width", function(){
-					if(assistance == "noAsst"){
-						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-					}
-					else{
-						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-					}
-				})
-			wrapper.append("div")
-				.attr("class", "bar text fips_" + d.id)
-				.text(function(d){
-					if(assistance = "noAsst"){
-						return noAsst;
-					}
-					else{
-						return asst;
-					}
-				})
-			wrapper.append("div")
-				.attr("class", "total units fips_" + d.id)
-				.text(comma(d["properties"][assistance + "Num" + year]))
+				var name = wrapper.append("div")
+					.attr("class", type + " county name")
+				name.append("div")
+					.attr("class", type + " fullName")
+					.text(d.properties.name)
+				name.append("div")
+					.attr("class",type + " year label")
+					.text(year)
+				name.append("div")
+					.attr("class", type + " expand_years")
+					.text("expand years")
+					.on("click", function(){
+						drawDetail(under, true, "2000");
+						drawDetail(under, true, "2006");
+						drawDetail(under, true, "2013");
+					})
+				var comma = d3.format("000,000")
+				wrapper.append("div")
+					.attr("class", type + " totalPop")
+					.text(comma(d["properties"]["totalPop" + year]))
+				var total = wrapper.append("div")
+					.datum(d)
+					.attr("class", type + " county total bar fips_" + d.id)
+					.on("click", function(){
+						assistance = getAssistance();
+						if(assistance == "asst"){
+							assistance = "noAsst";
+							dispatch.changeAssistance("noAsst");
+						}
+						else{
+							assistance ="asst"
+							dispatch.changeAssistance("asst");
+						}
+					})
+					.classed(year, true);	
+				total.append("div")
+					.attr("class", "asst bar")
+					.datum(d)
+					.style("width", (parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH) + "px")
+					.on("mouseover", highlightAsst)
+					.on("mouseout", deHover);
+				total.append("div")
+					.datum(d)
+					.attr("class", "display bar")
+					.attr("data-year", year)
+					.style("width", function(){
+						if(assistance == "noAsst"){
+							return (parseFloat(d["properties"]["noAsst" + year]/100.0) * BAR_WIDTH) + "px"
+						}
+						else{
+							return (parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH) + "px"
+						}
+					})
+					.on("mouseover", highlightAsst)
+					.on("mouseout", deHover)
+					.style("background", function(){
+						if(assistance == "noAsst"){
+							return COLORS[quantize(d["properties"]["noAsst" + year])]
+						}
+						else{
+							return COLORS[quantize(d["properties"]["asst" + year])]
+						}
+					})
+					.style("border", function(){
+						if(assistance == "noAsst"){
+							return "1px solid " + COLORS[quantize(d["properties"]["noAsst" + year])]
+						}
+						else{
+							return "1px solid " + COLORS[quantize(d["properties"]["asst" + year])]
+						}
+					})
+				total.append("div")
+					.datum(d)
+					.on("mouseover", highlightNoAsst)
+					.on("mouseout", deHover)
+					.attr("class", "bar marker")
+					.style("width", function(){
+						if(assistance == "noAsst"){
+							return (parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH) + "px"
+						}
+						else{
+							return (parseFloat(d["properties"]["noAsst" + year]/100.0) * BAR_WIDTH) + "px"
+						}
+					})
+				wrapper.append("div")
+					.attr("data-year", year)
+					.attr("class", type + " bar text fips_" + d.id)
+					.datum(d)
+					.text(function(d){
+						if(assistance == "noAsst"){
+							return d["properties"]["noAsst" + year]
+						}
+						else{
+							return d["properties"]["asst" + year]
+						}
+					})
+				wrapper.append("div")
+					.datum(d)
+					.attr("class", type + " total units fips_" + d.id)
+					.attr("data-year", year)
+					.text(comma(d["properties"][assistance + "Num" + year]))
 
-		 	wrapper
-			 	.transition()
-			 	.duration(40)
-			 	.style("height", "36px")
-			 	.style("opacity", 1)
+			 	wrapper
+				 	.transition()
+				 	.duration(40)
+				 	.style("height", "36px")
+				 	.style("opacity", 1)
+			}
 			pymChild.sendHeight();
 		}
 
@@ -728,13 +782,13 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var a = getAssistance();
 		d3.selectAll(".detail.year.label")
 			.text(year)
-		d3.selectAll(".totalPop.detail")
+		d3.selectAll(".detail.totalPop.detail")
 			.text(function(d){ return d["properties"]["totalPop" +  year]})
-		d3.selectAll(".bar.text")
+		d3.selectAll(".detail.bar.text")
 			.text(function(d){ return d["properties"][a + year]})
-		d3.selectAll(".total.units")
+		d3.selectAll(".detail.total.units")
 			.text(function(d){ return d["properties"][a + "Num" + year]})
-		d3.selectAll(".display.bar")
+		d3.selectAll(".detail.total.bar .display.bar")
 			.transition()
 			.style("width", function(d){
 				// var year = d3.select(this).attr("data-year")
@@ -769,13 +823,13 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					return COLORS[quantize(asst)]
 				}
 			})
-			d3.selectAll(".asst.bar")
+			d3.selectAll(".detail.total.bar .asst.bar")
 				.transition()
 				.style("width", function(d){
 					var asst = d.properties["asst" + year]
 					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
 				})
-			d3.selectAll(".bar.marker")
+			d3.selectAll(".detail.total.bar .bar.marker")
 				.transition()
 				.style("width", function(d){
 					var asst = d.properties["asst" + year]
@@ -790,15 +844,17 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 
 	})
 	dispatch.on("changeAssistance.details", function(a){
-		var year = getYear();
+		// var year = getYear();
+		var year;
 		d3.selectAll(".bar.text")
-			.text(function(d){ return d["properties"][a + year]})
+			.text(function(d){ year = d3.select(this).attr("data-year"); return d["properties"][a + year]})
 		d3.selectAll(".total.units")
-			.text(function(d){ return d["properties"][a + "Num" + year]})
-		d3.selectAll(".display.bar")
+			.text(function(d){ year = d3.select(this).attr("data-year"); return d["properties"][a + "Num" + year]})
+		d3.selectAll(".total.bar .display.bar")
 			.transition()
 			.style("width", function(d){
 				// var year = d3.select(this).attr("data-year")
+				var year = d3.select(this).attr("data-year");
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -810,6 +866,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			})
 			.style("background", function(d){
 				// var year = d3.select(this).attr("data-year")
+				var year = d3.select(this).attr("data-year");
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -821,6 +878,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			})
 			.style("border-color", function(d){
 				// var year = d3.select(this).attr("data-year")
+				var year = d3.select(this).attr("data-year");
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
