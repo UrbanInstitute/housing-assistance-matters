@@ -147,9 +147,11 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 
 	d3.selectAll("svg").remove();
 	d3.selectAll(".tooltip").remove();
-	// d3.selectAll(".text.container").remove();
 	d3.selectAll(".custom-combobox").remove();
 	d3.selectAll("#combobox").remove();
+	// d3.selectAll("li.national").remove();
+	// d3.selectAll(".garbage").remove();
+
 	var width = containerWidth,
 	height = containerWidth/2,
 	centered;
@@ -829,6 +831,16 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	})
 	dispatch.on("changeYear.details", function(year){
 		var a = getAssistance();
+		d3.selectAll(".y2013")
+			.classed("y2013",false)
+			.classed("y" +  year, true)
+		d3.selectAll(".y2006")
+			.classed("y2006",false)
+			.classed("y" +  year, true)
+		d3.selectAll(".y2000")
+			.classed("y2000",false)
+			.classed("y" +  year, true)
+			
 		d3.selectAll(".detail.year.label")
 			.attr("data-year", year)
 			.text(year)
