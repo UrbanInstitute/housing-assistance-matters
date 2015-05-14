@@ -10,7 +10,7 @@ function drawGraphic(containerWidth){
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 var gutterWidth = (headerWidth - 897)/2.0
 d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
-	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut");
+	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut", "updateTooltip");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
@@ -246,6 +246,8 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	          	return ignored + " " + fips + " " + quantize(d.properties.asst2013);
 	          })
 	      .on("click", clicked)
+	      .on("mouseover", function(){ d3.select(this).classed("hover", true); dispatch.updateTooltip() })
+	      .on("mouseout", function(){ d3.select(this).classed("hover", false); dispatch.updateTooltip() })
 	      .call(drag);
 	  g.append("path")
 	      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
@@ -356,7 +358,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	})
 
 
-
 	dispatch.on("load.tooltip", function(data){
 		d3.selectAll(".tooltip").remove();
 		var width = 26;
@@ -389,17 +390,29 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var container = sidebar.append("div")
 			.attr("class", "text container")
 		container.append("div")
-			.attr("class", "county-name")
-			.text("Matanuska-Susitna Borough")
+			.attr("class", "defaultTooltip")
+			.html("Click map to select counties<br>Compare affordable housing data below")
+
 		container.append("div")
-			.attr("class", "state-name")
-			.text("Alaska")
+			.attr("class", "county-name tooltipDetail")
+			.text("")
+			.style("display", "none")
 		container.append("div")
-			.attr("class", "relative number")
-			.text("2 units for every 100 ELI renters")
+			.attr("class", "state-name tooltipDetail")
+			.text("")
+			.style("display", "none")
 		container.append("div")
-			.attr("class", "absolute number")
-			.text("X renters")
+			.attr("class", "relative number tooltipDetail")
+			.html("<span class = \"tooltipNum\"></span> units for every 100 ELI renter households")
+			.style("display", "none")
+		container.append("div")
+			.attr("class", "total number tooltipDetail")
+			.html("<span class = \"tooltipNum\"></span> ELI renter households")
+			.style("display", "none")
+		container.append("div")
+			.attr("class", "absolute number tooltipDetail")
+			.html("<span class = \"tooltipNum\"></span> affordable, available and adequate units")
+			.style("display", "none")
 
 		sidebar.append("div")
 			.attr("class", "zoom in")
@@ -411,7 +424,53 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			.on("click", function(){ dispatch.zoomOut() })
 
 
-	})
+	});
+
+	dispatch.on("updateTooltip", function(){
+		// console.log(d3.selectAll(".hover"), d3.selectAll(".hover")[0].length)
+		// console.log(selectedCounties)
+		hovered = d3.selectAll(".hover")
+		if(hovered[0].length == 0 && selectedCounties.length == 0){
+			// console.log("default")
+			d3.selectAll(".defaultTooltip").style("display","block");
+			d3.selectAll(".tooltipDetail").style("display","none");
+		}
+		else if(hovered[0].length != 0){
+			// console.log("hover")
+			d3.selectAll(".defaultTooltip").style("display","none");
+			d3.selectAll(".tooltipDetail").style("display","block");
+			var hData = d3.select(".hover").data()[0];
+			// console.log("h", c)
+			updateText(hData);
+		}
+		else if(hovered[0].length == 0 && selectedCounties.length != 0){
+			// console.log("clicked")
+			d3.selectAll(".defaultTooltip").style("display","none");
+			d3.selectAll(".tooltipDetail").style("display","block");
+			var clickedID = selectedCounties[selectedCounties.length-1];
+			var cData = d3.select("path.fips_" + clickedID.split("_")[1]).data()[0];
+			// console.log("c", d)
+			updateText(cData)
+
+		}
+		function updateText(d){
+			var year = getYear();
+			var assistance = getAssistance();
+			var comma = d3.format("000,000")
+			d3.select(".county-name")
+				.text(d["properties"]["name"])
+			d3.select(".state-name")
+				.text(d["properties"]["STATE_NAME"])
+			d3.select(".relative .tooltipNum")
+				.text(d["properties"][assistance + year])
+			d3.select(".total .tooltipNum")
+				.text(comma(d["properties"]["totalPop" + year]))
+			d3.select(".absolute .tooltipNum")
+				.text(comma(d["properties"][assistance + "Num" + year]))
+		}
+		// console.log(data)
+
+	});
 
 	dispatch.on("load.menu", function(data){
 		var lookup = {};
@@ -584,12 +643,15 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		d3.select("path." +  id).classed("active",false).classed("dropdown",false)
 	})
 	dispatch.on("load.details", function(data){
-		var ul = d3.select(".detail.list")
-		ul.append("li")
-			.classed("national", true)
-			.classed("show", true)
-			.text("The USA data goes here")
-		ul.append("li").style("display","none")
+		// var ul = d3.select(".detail.list")
+		d3.select(".national_key")
+			.text("USA USA USA")
+
+		// ul.append("li")
+		// 	.classed("national", true)
+		// 	.classed("show", true)
+		// 	.text("The USA data goes here")
+		// ul.append("li").style("display","none")
 		// pymChild.sendHeight();
 	})
 	dispatch.on("selectCounty.details", function(d){
@@ -826,7 +888,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		 	.duration(0)
 		 	.style("display", "none")
 		 	.attr("class", "garbage");
-
+		dispatch.updateTooltip();
 		pymChild.sendHeight();
 	})
 	dispatch.on("changeYear.details", function(year){
@@ -840,7 +902,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		d3.selectAll(".y2000")
 			.classed("y2000",false)
 			.classed("y" +  year, true)
-			
+
 		d3.selectAll(".detail.year.label")
 			.attr("data-year", year)
 			.text(year)
@@ -902,12 +964,12 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				.style("width", function(d){
 					var asst = d.properties["asst" + year]
 					var noAsst = d.properties["noAsst" + year]
-					if(a == "noAsst"){
-						return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-					}
-					else{
+					// if(a == "noAsst"){
 						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-					}
+					// }
+					// else{
+						// return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+					// }
 				})
 
 	})
@@ -977,4 +1039,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
         });
 
 pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
+
+
 

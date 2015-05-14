@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="utf-8">
+<!-- <link rel="stylesheet" type="text/css" href="css/main.css"> -->
+<!-- <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'> -->
 <style>
 body{
 	margin: 0;
@@ -11,8 +13,31 @@ body{
 <body>
 <div id="graphic" style = "max-width: 1200px"></div>
 <script type="text/javascript" src="js/vendor/pym.min.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
 <script>
     var parent = new pym.Parent('graphic', 'child.html', {});
+// function sticky_relocate() {
+//     var window_top = $(window).scrollTop();
+//     var div_top = $("#graphic iframe").contents().find("#sticky-anchor").offset().top;
+//     if (window_top > div_top) {
+//     	// $(".cloned").remove();
+// 	    var contents = $("#graphic iframe").contents().find(".national_key").clone()
+// 	    console.log(contents)
+// 	    contents.addClass("cloned");
+//     	// contents.removeClass("cloned")
+//         contents.addClass('stick');
+//         $("body").append(contents)
+//     } else {
+//     	contents.addClass("cloned")
+//         $("#graphic iframe").contents().find(".national_key").removeClass('stick');
+//     }
+// }
+
+// $( document ).ready(function() {
+//     $(window).scroll(sticky_relocate);
+//     sticky_relocate();
+// });
 </script>
 </body>
 </html>

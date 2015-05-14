@@ -124,7 +124,10 @@ input.custom-combobox-input{
 #counties.grabbing{
   cursor: -webkit-grabbing;
 }
-
+/*Alaska boroughs not in the data*/
+path.fips_2280, path.fips_2130, path.fips_2201{
+  pointer-events: none;
+}
 
 /*Map fill and stroke*/
 /*.q0-5 { fill:rgb(247,251,255) !important; }
@@ -147,7 +150,7 @@ input.custom-combobox-input{
   opacity: 0;
 }
 
-#counties .active, .dropdown{
+#counties .active, .dropdown, .hover{
   fill: #fdbf11 !important;
 }
 #state-borders {
@@ -165,7 +168,9 @@ input.custom-combobox-input{
   stroke-linecap: round;*/
   pointer-events: none;
 }
-
+path.undefined{
+  pointer-events: none;
+}
 
 /*Map tooltip*/
 .tooltip{
@@ -248,7 +253,22 @@ li {
                   background .2s ease-out;
   border-top:0px solid rgba(0,0,0,0);
 }
+.dummy{
+  display: none;
+}
 .marker { opacity:0.0; }
+
+.national_key {
+    width: 100%;
+}
+.national_key.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+}
+.cloned{
+  display: none;
+}
 
 /*.swing li.show {
   height: 2em;

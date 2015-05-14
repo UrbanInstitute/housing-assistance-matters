@@ -6,6 +6,7 @@
   <style name="impostor_size">
     .marker + li { border-top-width:0px; }
   </style>
+
 </head>
 <body>
 <div class = "header container">
@@ -37,7 +38,14 @@
 	<div class = "total header">TOTAL UNITS</div>
 	<div class = "header right gutter"></div>
 </div>
-<div class = "detail container swing"><ul id="holder" class = "detail list"></ul></div>
+<div class = "detail container swing">
+	<div id="sticky-anchor"></div>
+	<div class = "national_key"></div>
+	<ul id="holder" class = "detail list">
+		<li class = "dummy"></li>
+		<li class = "dummy"></li>
+	</ul>
+</div>
 <div class = "footerRow">
 	<div class = "left footer">
 		<div class = "footer title">ABOUT</div>
