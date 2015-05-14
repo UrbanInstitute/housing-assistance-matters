@@ -22,7 +22,7 @@ body{
   border-right: 1px solid #888;
   cursor: pointer;
 }
-.button.active{
+.button.active, .button:hover{
   color: #ffffff;
   background-color: #00a6d2;
 }
@@ -258,8 +258,31 @@ li {
 }
 .marker { opacity:0.0; }
 
-.national_key {
+.national_key, .detail.container.fips_national {
     width: 100%;
+    height: 116px;
+}
+.us_caption_asst{
+  position: relative;
+  top: 30px
+}
+.us_line_asst{
+  width: 1px;
+  height: 20px;
+  background: #ccc;
+  position: absolute;
+  top: -9px;
+}
+.us_caption_noAsst{
+  position: relative;
+  top: 50px;
+}
+.us_line_noAsst{
+  width: 1px;
+  height: 30px;
+  background: #ccc;
+  position: absolute;
+  top: -29px;
 }
 .national_key.stick {
     position: fixed;
@@ -460,6 +483,72 @@ li {
   border-right: none;
 }
 
+
+/*Bottom Menu*/
+.arrow{
+  cursor: pointer;
+  background: url('../images/down-arrow.png');
+  width: 20px;
+  height: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.arrow:hover{
+  cursor: pointer;
+  background: url('../images/down-arrow_hover.png');
+  width: 20px;
+  height: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.arrow.clicked:hover, .arrow.clicked{
+  background: url('../images/up-arrow.png');
+  width: 20px;
+  height: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.radio{
+  cursor: pointer;
+  background: url('../images/year-button.png');
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.radio:hover, .radio.clicked{
+  background: url('../images/year-button_click.png');
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.bottom_menu div{
+  float: left;
+  margin: 5px;
+}
+
+.small_button{
+  width: 52px;
+  height: 24px;
+  font: 14px Lato;
+  color: #cccccc;
+  font-weight: 900;
+  background-color: #999999;
+  text-align: center;
+  border-right: 1px solid #888;
+  cursor: pointer;
+}
+
+.small_button.active, .small_button:hover{
+  color: #ffffff;
+  background-color: #00a6d2;
+}
+.small_button span{
+  position: relative;
+  top: 4px;
+}
 /*Footer*/
 .footerRow{
   background: #333;
