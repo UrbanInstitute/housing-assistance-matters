@@ -1010,7 +1010,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 //Note: indexOf not supported in IE 7 and 8
 		var index = selectedCounties.indexOf(identifier)
 		selectedCounties.splice(index)
-		var li = d3.select("#" + identifier)
+		var li = d3.select("[id$='" + identifier.split("_")[1] + "']")
 		li.transition()
 	 		.duration(200)
 		 	.style("height", "0px")
