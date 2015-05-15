@@ -546,7 +546,7 @@ li {
 
 /*Header detail labels*/
 .print.button{
-  background: #333;
+  background: #ccc;
   color: white;
   font: 13px Lato;
   font-weight: 900;
@@ -574,7 +574,7 @@ li {
   background: #b3b3b3;
   font: 14px Lato;
   font-weight: 900;
-  border-top: 3px solid #333;
+  border-top: 3px solid #ccc;
 }
 
 .headerRow .header{
