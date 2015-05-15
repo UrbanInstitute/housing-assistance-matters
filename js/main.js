@@ -1,7 +1,7 @@
 var STATES = { "Alabama": "AL", "Alaska": "AK", "American Samoa": "AS", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District Of Columbia": "DC", "Federated States Of Micronesia": "FM", "Florida": "FL", "Georgia": "GA", "Guam": "GU", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Marshall Islands": "MH", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Northern Mariana Islands": "MP", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Palau": "PW", "Pennsylvania": "PA", "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virgin Islands": "VI", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "WY": "Wyoming" }
 var pymChild = null;
 var selectedCounties = [];
-var BAR_WIDTH = 200.0;
+var BAR_WIDTH = 171.0;
 var comma = d3.format("0,000")
 
 var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","totalPop2000":"8165441","asstNum2000":"3004106","noAsstNum2000":"1270140","asst2006":"33","noAsst2006":"9","totalPop2006":"9644199","asstNum2006":"3205087","noAsstNum2006":"892240","asst2013":"28","noAsst2013":"5","totalPop2013":"10985956","asstNum2013":"3104458","noAsstNum2013":"565716"}}
@@ -12,7 +12,9 @@ function drawGraphic(containerWidth){
 //get widths for gutters, max width of details below is 897px
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 var gutterWidth = (headerWidth - 897)/2.0
-d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
+d3.selectAll("li")
+	.style("margin-left", gutterWidth + "px")
+d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut", "updateTooltip");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
@@ -132,8 +134,9 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	d3.select(".print.button")
 		.on("click", function(){
 			var counties = d3.selectAll("#holder li")[0].filter(function(obj){
-				return d3.select(obj).classed("garbage") === false && d3.select(obj).classed("national") === false;
+				return d3.select(obj).classed("dummy") === false && d3.select(obj).classed("garbage") === false && d3.select(obj).classed("national") === false;
 			})
+			console.log(counties)
 			var url = "/detail.html?fips=";
 			for(var i = 0; i<counties.length; i++){
 				url += d3.select(counties[i]).attr("id").split("_")[1];
@@ -246,8 +249,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 //Save object corresponding to county containing geographic center of USA, for default zoom in (Smith County, KS)
 		centerCounty = topojson.feature(us, us.objects.UScounties).features.filter(function(obj){return obj.id == 20183})[0]
 		national = topojson.feature(us, us.objects.UScounties).features.filter(function(obj){return obj.id == "National"})[0]
-		// console.log(topojson.feature(us, us.objects.UScounties).features)
-		// console.log(us)
 		lastClicked = centerCounty;
 		dispatch.load(topojson.feature(us, us.objects.UScounties).features);
 
@@ -262,7 +263,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 
 		g.append("g")
 	      .attr("id", "counties")
-	      // .classed(quantize(d.properties.asst2013), true)
 	      .selectAll("path")
 	      .data(topojson.feature(us, us.objects.UScounties).features)
 	      .enter().append("path")
@@ -421,12 +421,14 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					d3.selectAll("#counties path").style("opacity",1)
 
 				})
+				.append("span")
+				.text((i*20))
 		}
 		var container = sidebar.append("div")
 			.attr("class", "text container")
 		container.append("div")
 			.attr("class", "defaultTooltip")
-			.html("Click map to select counties<br>Compare affordable housing data below")
+			.html("<strong>Click</strong> map to select counties<br><strong>Compare</strong> affordable housing data below")
 
 		container.append("div")
 			.attr("class", "county-name tooltipDetail")
@@ -462,29 +464,22 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 	});
 
 	dispatch.on("updateTooltip", function(){
-		// console.log(d3.selectAll(".hover"), d3.selectAll(".hover")[0].length)
-		// console.log(selectedCounties)
 		hovered = d3.selectAll(".hover")
 		if(hovered[0].length == 0 && selectedCounties.length == 0){
-			// console.log("default")
 			d3.selectAll(".defaultTooltip").style("display","block");
 			d3.selectAll(".tooltipDetail").style("display","none");
 		}
 		else if(hovered[0].length != 0){
-			// console.log("hover")
 			d3.selectAll(".defaultTooltip").style("display","none");
 			d3.selectAll(".tooltipDetail").style("display","block");
 			var hData = d3.select(".hover").data()[0];
-			// console.log("h", c)
 			updateText(hData);
 		}
 		else if(hovered[0].length == 0 && selectedCounties.length != 0){
-			// console.log("clicked")
 			d3.selectAll(".defaultTooltip").style("display","none");
 			d3.selectAll(".tooltipDetail").style("display","block");
 			var clickedID = selectedCounties[selectedCounties.length-1];
 			var cData = d3.select("path.fips_" + clickedID.split("_")[1]).data()[0];
-			// console.log("c", d)
 			updateText(cData)
 
 		}
@@ -502,8 +497,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			d3.select(".absolute .tooltipNum")
 				.text(comma(d["properties"][assistance + "Num" + year]))
 		}
-		// console.log(data)
-
 	});
 
 	dispatch.on("load.menu", function(data){
@@ -684,42 +677,30 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		var d = usData;
 		var us = d3.select(".national_key")
 		drawDetail(us, null, false, currentYear, "national", d)
-
-			// .text("USA USA USA")
-
-		// ul.append("li")
-		// 	.classed("national", true)
-		// 	.classed("show", true)
-		// 	.text("The USA data goes here")
-		// ul.append("li").style("display","none")
-		// pymChild.sendHeight();
 	})
 	 		function drawDetail(listItem, under, expand, year, identifier, d){
-	 			// console.log(d.id)
 	 			var natl = (d.id == "national")
 				assistance = getAssistance();
-
-				// d.year = year;
 	 			var type  = (expand) ? "expand":"detail";
 				var wrapper = listItem.append("div")
 					.datum(d)
 					.attr("class", type + " container " + "fips_" +  d.id)
 					.style("height", 0)
 					.style("opacity", 0)
+					.style("margin-left", gutterWidth + "px")
+				if(expand){wrapper.append("div").attr("class","expand_bg")}
+
 
 				if(!natl){
 					wrapper.append("div")
 						.attr("class", type + " county close-button")
 						.on("click", function(){dispatch.deselectCounty(identifier)})
 				}
-					// .append("img")
-					// .attr("src","/images/close-button.png");
-
 				var name = wrapper.append("div")
 					.attr("class", type + " county name")
 				name.append("div")
 					.attr("class", type + " fullName")
-				if(!natl){ name.text(d.properties.name) }
+				if(!natl){ name.append("span").text(d.properties.name) }
 				else{
 					name.text("United States")
 					name.append("div")
@@ -753,12 +734,14 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				if(!natl){
 					name.append("div")
 						.attr("class", type + " expand_years collapsed")
-						.text("expand years")
 						.on("click", function(){
 							var collapsed = d3.select(this).classed("collapsed")
 							if(collapsed){
+								listItem.style("height", "323px")
 								d3.select(this)
 									.classed("collapsed", false)
+									.style("margin-top", "30px")
+									.select("span")
 									.text("collapse years")
 								drawDetail(under, null, true, "2000", identifier, d);
 								drawDetail(under, null, true, "2006", identifier, d);
@@ -768,8 +751,11 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 									.style("display", "none")
 							}
 							else{
+								listItem.style("height", "81px")
 								d3.select(this)
 									.classed("collapsed", true)
+									.style("margin-top", "12px")
+									.select("span")
 									.text("expand years");
 								d3.selectAll(".expand.container.fips_" + d.id)
 									.remove()
@@ -777,10 +763,12 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 									.style("display", "block")
 							}
 						})
+						.append("span")
+						.text("expand years")
 				}
 
 				wrapper.append("div")
-					.attr("class", type + " hideOnExpand totalPop + fips_" + d.id)
+					.attr("class", type + " hideOnExpand totalPop fips_" + d.id)
 					.text(comma(d["properties"]["totalPop" + year]))
 				var total = wrapper.append("div")
 					.datum(d)
@@ -893,7 +881,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 					.attr("class", type + " hideOnExpand total units fips_" + d.id + " y" + year)
 					.attr("data-year", year)
 					.text(comma(d["properties"][assistance + "Num" + year]))
-				// wrapper.append(under)
 				var h = (natl) ? "116px":"36px"
 			 	wrapper
 				 	.transition()
@@ -953,9 +940,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			}
 
 	function highlightNoAsst(d){
-		// var year = getYear();
 		var year = d3.select(this).attr("data-year")
-		console.log(year)
 		var a = "noAsst";
 		if(d.id != "national"){
 			d3.selectAll(".fips_" + d.id + ".caption.y" + year)
@@ -968,10 +953,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		d3.selectAll(".fips_" + d.id + " .marker.bar" + ".y" + year).classed("hover", true)
 	}
 	function highlightAsst(d){
-
-		// var year = getYear();
 		var year = d3.select(this).attr("data-year")
-		console.log(year)
 		var a = "asst";
 		if(d.id != "national"){
 			d3.selectAll(".fips_" + d.id + ".caption.y" + year)
@@ -984,9 +966,7 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		d3.selectAll(".fips_" + d.id + " .asst.bar" + ".y" + year).classed("hover", true);
 	}
 	function deHover(d){
-		// var year = getYear();
 		var year = d3.select(this).attr("data-year")
-		console.log(year)
 		var a = getAssistance();
 		d3.selectAll(".fips_" + d.id + ".caption.y" + year)
 			.text("")
@@ -1008,8 +988,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			var li = d3.select(".detail.list")
 				 .insert("li",":nth-child(2)")
  				.attr("id", identifier)
- 				// .classed("ui-state-default", true);
- 				// .append("li")
  		 	var under = li.append("div")
 				.attr("class", "expanded")
  			drawDetail(li, under, false, currentYear, identifier, d);
@@ -1064,7 +1042,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 			.attr("data-year", year)
 			.transition()
 			.style("width", function(d){
-				// var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -1075,7 +1052,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				}
 			})
 			.style("background", function(d){
-				// var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -1086,7 +1062,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				}
 			})
 			.style("border-color", function(d){
-				// var year = d3.select(this).attr("data-year")
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
 				if(a == "noAsst"){
@@ -1109,17 +1084,11 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				.style("width", function(d){
 					var asst = d.properties["asst" + year]
 					var noAsst = d.properties["noAsst" + year]
-					// if(a == "noAsst"){
-						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-					// }
-					// else{
-						// return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-					// }
+						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px";
 				})
 
 	})
 	dispatch.on("changeAssistance.details", function(a){
-		// var year = getYear();
 		var year;
 		d3.selectAll(".bar.text")
 			.text(function(d){ year = d3.select(this).attr("data-year"); return d["properties"][a + year]})
@@ -1128,7 +1097,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 		d3.selectAll(".total.bar .display.bar")
 			.transition()
 			.style("width", function(d){
-				// var year = d3.select(this).attr("data-year")
 				var year = d3.select(this).attr("data-year");
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
@@ -1140,7 +1108,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				}
 			})
 			.style("background", function(d){
-				// var year = d3.select(this).attr("data-year")
 				var year = d3.select(this).attr("data-year");
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]
@@ -1152,7 +1119,6 @@ d3.selectAll(".header.gutter").style("width", gutterWidth + "px")
 				}
 			})
 			.style("border-color", function(d){
-				// var year = d3.select(this).attr("data-year")
 				var year = d3.select(this).attr("data-year");
 				var asst = d.properties["asst" + year]
 				var noAsst = d.properties["noAsst" + year]

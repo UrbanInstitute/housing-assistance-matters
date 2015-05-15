@@ -91,6 +91,7 @@ input.custom-combobox-input{
   width: 208px;
 }
 .ui-menu-item{
+  height: 20px;
   background: #cccccc;
   font: 13px Lato !important;
   color: #333 !important;
@@ -184,21 +185,65 @@ path.undefined{
   pointer-events: none;
 }
 
-/*.text.container{*/
-/*  position: relative;
-  top: 73%;
-  float: right;
-  margin-right: 3%;
-}*/
-
+.text.container{
+  height: 150px;
+  margin-top: 53%;
+  margin-left: 40px;
+  font: 14px Lato;
+  color: #333;
+  font-style: italic;
+}
+.county-name.tooltipDetail{
+  font: 18px Lato;
+  font-weight: 900;
+  color: #0096d2;
+}
+.state-name.tooltipDetail{
+  font: 16px Lato;
+  font-weight: 400;
+  color: #333;
+}
+.relative .tooltipNum{
+  font: 18px Lato;
+  font-weight: 700;
+  color: #0096d2; 
+}
+.total .tooltipNum, .absolute .tooltipNum{
+  font: 14px Lato;
+  font-weight: 700;
+  color: #333;
+  font-style: normal; 
+}
 .zoom{
+  position: relative;
+  left: 80%;
+  width: 24px;
+  height: 30px;
+  font: 20px Lato;
+  font-weight: 700;
+  text-align: center;
+  color: 989898;
+  background: #E5E5E5;
+  border: 1pt solid #CCCCCB;
   pointer-events: all;
+  cursor: pointer;
 }
 
+.legend.container{
+  width: 20px;
+  left: 75%;
+  top: 37px;
+  position: relative;
+}
 .legend.key{
   width: 22px;
   height: 32px;
   pointer-events: all;
+}
+.legend.key span{
+  position: relative;
+  left: 26px;
+  top: -6px;
 }
 /*Detail view animations*/
 /*.swing {
@@ -224,6 +269,7 @@ path.undefined{
 }
 ul#holder{ padding: 0;}
 li {
+ height: 81px;
  display:block;
  position:relative;
  padding:12px 6px;
@@ -261,28 +307,34 @@ li {
 .national_key, .detail.container.fips_national {
     width: 100%;
     height: 116px;
+    position: relative;
+    top: 31px;
+    pointer-events: none;
+}
+.fips_national.total.bar{
+  pointer-events: all;
 }
 .us_caption_asst{
   position: relative;
-  top: 30px
+  top: 48px
 }
 .us_line_asst{
   width: 1px;
-  height: 20px;
+  height: 12px;
   background: #ccc;
   position: absolute;
-  top: -9px;
+  top: -10px;
 }
 .us_caption_noAsst{
   position: relative;
-  top: 50px;
+  top: 49px;
 }
 .us_line_noAsst{
   width: 1px;
-  height: 30px;
+  height: 26px;
   background: #ccc;
   position: absolute;
-  top: -29px;
+  top: -26px;
 }
 .national_key.stick {
     position: fixed;
@@ -314,6 +366,9 @@ li {
   height: 29px;
   background-size: contain;
   background-repeat: no-repeat;
+  top: -57px;
+  position: relative;
+  margin-right: 17px;
 }
 .close-button:hover{
   background: url('../images/close-button_hover.png');
@@ -335,24 +390,78 @@ li {
   float: left;
   margin-left: 5px;
 }
-
 .name{
-  width: 150px;
+  width: 205px;
+  font: 16px Lato;
+  font-weight: 700;
+  color: #0096d2;
+  position: relative;
+  top: -56px;
+}
+.year.label{
+  font: 15px Lato;
+  font-weight: 700;
+  color: #333;
+}
+.expand_years{
+  width: 98px;
+  height: 23px;
+  font: 13px Lato;
+  font-weight: 300;
+  color: white;
+  background: #999;
+  text-align: center;
+  margin-top: 12px;
+  cursor: pointer;
+}
+.expand_years span{
+  position: relative;
+  top: 3px;
+}
+.totalPop{
+  font: 16px Lato;
+  color: #333;
+  width: 153px;
+  float: left;
+  text-indent: 19px;
+  top: -38px;
+  position: relative;
+}
+.totalPop.expand{
+  left: 49px;
+  width: 201px;
 }
 
-.totalPop{
-  width: 100px;
-  float: left;
-}
 
 /*All years detail*/
 .expanded .detail.container{
   background: #F8F8F8;
 }
-.expand.county.close-button, .expand.expand_years, .expand.fullName{
+/*.expanded{
+  top: -70px;
+  position: relative;
+}*/
+.expand.county.name span, .expand.county.close-button, .expand.expand_years, .expand.fullName{
   display: none;
 }
 
+.expand.county.name{
+  text-align: right;
+  position: relative;
+  top: -38px;
+}
+/*.expand_bg{
+  width: 100%;
+  background: #f8f8f8;
+  height: 79px;
+  position: relative;
+  top: 18px;*/
+  /*left: -100px;
+  z-index: -1;*/
+}
+.bar{
+  pointer-events: all;
+}
 .bar.hover{
   background: #fdbf11 !important;
   border: 1px solid #fdbf11 !important;
@@ -363,23 +472,33 @@ li {
 .bar.marker.hover{
   opacity: 1;
   background: #fdbf11 !important;
-  height: 20px;
+  height: 34px;
   border: 1px solid #fdbf11;
   left: -1px;
   top: -1px;
 }
 
 .total.bar{
-  width: 200px;
-  height: 20px;
+  width: 171px;
+  height: 34px;
   background: #fff;
   border: 1px solid #999999;
   position: relative;
-  top: 6px;
+  top: -38px;
   left: 15px;
 }
+.total.units{
+  font: 16px Lato;
+  color: #333;
+  width: 153px;
+  float: left;
+  text-indent: 19px;
+  top: -38px;
+  left: 92px;
+  position: relative;
+}
 .display.bar{
-  height: 20px;
+  height: 34px;
   background: blue;
   display: inline-block;
   position: absolute;
@@ -388,7 +507,7 @@ li {
   left: -1px;
 }
 .asst.bar{
-  height: 20px;
+  height: 34px;
   background: #e6e6e6;
   border: 1px solid #e6e6e6;
   display: inline-block;
@@ -399,7 +518,7 @@ li {
 
 .marker.bar{
   background: none;
-  height: 24px;
+  height: 38px;
   border-right: 1px solid white;
   opacity: .5;
   display: inline-block;
@@ -414,12 +533,14 @@ li {
   font: 30px Lato;
   color: #0096d2;
   font-weight: 700;
+  left: 28px;
+  top: -40px;
 }
 .caption{
   font-size: 13px;
   color: #333;
   position: absolute;
-  top: 22px;
+  top: 40px;
   font-style: italic;
 }
 
@@ -431,10 +552,10 @@ li {
   font-weight: 900;
   width: 184px;
   height: 36px;
-  float: right;
+  float: left;
   position: relative;
   bottom: 36px;
-  right: 84px;
+  left: 84px;
   cursor: pointer;
 }
 .print.button img{
@@ -492,6 +613,10 @@ li {
   height: 10px;
   background-size: contain;
   background-repeat: no-repeat;
+  pointer-events: all;
+  position: relative;
+  top: -13px;
+  left: 106px;
 }
 .arrow:hover{
   cursor: pointer;
@@ -527,6 +652,7 @@ li {
 .bottom_menu div{
   float: left;
   margin: 5px;
+  pointer-events: all;
 }
 
 .small_button{
@@ -557,4 +683,14 @@ li {
 
 .footer.text{
   font: 13px Lato #fff;
+}
+.fips_national .county.name{
+  left: 54px;
+}
+.totalPop.fips_national{
+  left: 58px;
+  width: 210px;
+}
+.national_key{
+  /*display: none;*/
 }
