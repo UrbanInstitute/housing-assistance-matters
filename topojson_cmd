@@ -2,6 +2,7 @@ topojson \
   -e data/HAI_all_years.csv \
   --id-property +FIPS\
   -p \
-  -s .00000001\
+  -s .000000000000001\
   -o data/data.json \
+  --shapefile-encoding utf8\
   -- data/geo/county/UScounties.shp data/geo/state/cb_2013_us_state_500k.shp

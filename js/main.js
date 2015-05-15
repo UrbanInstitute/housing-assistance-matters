@@ -139,7 +139,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 				return d3.select(obj).classed("dummy") === false && d3.select(obj).classed("garbage") === false && d3.select(obj).classed("national") === false;
 			})
 			console.log(counties)
-			var url = "/detail.html?fips=";
+			var url = "detail.html?fips=";
 			for(var i = 0; i<counties.length; i++){
 				url += d3.select(counties[i]).attr("id").split("_")[1];
 				if (i < (counties.length - 1)){

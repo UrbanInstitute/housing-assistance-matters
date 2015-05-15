@@ -1,6 +1,8 @@
 body{
 	font-family: Lato;
 	font-size: 10pt;
+	  -webkit-print-color-adjust:exact;
+
 }
 @media screen{}
 @media print {
@@ -44,7 +46,7 @@ h2{
 	stroke-dasharray: 2, 2;
 }
 
-.dot{
+.bar{
 
 }
 .line{
@@ -52,7 +54,7 @@ h2{
 	stroke-width: 3px;
 }
 
-/*See Teton County for need for dotted line*/
+/*See Teton County for need for barted line*/
 .asst.line{
 	stroke-dasharray: 5,4;
 }
@@ -60,15 +62,15 @@ h2{
 	stroke-dasharray: 4, 4;
 }
 
-.asst.dot{
-	fill: #1696d2;
+.asst.bar{
+	fill: #c6c6c6;
 }
 .asst.line{
 	stroke: #1696d2;
 }
 
-.noAsst.dot{
-	fill: #c6c6c6;
+.noAsst.bar{
+	fill: #1696d2;
 }
 .noAsst.line{
 	stroke: #c6c6c6;
@@ -91,11 +93,11 @@ td{
 	text-indent: 20px;
 }
 td.asst, th.asst{
-	background: #1696d2;
+	background: #c6c6c6;
 	color: white;
 }
 td.noAsst, th.noAsst{
-	background: #c6c6c6;
+	background: #1696d2;
 }
 
 /*.scatter .text{

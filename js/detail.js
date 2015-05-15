@@ -1,4 +1,7 @@
 var NATIONAL_VALUES = {"3004106":"2000", "3104458":"2013", "3285639":"2012", "3205087":"2006"}
+var STATES = { "Alabama": "AL", "Alaska": "AK", "American Samoa": "AS", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District of Columbia": "DC", "Federated States Of Micronesia": "FM", "Florida": "FL", "Georgia": "GA", "Guam": "GU", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Marshall Islands": "MH", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Northern Mariana Islands": "MP", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Palau": "PW", "Pennsylvania": "PA", "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virgin Islands": "VI", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "WY": "Wyoming" }
+
+var BAR_WIDTH = 100
 if (!Array.prototype.filter) {
   Array.prototype.filter = function(fun/*, thisArg*/) {
     'use strict';
@@ -84,15 +87,19 @@ function drawGraphic(containerWidth){
 			.attr("class","scatter container")
 
 		containers.append("h2")
-			.text(function(d){ return d.properties.name })
+			.text(function(d){ return d.properties.name  + ", " + STATES[d.properties.state]})
 
-		var x = d3.scale.linear()
-				.range([margin.left,width-margin.left])
-				.domain([1999.5,2013.5])
+
+		// var x = d3.scale.linear()
+		// 		.range([margin.left,width-margin.left])
+		// 		.domain([1999.5,2013.5])
+		var x = d3.scale.ordinal()
+    		.rangeRoundBands([0, width], .3)
+    		.domain([2000,2006,2013]);
 		var y = d3.scale.linear()
 				.range([height-margin.bottom,margin.bottom])
 				.domain([0,100])
-		var years = [2000,2006,2012,2013]
+		var years = [2000,2006,2013]
 		// var line = d3.svg.line()
 	 //    	.x(function(d) { return x(d.date); })
 	 //    	.y(function(d) { return y(d.close); });
@@ -102,8 +109,8 @@ function drawGraphic(containerWidth){
 		var xAxis = d3.svg.axis()
 		    .scale(x)
 		    .orient("bottom")
-		    .tickValues([2000,2006,2012,2013])
-		    .tickFormat(d3.format("0"))
+		    // .tickValues([2000,2006,2013])
+		    // .tickFormat(d3.format("0"))
 		    .outerTickSize(0);
 
 		var yAxis = d3.svg.axis()
@@ -115,14 +122,14 @@ function drawGraphic(containerWidth){
 				.attr("height",height)
 				.attr("width",width)
 				.append("g");
-		for(var t= 1; t <= 5; t++){
-			svg.append("line")
-				.attr("class", "grid-line")
-				.attr("x1", x(1999.5))
-				.attr("x2", x(2013.5))
-				.attr("y1", y(t*20))
-				.attr("y2", y(t*20));
-		}
+		// for(var t= 1; t <= 5; t++){
+		// 	svg.append("line")
+		// 		.attr("class", "grid-line")
+		// 		.attr("x1", x(2))
+		// 		.attr("x2", x(2013.5))
+		// 		.attr("y1", y(t*20))
+		// 		.attr("y2", y(t*20));
+		// }
 		svg.append("g")
 		      .attr("class", "x axis")
 		      .attr("transform", "translate(0," + (height-margin.bottom) + ")")
@@ -139,57 +146,62 @@ function drawGraphic(containerWidth){
 		      .style("text-anchor", "end")
 
 		for(var i = 0; i < years.length; i++){
-			if(i < (years.length - 1)){
-				svg.append("line")
-					.attr("class", "asst line")
-					.attr("x1", x(years[i]))
-					.attr("x2", x(years[i+1]))
-					.attr("y1", function(d){ return y(d.properties["asst" + years[i]])})
-					.attr("y2", function(d){ return y(d.properties["asst" + years[i+1]])})
+			// if(i < (years.length - 1)){
+			// 	svg.append("line")
+			// 		.attr("class", "asst line")
+			// 		.attr("x1", x(years[i]))
+			// 		.attr("x2", x(years[i+1]))
+			// 		.attr("y1", function(d){ return y(d.properties["asst" + years[i]])})
+			// 		.attr("y2", function(d){ return y(d.properties["asst" + years[i+1]])})
 
-				svg.append("line")
-					.attr("class", "noAsst line")
-					.attr("x1", x(years[i]))
-					.attr("x2", x(years[i+1]))
-					.attr("y1", function(d){ return y(d.properties["noAsst" + years[i]])})
-					.attr("y2", function(d){ return y(d.properties["noAsst" + years[i+1]])})
+			// 	svg.append("line")
+			// 		.attr("class", "noAsst line")
+			// 		.attr("x1", x(years[i]))
+			// 		.attr("x2", x(years[i+1]))
+			// 		.attr("y1", function(d){ return y(d.properties["noAsst" + years[i]])})
+			// 		.attr("y2", function(d){ return y(d.properties["noAsst" + years[i+1]])})
 
-			}
-			svg.append("circle")
-				.attr("class","asst dot")
-				.attr("cx",x(years[i]))
-				.attr("cy", function(d){ return y(d.properties["asst" + years[i]])})
-				.attr("r",4)
+			// }
 
-			svg.append("circle")
-				.attr("class","noAsst dot")
-				.attr("cx",x(years[i]))
-				.attr("cy", function(d){ return y(d.properties["noAsst" + years[i]])})
-				.attr("r",4)
+			svg.append("rect")
+				.attr("class","asst bar")
+				.attr("x", x(years[i]))
+				.attr("y", function(d) { return y(d.properties["asst" + years[i]]) })
+				.attr("width", x.rangeBand())
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["asst" + years[i]])})
+				// .attr("cx",x(years[i]))
+				// .attr("cy", function(d){ return y(d.properties["asst" + years[i]])})
+				// .attr("r",4)
+			svg.append("rect")
+				.attr("class","noAsst bar")
+				.attr("x", x(years[i]))
+				.attr("y", function(d) { return y(d.properties["noAsst" + years[i]]) })
+				.attr("width", x.rangeBand())
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["noAsst" + years[i]])})
+
 		}
 		var table = containers.append("table")
 		headers = table.append("tr")
 		headers.append("th")
-			.text("")
+			.html("")
  		headers.append("th")
-			.text("AAA units per 100 renters")
-			.attr("class","asst")
- 		headers.append("th")
-			.text("Total AAA units")
- 		headers.append("th")
-			.text("Units per 100 renters (assistance off)")
-			.attr("class","noAsst")
- 		headers.append("th")
-			.text("Total AAA units (assistance off)")
- 		headers.append("th")
-			.text("Total ELI renters")
- 		headers.append("th")
-			.text("Number of HUD assissted units")
- 		headers.append("th")
-			.text("Housing Gap")
+			.html("ELI<sup>*</sup> renter households")
 		headers.append("th")
-			.text("Housing Gap (assistance off)")
-		var heads =["Units per 100 renters","AAA units", "Units per 100 renters (asst off)", "AAA units (asst off)", "Total ELI renters", "Number of HUD asst units", "Housing gap", "Housing gap (asst off)"]
+			.html("AMI<sup>**</sup> cutoff for ELI<sup>*</sup> status")
+ 		headers.append("th")
+			.html("AAA<sup>***</sup> rental units")
+ 		headers.append("th")
+			.html("Gap between ELI<sup>*</sup> households and AAA<sup>***</sup> rental units")
+ 		headers.append("th")
+			.html("Units serving ELI<sup>*</sup> households without HUD assistance")
+ 		headers.append("th")
+			.attr("class","asst")
+			.html("Units per 100 households")
+ 		headers.append("th")
+			.attr("class","noAsst")
+			.html("Units per 100 households without HUD assistance ")
+
+		var heads =["Total ELI renters","dolla dolla bills yall", "AAA units", "gap", "AAA units (asst off)", "Units per 100 renters", "Units per 100 renters (asst off)"]
 		
 		for(var y = 0; y < years.length; y++){
 			var year = years[y]
@@ -241,7 +253,15 @@ function drawGraphic(containerWidth){
 		// row2013 = table.append("tr")
 		// row2013.append("td")
 		// 	.text("2013")
-
+		containers.append("div")
+			.attr("class", "footnote")
+			.text("* Extremely low income (ELI) households earn less than 30 percent area median income.")
+		containers.append("div")
+			.attr("class", "footnote")
+			.text("** Does AMI need a footnote?")
+		containers.append("div")
+			.attr("class", "footnote")
+			.text("*** AAA definition goes here")
 		containers.append("div")
 			.attr("class","page-break")
 
