@@ -1,6 +1,7 @@
 body{
   margin: 0;
   font: 12px Lato;
+  color: #333;
 }
 
 /*Header*/
@@ -31,11 +32,54 @@ body{
   margin-top: 4px;
   margin-right: 4px;
 }
-.help-button img{
-  width: 15px;
+
+.help-button{
   margin-top: 6.5px;
   margin-right: 11px;
+  background: url('../images/help-button.png');
+  width: 15px;
+  height: 15px;
+  top: -3px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  cursor: pointer;
 }
+.help-button:hover{
+  background: url('../images/help-button_hover.png');
+  width: 15px;
+  height: 15px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.help.text.asst{
+  width: 206px;
+  color: white;
+  float: left;
+  clear: both;
+  position: fixed;
+  z-index: 2;
+  padding-left: 37px;
+  padding-right: 37px;
+  padding-top: 23px;
+  padding-bottom: 23px;
+  pointer-events: none;
+}
+.help.text.asst:after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  margin-left: -28px;
+  width: 0;
+  height: 0;
+  border-bottom: solid 5px #333;
+  border-top: none;
+  border-left: solid 5px transparent;
+  border-right: solid 5px transparent;
+  pointer-events: none;
+}
+
 .header.label{
   font: 13px Lato #333;
   font-weight: 700;
@@ -391,7 +435,7 @@ li {
   margin-left: 5px;
 }
 .name{
-  width: 205px;
+  width: 247px;
   font: 16px Lato;
   font-weight: 700;
   color: #0096d2;
@@ -528,6 +572,7 @@ li {
 }
 
 .bar.text{
+  width: 36px;
   float: left;
   position: relative;
   font: 30px Lato;
@@ -585,6 +630,33 @@ li {
   text-align: left;
   text-indent: 19px;
   border-right: 1px solid #fff;
+}
+.help.text{
+  background: #333;
+  font: 12px Lato;
+  font-weight: 300;
+  font-style: italic;
+  position: relative;
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  z-index: -2;
+  opacity: 0;
+  top: -20px;
+}
+.help.text:after {
+    content:'';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -50px;
+    width: 0;
+    height: 0;
+    border-top: solid 5px #333;
+    border-left: solid 5px transparent;
+    border-right: solid 5px transparent;
+    pointer-events: none;
 }
 
 .left.gutter.header{
@@ -649,15 +721,35 @@ li {
   background-size: contain;
   background-repeat: no-repeat;
 }
+.bottom_menu{
+  top: -20px;
+  position: relative;
+  background: #f8f8f8;
+}
 .bottom_menu div{
   float: left;
-  margin: 5px;
+  margin-top: 26px;
   pointer-events: all;
 }
-
+.bottom_menu div.text{
+  font: 13px Lato;
+  font-style: italic;
+  font-weight: 700;
+  margin-right: 10px
+}
+.bottom_menu div.text.right{
+  margin-left: 47px;
+}
+.bottom_menu div.label{
+  font: 14px Lato;
+  font-weight: 400;
+  margin-right: 17px;
+  margin-left: 3px;
+}
 .small_button{
   width: 52px;
   height: 24px;
+  margin-top: 22px !important;
   font: 14px Lato;
   color: #cccccc;
   font-weight: 900;

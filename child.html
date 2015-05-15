@@ -12,13 +12,10 @@
 <div class = "header container">
 	<div class = "assistance container">
 		<div class = "assistance header label">Federal Assistance</div>
-		<div class = "help-button">
-			<img src = "/images/help-button.png">
-		</div>
+		<div class = "help-button"></div>
 		<div class = "assistance button turnOn active"><span>ON</span></div>
 		<div class = "assistance button turnOff"><span>OFF</span></div>
 	</div>
-
 	<div class = "year container">
 		<div class = "year header label">Year</div>
 		<div class = "year button" id = "button_2000"><span>2000</span></div>
@@ -27,15 +24,22 @@
 	</div>
 	<div class = "search container">
 	</div>
+	<div class = "help text asst">Federal housing assistance data comes from the US Department of Housing and Urban Development’s (HUD) administrative databases.  Other federal rental assistance, such as 521 rental assistance, funded by the US Department of Agriculture, is not included in the calculations.  It is important to note that because HUD has provided the data from its administrative systems, we consider it more complete compared to data tabulations from the American Housing Survey that may be used to estimate federal rental assistance.</div>
 </div>
 <div class = "map container"></div>
 <div class = "print button"><img src = "images/print-icon.png"/><span>Print county details</span></div>
 <div class = "headerRow">
 	<div class = "header left gutter"></div>
 	<div class = "location header">LOCATION</div>
-	<div class = "population header">ELI POPULATION</div>
-	<div class = "per100 header">UNITS PER 100</div>
-	<div class = "total header">TOTAL UNITS</div>
+	<div class = "population header">ELI HOUSEHOLDS
+		<div class = "help text pop">Extremely low income (ELI) households earn less than 30 percent area median income.</div>
+	</div>
+	<div class = "per100 header">UNITS PER 100
+		<div class = "help text per">The number of affordable, available and adequate rental units for every 100 extremely low-income renter households.</div>
+	</div>
+	<div class = "total header">TOTAL UNITS
+		<div class = "help text total">The total number of available and adequate rental units in this county affordable to extremely low-income households.</div>
+	</div>
 </div>
 <div class = "detail container swing">
 	<div id="sticky-anchor"></div>
@@ -48,7 +52,9 @@
 <div class = "footerRow">
 	<div class = "left footer">
 		<div class = "footer title">ABOUT</div>
-		<div class = "footer text">The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renters at the county level in the U.S. The data analyzed come from multiple sources – the American Community Survey (ACS) Public Use Microdata Sample (PUMS) from the Census (via the Integrated Public Use Microdata Series from the Minnesota Population Center), the US Department of Housing and Urban Development (HUD) Picture of Subsidized Housing (PSH), the HUD Section 8 Income Limits, and ACS pre-tabulated data from the Census.</div>
+		<div class = "footer text"><p>The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renter households at the county level in the United States. The data analyzed come from multiple sources – the American Community Survey (ACS) Public Use Microdata Sample (PUMS) from the Census (via the Integrated Public Use Microdata Series from the Minnesota Population Center), data provided by the US Department of Housing and Urban Development (HUD) from the Public and Indian Housing Information Center(PIC) and Tenant Rental Assistance Certification System (TRACs), the HUD Section 8 Income Limits, and ACS pre-tabulated data from the Census.</p>
+		<p>The data on HUD assisted housing represents a best estimate of the total number of HUD subsidized ELI households. We include only those programs for which we can obtain data from HUD, namely, Public Housing, Housing Choice Vouchers, Moderate Rehabilitation, and Section 8 New Construction and Substantial Rehabilitation, and only those recipients who are not rent-burdened.  Because no data source identifies Section 521 units, funded through the US Department of Agriculture, at the county level, these units are not included in this analysis, providing an undercount of federal assistance to ELI renter households in rural counties.</p>
+</div>
 	</div>
 	<div class = "right footer">
 		<div class = "buttonRow">

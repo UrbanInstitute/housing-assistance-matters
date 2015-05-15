@@ -13,7 +13,9 @@ function drawGraphic(containerWidth){
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 var gutterWidth = (headerWidth - 897)/2.0
 d3.selectAll("li")
-	.style("margin-left", gutterWidth + "px")
+	.style("margin-left", (gutterWidth-42) + "px")
+// d3.select(".text.left")
+// 	.style("margin-left", (gutterWidth+18) + "px")
 d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut", "updateTooltip");
 	var data = d3.map();
@@ -687,7 +689,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 					.attr("class", type + " container " + "fips_" +  d.id)
 					.style("height", 0)
 					.style("opacity", 0)
-					.style("margin-left", gutterWidth + "px")
+					.style("margin-left", (gutterWidth-42) + "px")
 				if(expand){wrapper.append("div").attr("class","expand_bg")}
 
 
@@ -892,8 +894,9 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
  					var menu = listItem.append("div")
 						.attr('class', "bottom_menu")
 					menu.append("div")
-						.attr("class", "text")
+						.attr("class", "text left")
 						.text("Change selected year")
+						.style("margin-left", (gutterWidth + 18) + "px")
 					menu.append("div")
 						.attr("class", "radio yr2000")
 						.on("click", function(){ dispatch.changeYear("2000") })
@@ -913,7 +916,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 						.attr("class", "label yr2013")
 						.text("2013")
 					menu.append("div")
-						.attr("class", "text")
+						.attr("class", "text right")
 						.text("Federal Assistance")
 					menu.append("div")
 						.attr("class", "small_button turnOn active")
@@ -1166,5 +1169,78 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 
 pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
 
+d3.select(".population.header")
+	.style("cursor","pointer")
+	.on("mouseover", function(){
+		d3.select(".help.text.pop")
+			.style("z-index",1)
+			.transition()
+			.duration(100)
+			.style("top","-134px")
+			.style("opacity",1)
+	})
+	.on("mouseout", function(){
+		d3.select(".help.text.pop")
+			.transition()
+			.duration(100)
+			.style("top","-20px")
+			.style("opacity",0)
+			.style("z-index",-2)
+	})
 
+d3.select(".per100.header")
+	.style("cursor","pointer")
+	.on("mouseover", function(){
+		d3.select(".help.text.per")
+			.style("z-index",1)
+			.transition()
+			.duration(100)
+			.style("top","-119px")
+			.style("opacity",1)
+	})
+	.on("mouseout", function(){
+		d3.select(".help.text.per")
+			.transition()
+			.duration(100)
+			.style("top","-20px")
+			.style("opacity",0)
+			.style("z-index",-2)
+	})
+
+d3.select(".total.header")
+	.style("cursor","pointer")
+	.on("mouseover", function(){
+		d3.select(".help.text.total")
+			.style("z-index",1)
+			.transition()
+			.duration(100)
+			.style("top","-149px")
+			.style("opacity",1)
+	})
+	.on("mouseout", function(){
+		d3.select(".help.text.total")
+			.transition()
+			.duration(100)
+			.style("top","-20px")
+			.style("opacity",0)
+			.style("z-index",-2)
+	})
+
+d3.select(".help-button")
+	.on("mouseover", function(){
+		d3.select(".help.text.asst")
+			.style("z-index",1)
+			.transition()
+			.duration(100)
+			.style("top","60px")
+			.style("opacity",1)
+	})
+	.on("mouseout", function(){
+		d3.select(".help.text.asst")
+			.transition()
+			.duration(100)
+			.style("top","-240px")
+			.style("opacity",0)
+			.style("z-index",-2)
+	})
 
