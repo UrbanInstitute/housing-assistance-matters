@@ -15,8 +15,7 @@ function drawGraphic(containerWidth){
 //get widths for gutters, max width of details below is 897px
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 var gutterWidth = (headerWidth - 897)/2.0
-d3.selectAll("li")
-	.style("margin-left", (gutterWidth-42) + "px")
+
 // d3.select(".text.left")
 // 	.style("margin-left", (gutterWidth+18) + "px")
 d3.selectAll(".gutter").style("width", gutterWidth + "px")
@@ -661,7 +660,15 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 		var d = usData;
 		var us = d3.select(".national_key")
 		drawDetail(us, null, false, currentYear, "national", d)
-		console.log("foo")
+		var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
+		console.log(headerWidth - containerWidth);
+		console.log(containerWidth)
+		var gutterWidth = (containerWidth - 897)/2.0
+		// console.log(containerWidth)
+		// d3.selectAll("li")
+			// .style("margin-left", (gutterWidth-42) + "px")
+		d3.selectAll("detail.container")
+			.style("margin-left", (gutterWidth-42) + "px")
 	})
 	 		function drawDetail(listItem, under, expand, year, identifier, d){
 	 			var natl = (d.id == "national")
