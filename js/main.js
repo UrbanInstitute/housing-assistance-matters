@@ -8,7 +8,10 @@ var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","t
 var drawDetail = function(d){
 	var detail;
 }
+var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut", "updateTooltip");
+
 function drawGraphic(containerWidth){
+	console.log(selectedCounties)
 //get widths for gutters, max width of details below is 897px
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 var gutterWidth = (headerWidth - 897)/2.0
@@ -17,7 +20,6 @@ d3.selectAll("li")
 // d3.select(".text.left")
 // 	.style("margin-left", (gutterWidth+18) + "px")
 d3.selectAll(".gutter").style("width", gutterWidth + "px")
-	var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut", "updateTooltip");
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
@@ -80,19 +82,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 			d3.select(".assistance.button.turnOn")
 				.classed("active", true);
 			dispatch.changeAssistance("asst");
-		}
-
-		// if(btn.classed("turnOn")){
-		// 	btn.classed("on",false)
-		// 	btn.classed("active", true)
-		// 	dispatch.changeAssistance("noAsst");
-		// }
-		// else{
-		// 	btn.classed("on",true)
-		// 	btn.classed("off", false)
-		// 	dispatch.changeAssistance("asst");
-		// }
-		
+		}		
 	});
 	dispatch.on("changeAssistance", function(assistance){
 		if(assistance == "asst"){
@@ -186,8 +176,8 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	d3.selectAll(".tooltip").remove();
 	d3.selectAll(".custom-combobox").remove();
 	d3.selectAll("#combobox").remove();
-	// d3.selectAll("li.national").remove();
-	// d3.selectAll(".garbage").remove();
+	d3.selectAll("li.national").remove();
+	d3.selectAll(".garbage").remove();
 
 	var width = containerWidth,
 	height = containerWidth/2,
@@ -208,17 +198,6 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	    .attr("width", width)
 	    .attr("height", height)
 	    .on("click", clicked);
-
-// var zoom = d3.behavior.zoom()
-//     .translate(projection.translate())
-//     .scale(projection.scale())
-//     .scaleExtent([height, 8 * height])
-//     .on("zoom", zoomed)
-
-// function zoomed() {
-//   projection.translate(d3.event.translate).scale(d3.event.scale);
-//   g.selectAll("path").attr("d", path);
-// }
 
 	var drag = d3.behavior.drag()
 	    .origin(function(d) {return d; })
@@ -673,12 +652,16 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	})
 	dispatch.on("load.details", function(data){
 		// var ul = d3.select(".detail.list")
+		d3.selectAll(".fips_national").remove()
+		d3.selectAll(".bottom_menu").remove()
+
 		var assistance = getAssistance();
 		var currentYear = getYear();
 
 		var d = usData;
 		var us = d3.select(".national_key")
 		drawDetail(us, null, false, currentYear, "national", d)
+		console.log("foo")
 	})
 	 		function drawDetail(listItem, under, expand, year, identifier, d){
 	 			var natl = (d.id == "national")
@@ -1148,6 +1131,11 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 				}
 			})
 		})
+	// for(var t=0; t< selectedCounties.length; t+=1){
+	// 	dispatch.deselectCounty(selectedCounties[t])
+	// }
+	
+
 }
 
        var stylesheet = $('style[name=impostor_size]')[0].sheet,
