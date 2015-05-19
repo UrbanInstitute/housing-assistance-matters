@@ -614,7 +614,7 @@ li {
 }
 .headerRow{
   width: 100%;
-  height: 28px;
+  height: 40px;
   position: absolute;
   background: #b3b3b3;
   font: 14px Lato;
@@ -625,11 +625,16 @@ li {
 .headerRow .header{
   color: #fff;
   float: left;
-  height: 28px;
-  padding-top: 6px;
+  position: relative;
+  top: -3px;
+  height: 40px;
+  padding-top: 12px;
   text-align: left;
   text-indent: 19px;
   border-right: 1px solid #fff;
+}
+.population.header{
+  padding-top: 6px;
 }
 .help.text{
   background: #333;
@@ -643,7 +648,7 @@ li {
   padding-bottom: 24px;
   z-index: -2;
   opacity: 0;
-  top: -20px;
+  /*top: -45px;*/
 }
 .help.text:after {
     content:'';

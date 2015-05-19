@@ -83,6 +83,8 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 		}		
 	});
 	dispatch.on("changeAssistance", function(assistance){
+		dispatch.updateTooltip();
+
 		if(assistance == "asst"){
 			d3.selectAll(".turnOn").classed("active", true)
 			d3.selectAll(".turnOff").classed("active", false)
@@ -93,6 +95,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 		}
 	});
 	dispatch.on("changeYear", function(year){
+		dispatch.updateTooltip();
 		d3.selectAll(".radio").classed("clicked", false)
 		d3.selectAll(".radio.yr"+year).classed("clicked", true)
 
@@ -659,12 +662,12 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 		var us = d3.select(".national_key")
 		drawDetail(us, null, false, currentYear, "national", d)
 		var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
-		var gutterWidth = (containerWidth - 897)/2.0
-		// console.log(containerWidth)
+		var gutterWidth = (containerWidth - 897)/4.0
+		console.log(containerWidth)
 		// d3.selectAll("li")
 			// .style("margin-left", (gutterWidth-42) + "px")
-		d3.selectAll("detail.container")
-			.style("margin-left", (gutterWidth-42) + "px")
+		// d3.selectAll(".detail.container")
+		// 	.style("margin-left", (gutterWidth-42) + "px")
 	})
 	 		function drawDetail(listItem, under, expand, year, identifier, d){
 	 			var natl = (d.id == "national")
@@ -1163,14 +1166,26 @@ pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
 d3.select(".population.header")
 	.style("cursor","pointer")
 	.on("mouseover", function(){
+		d3.select(this)
+			.style("background","#1696d2")
+			.style("border-top","solid 3px #1696d2")
+			.style("height","37px")
+			.style("padding-top","3px")
 		d3.select(".help.text.pop")
 			.style("z-index",1)
 			.transition()
 			.duration(100)
-			.style("top","-134px")
+			.style("top","-147px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
+		var col = d3.select(".print.button").style("background-color")
+		console.log(col)
+		d3.select(this)
+			.style("background","#b3b3b3")
+			.style("border-top","solid 3px " + col)
+			// .style("height","28px")
+			.style("padding-top","3px")
 		d3.select(".help.text.pop")
 			.transition()
 			.duration(100)
@@ -1182,14 +1197,24 @@ d3.select(".population.header")
 d3.select(".per100.header")
 	.style("cursor","pointer")
 	.on("mouseover", function(){
+		d3.select(this)
+			.style("background","#1696d2")
+			.style("border-top","solid 5px #1696d2")
+			.style("height","30px")
+			.style("padding-top","8px")
 		d3.select(".help.text.per")
 			.style("z-index",1)
 			.transition()
 			.duration(100)
-			.style("top","-119px")
+			.style("top","-122px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
+		d3.select(this)
+			.style("background","#b3b3b3")
+			.style("border-top","solid 3px #ccc")
+			.style("height","28px")
+			.style("padding-top","12px")
 		d3.select(".help.text.per")
 			.transition()
 			.duration(100)
@@ -1201,14 +1226,24 @@ d3.select(".per100.header")
 d3.select(".total.header")
 	.style("cursor","pointer")
 	.on("mouseover", function(){
+		d3.select(this)
+			.style("background","#1696d2")
+			.style("border-top","solid 5px #1696d2")
+			.style("height","30px")
+			.style("padding-top","8px")
 		d3.select(".help.text.total")
 			.style("z-index",1)
 			.transition()
 			.duration(100)
-			.style("top","-149px")
+			.style("top","-153px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
+		d3.select(this)
+			.style("background","#b3b3b3")
+			.style("border-top","solid 3px #ccc")
+			.style("height","28px")
+			.style("padding-top","12px")
 		d3.select(".help.text.total")
 			.transition()
 			.duration(100)
