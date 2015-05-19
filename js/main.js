@@ -11,7 +11,6 @@ var drawDetail = function(d){
 var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCounty", "deselectCounty", "zoomIn","zoomOut", "updateTooltip");
 
 function drawGraphic(containerWidth){
-	console.log(selectedCounties)
 //get widths for gutters, max width of details below is 897px
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 var gutterWidth = (headerWidth - 897)/2.0
@@ -127,7 +126,6 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 			var counties = d3.selectAll("#holder li")[0].filter(function(obj){
 				return d3.select(obj).classed("dummy") === false && d3.select(obj).classed("garbage") === false && d3.select(obj).classed("national") === false;
 			})
-			console.log(counties)
 			var url = "detail.html?fips=";
 			for(var i = 0; i<counties.length; i++){
 				url += d3.select(counties[i]).attr("id").split("_")[1];
@@ -661,8 +659,6 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 		var us = d3.select(".national_key")
 		drawDetail(us, null, false, currentYear, "national", d)
 		var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
-		console.log(headerWidth - containerWidth);
-		console.log(containerWidth)
 		var gutterWidth = (containerWidth - 897)/2.0
 		// console.log(containerWidth)
 		// d3.selectAll("li")
@@ -999,7 +995,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	dispatch.on("deselectCounty.details", function(identifier){
 //Note: indexOf not supported in IE 7 and 8
 		var index = selectedCounties.indexOf(identifier)
-		selectedCounties.splice(index)
+		selectedCounties.splice(index,1)
 		var li = d3.select("[id$='" + identifier.split("_")[1] + "']")
 		li.transition()
 	 		.duration(200)
