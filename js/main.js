@@ -180,18 +180,18 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	d3.selectAll("li.national").remove();
 	d3.selectAll(".garbage").remove();
 
-	var width = containerWidth,
-	height = containerWidth/2,
+	var width = (containerWidth >= 1070) ? 1070:containerWidth,
+	height = width/2,
 	centered;
 	var projection = d3.geo.albersUsa()
 	    .scale(width)
-	    .translate([width / 2.2, height / 2]);
+	    .translate([containerWidth / 2.2, height / 2]);
 
 	var path = d3.geo.path()
 	    .projection(projection);
 
 	var svg = d3.select(".map.container").append("svg")
-	    .attr("width", width)
+	    .attr("width", containerWidth)
 	    .attr("height", height);
 
 	svg.append("rect")
@@ -214,7 +214,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		x = centroid[0];
 		y = centroid[1];
 	 	g.transition()
-	     	  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+	     	  .attr("transform", "translate(" + width / 2.2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
 	}
 
 	function dragend(d){
@@ -338,7 +338,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		}
 		  g.transition()
 	      .duration(750)
-	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+	      .attr("transform", "translate(" + width / 2.2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
 	      .style("stroke-width", 1.5 / k + "px");
 	}
 
@@ -359,7 +359,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	    y = centroid[1];
 		g.transition()
 	      .duration(750)
-	      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+	      .attr("transform", "translate(" + width / 2.2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
 	      .style("stroke-width", 1.5 / lastK + "px");
 	})
 
@@ -390,7 +390,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 			}
 			g.transition()
 		      .duration(750)
-		      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
+		      .attr("transform", "translate(" + width / 2.2 + "," + height / 2 + ")scale(" + lastK + ")translate(" + -x + "," + -y + ")")
 		      .style("stroke-width", 1.5 / lastK + "px");
 		}
 	})
@@ -786,6 +786,8 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 				wrapper.append("div")
 					.attr("class", type + " hideOnExpand totalPop fips_" + d.id)
 					.text(comma(d["properties"]["totalPop" + year]))
+				.append("div")
+					.attr("class","ami-button")
 				var total = wrapper.append("div")
 					.datum(d)
 					.attr("class", type + " hideOnExpand county total bar fips_" + d.id + " y" + year)
@@ -1208,7 +1210,7 @@ d3.select(".population.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-147px")
+			.style("top","-144px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1238,7 +1240,7 @@ d3.select(".per100.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-122px")
+			.style("top","-119px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1268,7 +1270,7 @@ d3.select(".total.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-107px")
+			.style("top","-120px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1304,4 +1306,20 @@ d3.select(".help-button")
 			.style("z-index",-2)
 	})
 
-
+d3.select(".ami-button")
+	.on("mouseover", function(){
+		d3.select(".help.text.ami")
+			.style("z-index",5)
+			.transition()
+			.duration(100)
+			.style("top","60px")
+			.style("opacity",1)
+	})
+	.on("mouseout", function(){
+		d3.select(".help.text.ami")
+			.transition()
+			.duration(100)
+			.style("top","-240px")
+			.style("opacity",0)
+			.style("z-index",-2)
+	})
