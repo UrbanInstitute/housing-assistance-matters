@@ -261,6 +261,7 @@ path.undefined{
 .zoom{
   position: relative;
   left: 80%;
+  bottom: 50px;
   width: 24px;
   height: 30px;
   font: 20px Lato;
@@ -359,6 +360,7 @@ li {
   pointer-events: all;
 }
 .us_caption_asst{
+  font-style: italic;
   position: relative;
   top: 48px
 }
@@ -370,6 +372,9 @@ li {
   top: -10px;
 }
 .us_caption_noAsst{
+  font-style: italic;
+  font-weight: 700;
+  color: #1696D2;
   position: relative;
   top: 49px;
 }
@@ -380,11 +385,11 @@ li {
   position: absolute;
   top: -26px;
 }
-.national_key.stick {
+/*.national_key.stick {
     position: fixed;
     top: 0;
     z-index: 10000;
-}
+}*/
 .cloned{
   display: none;
 }
@@ -595,7 +600,7 @@ li {
   color: white;
   font: 13px Lato;
   font-weight: 900;
-  width: 184px;
+  width: 202px;
   height: 36px;
   float: left;
   position: relative;
@@ -603,31 +608,49 @@ li {
   left: 84px;
   cursor: pointer;
 }
+.print.border{
+  height: 3px;
+  width: 100%;
+  position: relative;
+  background: #ccc;
+  z-index: 4;
+}
 .print.button img{
   height: 17px;
   padding-top: 12px;
-  padding-left: 18px;
-  padding-right: 12px;
+  padding-left: 12px;
+  padding-right: 8px;
 }
 .print.button span{
   top: -5px
+}
+.disclaimer{
+  width: 432px;
+  left: 300px;
+  bottom: 18px;
+  position: relative;
+  color: #999;
+  font-style: italic;
+  opacity: 1;
+  height: 17px;
 }
 .headerRow{
   width: 100%;
   height: 40px;
   position: absolute;
-  background: #b3b3b3;
+  background-color: rgba(0,0,0,0);
   font: 14px Lato;
   font-weight: 900;
-  border-top: 3px solid #ccc;
+  /*border-top: 3px solid #ccc;*/
 }
 
 .headerRow .header{
   color: #fff;
+  background-color: #b3b3b3;
   float: left;
   position: relative;
   top: -3px;
-  height: 40px;
+  height: 31px;
   padding-top: 12px;
   text-align: left;
   text-indent: 19px;
@@ -635,6 +658,7 @@ li {
 }
 .population.header{
   padding-top: 6px;
+  height: 37px;
 }
 .help.text{
   background: #333;
@@ -664,10 +688,14 @@ li {
     pointer-events: none;
 }
 
+.gutter.header{
+  background-color: #b3b3b3;  
+}
 .left.gutter.header{
   border-right: none;
 }
 .location.header{
+  background-color: #b3b3b3;
   width: 267px;
 }
 .population.header{

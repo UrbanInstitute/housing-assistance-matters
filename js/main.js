@@ -13,11 +13,12 @@ var dispatch = d3.dispatch("load", "changeYear", "changeAssistance", "selectCoun
 function drawGraphic(containerWidth){
 //get widths for gutters, max width of details below is 897px
 var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
-var gutterWidth = (headerWidth - 897)/2.0
+var gutterWidth = (containerWidth - 897)/2.0
 
 // d3.select(".text.left")
 // 	.style("margin-left", (gutterWidth+18) + "px")
-d3.selectAll(".gutter").style("width", gutterWidth + "px")
+d3.selectAll(".left.gutter").style("width", gutterWidth + "px");
+d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	var data = d3.map();
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
@@ -184,7 +185,7 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 	centered;
 	var projection = d3.geo.albersUsa()
 	    .scale(width)
-	    .translate([width / 2, height / 2]);
+	    .translate([width / 2.2, height / 2]);
 
 	var path = d3.geo.path()
 	    .projection(projection);
@@ -287,6 +288,10 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 			d3.select(".tooltip")
 				.transition()
 				.style("background", "rgba(255,255,255,0)")
+			d3.select("div.disclaimer")
+					.transition()
+					.style("opacity",1)
+					.style("height","17px")
 			lastClicked = centerCounty;
 			lastK = 1;
 		    x = width / 2;
@@ -303,6 +308,10 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 					.transition()
 					.style("background","rgba(255,255,255,.9)")
 					// .style("opacity",".5")
+				d3.select("div.disclaimer")
+					.transition()
+					.style("opacity",0)
+					.style("height","0px")
 				d3.select("path.fips_" + d.id).classed("active",true)
 				dispatch.selectCounty(d)
 			    var centroid = path.centroid(d);
@@ -315,6 +324,10 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 				d3.select(".tooltip")
 					.transition()
 					.style("background", "rgba(255,255,255,0)")
+				d3.select("div.disclaimer")
+					.transition()
+					.style("opacity",1)
+					.style("height","17px")
 					// .style("opacity", "0")
 				dispatch.deselectCounty(identifier);
 		    	x = width / 2;
@@ -331,9 +344,14 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 
 	// var k = 1;
 	dispatch.on("zoomIn", function(){
+		console.log("foo")
 		d3.select(".tooltip")
 			.transition()
 			.style("background", "rgba(255,255,255,.9)")
+		d3.select("div.disclaimer")
+			.transition()
+			.style("opacity",0)
+			.style("height","0px")
 		var x,y;
 		lastK += 1;
 	    var centroid = path.centroid(lastClicked);
@@ -356,6 +374,10 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 				d3.select(".tooltip")
 					.transition()
 					.style("background", "rgba(255,255,255,0)")
+				d3.select("div.disclaimer")
+					.transition()
+					.style("opacity",1)
+					.style("height","17px")
 					// .style("opacity", "0")
 				lastClicked = centerCounty;
 				x = width / 2;
@@ -990,6 +1012,10 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 			.transition()
 			.duration(20)
 			.style("background","#333")
+		d3.select(".print.border")
+			.transition()
+			.duration(20)
+			.style("background","#333")
 		d3.select(".headerRow")
 			.transition()
 			.duration(20)
@@ -1012,6 +1038,10 @@ d3.selectAll(".gutter").style("width", gutterWidth + "px")
 		pymChild.sendHeight();
 		if(selectedCounties.length == 0){
 		d3.select(".print.button")
+			.transition()
+			.duration(20)
+			.style("background","#ccc")
+		d3.select(".print.border")
 			.transition()
 			.duration(20)
 			.style("background","#ccc")
@@ -1172,7 +1202,7 @@ d3.select(".population.header")
 			.style("height","37px")
 			.style("padding-top","3px")
 		d3.select(".help.text.pop")
-			.style("z-index",1)
+			.style("z-index",5)
 			.transition()
 			.duration(100)
 			.style("top","-147px")
@@ -1180,7 +1210,6 @@ d3.select(".population.header")
 	})
 	.on("mouseout", function(){
 		var col = d3.select(".print.button").style("background-color")
-		console.log(col)
 		d3.select(this)
 			.style("background","#b3b3b3")
 			.style("border-top","solid 3px " + col)
@@ -1203,16 +1232,17 @@ d3.select(".per100.header")
 			.style("height","30px")
 			.style("padding-top","8px")
 		d3.select(".help.text.per")
-			.style("z-index",1)
+			.style("z-index",5)
 			.transition()
 			.duration(100)
 			.style("top","-122px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
+		var col = d3.select(".print.button").style("background-color")
 		d3.select(this)
 			.style("background","#b3b3b3")
-			.style("border-top","solid 3px #ccc")
+			.style("border-top","solid 3px " + col)
 			.style("height","28px")
 			.style("padding-top","12px")
 		d3.select(".help.text.per")
@@ -1232,16 +1262,17 @@ d3.select(".total.header")
 			.style("height","30px")
 			.style("padding-top","8px")
 		d3.select(".help.text.total")
-			.style("z-index",1)
+			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-153px")
+			.style("top","-123px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
+		var col = d3.select(".print.button").style("background-color")
 		d3.select(this)
 			.style("background","#b3b3b3")
-			.style("border-top","solid 3px #ccc")
+			.style("border-top","solid 3px " + col)
 			.style("height","28px")
 			.style("padding-top","12px")
 		d3.select(".help.text.total")
@@ -1255,7 +1286,7 @@ d3.select(".total.header")
 d3.select(".help-button")
 	.on("mouseover", function(){
 		d3.select(".help.text.asst")
-			.style("z-index",1)
+			.style("z-index",5)
 			.transition()
 			.duration(100)
 			.style("top","60px")
