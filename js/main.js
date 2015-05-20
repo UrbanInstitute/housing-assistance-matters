@@ -408,6 +408,9 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		
 		var legend = sidebar.append("div")
 			.attr("class","legend container")
+		legend.append("div")
+			.attr("class", "legendTitle")
+			.text()
 		for(var i = 0; i < 6; i += 1){
 			legend.append("div")
 				.attr("class", "legend key")
@@ -1069,6 +1072,9 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		d3.selectAll(".detail.totalPop.detail")
 			.attr("data-year", year)
 			.text(function(d){ return comma(d["properties"]["totalPop" +  year])})
+			.on("mouseover", function(d){
+				console.log(d["ami" + year])
+			});
 		d3.selectAll(".detail.bar.text")
 			.attr("data-year", year)
 			.text(function(d){ return d["properties"][a + year]})
@@ -1265,7 +1271,7 @@ d3.select(".total.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-123px")
+			.style("top","-107px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
