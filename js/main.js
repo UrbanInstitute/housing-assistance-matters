@@ -1072,9 +1072,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		d3.selectAll(".detail.totalPop.detail")
 			.attr("data-year", year)
 			.text(function(d){ return comma(d["properties"]["totalPop" +  year])})
-			.on("mouseover", function(d){
-				console.log(d["ami" + year])
-			});
 		d3.selectAll(".detail.bar.text")
 			.attr("data-year", year)
 			.text(function(d){ return d["properties"][a + year]})
@@ -1306,4 +1303,5 @@ d3.select(".help-button")
 			.style("opacity",0)
 			.style("z-index",-2)
 	})
+
 
