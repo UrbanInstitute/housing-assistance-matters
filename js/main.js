@@ -250,21 +250,61 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      .enter().append("path")
 	      .attr("d", path)
 	      .style("fill", function(d){
-	      	if(d.properties.ignore !== "1"){
+	      	if(d.properties.flagged !== "1"){
 	      		return COLORS[quantize(d.properties.asst2013)];
 	      	}
 	      	else{
-	      		return GREYS[quantize(d.properties.asst2013)]
+	      		var temp = parseInt(d.properties.STATE_FIPS)%5
+	      		// console.log(temp, GREYS[temp])
+	      		return GREYS["q" + temp + "-5"]
 	      	}
 	      })
+  	      .style("stroke", function(d){
+	      	if(d.properties.flagged !== "1"){
+	      		return "#fff";
+	      	}
+	      	else{
+	      		var temp = parseInt(d.properties.STATE_FIPS)%5
+	      		// console.log(temp, GREYS[temp])
+	      		return GREYS["q" + temp + "-5"]
+	      		// return "#fe0103";
+	      		// return "none"
+	      	}
+	      })
+	      .style("stroke-width", function(d){
+	      	if(d.properties.flagged !== "1"){
+	      		return ".5px";
+	      	}
+	      	else{
+	      		var temp = parseInt(d.properties.STATE_FIPS)%5
+	      		// console.log(temp, GREYS[temp])
+	      		// return GREYS["q" + temp + "-5"]
+	      		return "1px"
+	      	}
+	      })
+	        // stroke: #333;
+
 	          .attr("class", function(d) {
-	          	var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+	          	var ignored = (d.properties.flagged == "1") ? " ignored" : "notIgnored";
 	          	var fips = "fips_" + d.id
-	          	return ignored + " " + fips + " " + quantize(d.properties.asst2013);
+	          	return ignored + " " + fips + " " + quantize(d.properties.asst2013) + " " + "state_" + d.properties.STATE_FIPS;
 	          })
 	      .on("click", clicked)
-	      .on("mouseover", function(){ d3.select(this).classed("hover", true); dispatch.updateTooltip() })
-	      .on("mouseout", function(){ d3.select(this).classed("hover", false); dispatch.updateTooltip() })
+	      .on("mouseover", function(){
+	      	var obj = d3.select(this)
+	      	var stateClass = "state_" + obj.attr("class").split("state_")[1]
+	      	// obj.style("fill","#ffda91 !important")
+	      	if(obj.classed("ignored")){
+	      		d3.selectAll(".ignored." + stateClass).classed("hover", true);
+	      		obj.classed("hover",false)
+	      		obj.classed("hover2",true)
+	      	}
+	      	else{
+	      		obj.classed("hover",true)
+	      	}
+	      	dispatch.updateTooltip()
+	  	   })
+	      .on("mouseout", function(){ d3.selectAll("path.hover").classed("hover", false); d3.selectAll("path.hover2").classed("hover2", false); dispatch.updateTooltip() })
 	      .call(drag);
 	  g.append("path")
 	      .datum(topojson.mesh(us, us.objects.UScounties, function(a, b) { return a !== b; }))
@@ -275,8 +315,12 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      .attr("id", "state-borders")
 	      .attr("d", path);
 
-
-
+	d3.selectAll(".notIgnored").each(function(){ d3.select(this).node().parentNode.appendChild(d3.select(this).node()) })
+function foo(selection) {
+	// console.log(this)
+	// console.log(selection.node())
+  selection.node().parentNode.appendChild(selection.node())
+}
 	});
 
 	var legend = g.append("g")

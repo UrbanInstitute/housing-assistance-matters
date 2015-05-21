@@ -186,8 +186,8 @@ path.fips_2280, path.fips_2130, path.fips_2201{
 .q8-9 { fill:rgb(8,48,107) !important; }
 */
 .ignored{
-/*fill: #ccc !important;*/
-/*webkit-filter: grayscale(100%);*/
+/*fill: #fe0103 !important;*/
+/*/webkit-filter: grayscale(100%);*/
 }
 
 #states {
@@ -197,17 +197,23 @@ path.fips_2280, path.fips_2130, path.fips_2201{
 
 #counties .active, .dropdown, .hover{
   fill: #fdbf11 !important;
+  stroke: #fdbf11 !important;
+}
+#counties .hover2{
+  fill: #ffda91 !important;
+  stroke: #ffda91 !important;
+
 }
 #state-borders {
   fill: none;
-  stroke: #333;
-  stroke-width: .5px;
+  stroke: #fff;
+  stroke-width: 1.5px;
   pointer-events: none;
 }
 
 #county-borders {
   fill: none;
-  stroke: #fff;
+  /*stroke: #fff;*/
   stroke-width: 0.5px;
 /*  stroke-linejoin: round;
   stroke-linecap: round;*/
