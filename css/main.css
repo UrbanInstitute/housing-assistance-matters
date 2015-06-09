@@ -114,7 +114,7 @@ body{
   margin-right: 11px;
 }
 .year.button{
-  width: 75px;
+  width: 86px;
   height: 28px;
   vertical-align: middle;
 }
@@ -325,6 +325,15 @@ path.undefined{
   position: relative;
   left: 26px;
   top: -6px;
+}
+.legendTitle{
+  width: 90px;
+  font-weight: 700;
+  position: absolute;
+  text-align: right;
+  right: 27px;
+  top: -4px;
+  line-height: 13px;
 }
 /*Detail view animations*/
 /*.swing {

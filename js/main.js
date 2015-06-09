@@ -458,7 +458,7 @@ function foo(selection) {
 			.attr("class","legend container")
 		legend.append("div")
 			.attr("class", "legendTitle")
-			.text()
+			.text("Units per 100 ELI renter households")
 		for(var i = 0; i < 6; i += 1){
 			legend.append("div")
 				.attr("class", "legend key")
