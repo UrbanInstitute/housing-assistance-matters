@@ -50,6 +50,19 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 			"q4-5": "#061b5a",
 		}
 
+	var threeYearNameUpdate = function(year){
+		//moving from 1 yr to 3 yr acs data in 11th hour, so instead of updating all fields, var names, etc, keeping variable names as 2000, 2006, 2013
+		//However, for display text we need to update
+		if (year == "2000"){
+			return "2000";
+		}
+		else if (year == "2006"){
+			return "2005 — '07";
+		}
+		else if (year == "2013"){
+			return "2011 — '13";
+		}
+	}
 	var getAssistance = function(){
 		var btn = d3.select(".assistance.button.active");
 		if (btn.classed("turnOn")){return "asst"}
@@ -790,7 +803,7 @@ function foo(selection) {
 				}
 				name.append("div")
 					.attr("class",type + " year label hideOnExpand fips_" + d.id)
-					.text(year)
+					.text(threeYearNameUpdate(year))
 				if(!natl){
 					name.append("div")
 						.attr("class", type + " expand_years collapsed")
