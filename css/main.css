@@ -849,11 +849,75 @@ li {
 .footerRow{
   background: #333;
   color: white;
+  height: 795px;
 }
 
 .footer.text{
-  font: 13px Lato #fff;
+  font: 14px Lato #fff;
 }
+.footer.title{
+  font: 16px Lato;
+  font-weight: 500;
+}
+hr{
+  background: #b3b3b3;
+}
+
+.left.footer{
+  padding-top: 45px;
+  width: 445px;
+  margin-left: 75px;
+  font-size: 14px;
+  font-weight: 200;
+  float: left;
+  clear: both;
+}
+
+.right.footer{
+  display: inline-block;
+  width: 460px;
+  left: -182px;
+  position: relative;
+}
+
+.right.footer h1{
+  color: #0096d2;
+  font: 15px Lato;
+}
+.right.footer h2{
+  font: 15px Lato;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+.right.footer p{
+  font: 13px Lato;
+  font-style: italic;
+  margin-top: 0px;
+}
+.right.footer a{
+  text-decoration:none;
+  color: #fff
+}
+.right.footer a:hover{
+  color: #0096d2;
+}
+
+.footer.read{
+  float: left;
+  clear: both;
+  height: 40px;
+  width: 112px;
+  border: 1px solid #f2f2f2;
+  margin-right: 7px;
+  margin-top: 45px;
+}
+
+.left.credits{
+  float: left;
+  clear: both;
+  width: 228px;
+}
+
 .fips_national .county.name{
   left: 54px;
 }
