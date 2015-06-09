@@ -32,15 +32,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 			"q4-5": "#061b5a",
 		}
 
-	// var GREYS = 
-	// 	{
-	// 		"q0-5": "#ccc",
-	// 		"q1-5": "#aaa",
-	// 		"q2-5": "#777",
-	// 		"q3-5": "#444",
-	// 		"q4-5": "#111",
-	// 	}
-
 	var GREYS = 
 		{
 			"q0-5": "#b0d5f1",
@@ -776,30 +767,31 @@ function foo(selection) {
 				if(!natl){ name.append("span").text(d.properties.name) }
 				else{
 					name.text("United States")
-					name.append("div")
-						.attr("class", "arrow")
-						.on("click", function(){
-							if(d3.select(this).classed("clicked")){
-								d3.select(".national_key")
-									.transition()
-									.style("height", "116px")
-								d3.select(".bottom_menu")
-									.transition()
-									.style("height", "0px")
-									.style("opacity",0)
-								d3.select(this).classed("clicked",false)
-							}
-							else{
-								d3.select(".national_key")
-									.transition()
-									.style("height", "175px")
-								d3.select(".bottom_menu")
-									.transition()
-									.style("height", "60px")
-									.style("opacity",1)
-								d3.select(this).classed("clicked",true)		
-							}
-						})
+//Commenting out the bottom menu here, but there is still code to support it. BLOAT. Should be removed.
+					// name.append("div")
+					// 	.attr("class", "arrow")
+					// 	.on("click", function(){
+					// 		if(d3.select(this).classed("clicked")){
+					// 			d3.select(".national_key")
+					// 				.transition()
+					// 				.style("height", "116px")
+					// 			d3.select(".bottom_menu")
+					// 				.transition()
+					// 				.style("height", "0px")
+					// 				.style("opacity",0)
+					// 			d3.select(this).classed("clicked",false)
+					// 		}
+					// 		else{
+					// 			d3.select(".national_key")
+					// 				.transition()
+					// 				.style("height", "175px")
+					// 			d3.select(".bottom_menu")
+					// 				.transition()
+					// 				.style("height", "60px")
+					// 				.style("opacity",1)
+					// 			d3.select(this).classed("clicked",true)		
+					// 		}
+					// 	})
 				}
 				name.append("div")
 					.attr("class",type + " year label hideOnExpand fips_" + d.id)

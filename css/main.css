@@ -18,9 +18,9 @@ body{
   color: #cccccc;
   font-weight: 900;
   float:left;
-  background-color: #999999;
+  background-color: #e6e6e6;
   text-align: center;
-  border-right: 1px solid #888;
+  border: 1px solid #b3b3b3;
   cursor: pointer;
 }
 .button.active, .button:hover{
@@ -34,7 +34,7 @@ body{
 }
 
 .help-button{
-  margin-top: 6.5px;
+  margin-top: 9.5px;
   margin-right: 11px;
   background: url('../images/help-button.png');
   width: 15px;
@@ -81,7 +81,8 @@ body{
 }
 
 .header.label{
-  font: 13px Lato #333;
+  font: 15px Lato;
+  color: #333;
   font-weight: 700;
 }
 
@@ -90,10 +91,12 @@ body{
   top: 5px;
 }
 
+.assistance.container{
+  margin-left: 30%;
+}
 .assistance.container, .year.container{
-  border-right: 1px solid #ccc;
   height: 43px;
-  padding-top: 16px;
+  padding-top: 0px;
   padding-left: 5px;
   padding-right: 10px;
 }
@@ -103,6 +106,10 @@ body{
   height: 28px;
 }
 
+.header.container .year.label{
+  margin-left: 22px;
+  padding-top: 5px;
+}
 .year.label{
   margin-right: 11px;
 }
@@ -112,8 +119,8 @@ body{
   vertical-align: middle;
 }
 
-#button_2013, .assistance.button.turnOff{
-  border-right: none;
+#button_2013, #button_2006, .assistance.button.turnOff{
+  border-left: none;
 }
 
 div.ui-widget{
