@@ -2,7 +2,7 @@ var STATES = { "Alabama": "AL", "Alaska": "AK", "American Samoa": "AS", "Arizona
 var pymChild = null;
 var selectedCounties = [];
 var BAR_WIDTH = 171.0;
-var comma = d3.format("0,000")
+var comma = d3.format(",f")
 
 var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","totalPop2000":"8165441","asstNum2000":"3004106","noAsstNum2000":"1270140","asst2006":"33","noAsst2006":"9","totalPop2006":"9644199","asstNum2006":"3205087","noAsstNum2006":"892240","asst2013":"28","noAsst2013":"5","totalPop2013":"10985956","asstNum2013":"3104458","noAsstNum2013":"565716"}}
 var drawDetail = function(d){
@@ -149,15 +149,30 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		d3.selectAll("#counties path")
 			.attr("class", function(d){
 				var active = (d3.select(this).classed("active")) ? "active ":"";
-			    var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+			    var ignored = (d.properties.flagged == "1") ? " ignored" : "notIgnored";
 	          	var fips = "fips_" + d.id;
-	          	return active + ignored + " " + fips + " " + quantize(d["properties"][asst+year]);
+	          	return active + " " + ignored + " " + fips + " " + quantize(d["properties"][asst+year]) + " " + "state_" + d.properties.STATE_FIPS;
 	         })
 			.transition()
-			.style("fill", function(d){
-					if(d.properties.ignore != "1") {return COLORS[quantize(d.properties[asst +  year])];}
-					else{ return GREYS[quantize(d.properties[asst +  year])]; }
-				});
+	      .style("fill", function(d){
+	      	return COLORS[quantize(d.properties[asst + year])];
+	      })
+  	      .style("stroke", function(d){
+	      	if(d.properties.flagged !== "1"){
+	      		return "#fff";
+	      	}
+	      	else{
+	      		return COLORS[quantize(d.properties[asst + year])];
+	      	}
+	      })
+	      .style("stroke-width", function(d){
+	      	if(d.properties.flagged !== "1"){
+	      		return ".5px";
+	      	}
+	      	else{
+	      		return "1px"
+	      	}
+	      })
 	});
 
 	dispatch.on("changeYear.map", function(year){
@@ -166,15 +181,30 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		d3.selectAll("#counties path")
 			.attr("class", function(d){
 				var active = (d3.select(this).classed("active")) ? "active ":"";
-			    var ignored = (d.properties.ignore == "1") ? " ignored" : "";
+			    var ignored = (d.properties.flagged == "1") ? " ignored" : "notIgnored";
 	          	var fips = "fips_" + d.id;
-	          	return active + ignored + " " + fips + " " + quantize(d["properties"][a+year]);
+	          	return active + " " + ignored + " " + fips + " " + quantize(d["properties"][a+year]) + " " + "state_" + d.properties.STATE_FIPS;
 	         })
 			.transition()
-			.style("fill", function(d){
-					if(d.properties.ignore != "1") {return COLORS[quantize(d.properties[a +  year])];}
-					else{ return GREYS[quantize(d.properties[a +  year])]; }
-			})
+	      .style("fill", function(d){
+	      	return COLORS[quantize(d.properties[a + year])];
+	      })
+  	      .style("stroke", function(d){
+	      	if(d.properties.flagged !== "1"){
+	      		return "#fff";
+	      	}
+	      	else{
+	      		return COLORS[quantize(d.properties[a + year])];
+	      	}
+	      })
+	      .style("stroke-width", function(d){
+	      	if(d.properties.flagged !== "1"){
+	      		return ".5px";
+	      	}
+	      	else{
+	      		return "1px"
+	      	}
+	      })
 	});
 
 	d3.selectAll("svg").remove();
@@ -258,9 +288,10 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		return COLORS[quantize(d.properties.asst2013)];
 	      	}
 	      	else{
-	      		var temp = parseInt(d.properties.STATE_FIPS)%5
+	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
-	      		return GREYS["q" + temp + "-5"]
+	      		// return GREYS["q" + temp + "-5"]
+	      		return COLORS[quantize(d.properties.asst2013)];
 	      	}
 	      })
   	      .style("stroke", function(d){
@@ -268,9 +299,10 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		return "#fff";
 	      	}
 	      	else{
-	      		var temp = parseInt(d.properties.STATE_FIPS)%5
+	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
-	      		return GREYS["q" + temp + "-5"]
+	      		// return GREYS["q" + temp + "-5"]
+	      		return COLORS[quantize(d.properties.asst2013)];
 	      		// return "#fe0103";
 	      		// return "none"
 	      	}
@@ -280,7 +312,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		return ".5px";
 	      	}
 	      	else{
-	      		var temp = parseInt(d.properties.STATE_FIPS)%5
+	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
 	      		// return GREYS["q" + temp + "-5"]
 	      		return "1px"
@@ -299,6 +331,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      	var stateClass = "state_" + obj.attr("class").split("state_")[1]
 	      	// obj.style("fill","#ffda91 !important")
 	      	if(obj.classed("ignored")){
+	      		// console.log("FOOOOO")
 	      		d3.selectAll(".ignored." + stateClass).classed("hover", true);
 	      		obj.classed("hover",false)
 	      		obj.classed("hover2",true)
@@ -331,6 +364,7 @@ function foo(selection) {
 		.attr("id", "legend")
 
 	function clicked(d) {
+		console.log(d)
 		var x,y,k;
 		if(typeof(d) == "undefined"){
 			d3.select(".tooltip")
@@ -482,7 +516,7 @@ function foo(selection) {
 			.attr("class", "text container")
 		container.append("div")
 			.attr("class", "defaultTooltip")
-			.html("<strong>Click</strong> map to select counties<br><strong>Compare</strong> affordable housing data below")
+			.html("<span class = \"big\">Click map to<br><strong>explore</strong> the crisis</span><br><span class = \"small\">compare affordable housing<br>data for counties below</span>")
 
 		container.append("div")
 			.attr("class", "county-name tooltipDetail")
@@ -519,9 +553,16 @@ function foo(selection) {
 
 	dispatch.on("updateTooltip", function(){
 		hovered = d3.selectAll(".hover")
+		var hovered2 = d3.selectAll(".hover2")
 		if(hovered[0].length == 0 && selectedCounties.length == 0){
 			d3.selectAll(".defaultTooltip").style("display","block");
 			d3.selectAll(".tooltipDetail").style("display","none");
+		}
+		else if(hovered2[0].length != 0){
+			d3.selectAll(".defaultTooltip").style("display","none");
+			d3.selectAll(".tooltipDetail").style("display","block");
+			var hData = d3.select(".hover2").data()[0];
+			updateText(hData);	
 		}
 		else if(hovered[0].length != 0){
 			d3.selectAll(".defaultTooltip").style("display","none");
@@ -538,6 +579,7 @@ function foo(selection) {
 
 		}
 		function updateText(d){
+			console.log(d)
 			var year = getYear();
 			var assistance = getAssistance();
 			d3.select(".county-name")
@@ -545,7 +587,7 @@ function foo(selection) {
 			d3.select(".state-name")
 				.text(d["properties"]["STATE_NAME"])
 			d3.select(".relative .tooltipNum")
-				.text(d["properties"][assistance + year])
+				.text(comma(d["properties"][assistance + year]))
 			d3.select(".total .tooltipNum")
 				.text(comma(d["properties"]["totalPop" + year]))
 			d3.select(".absolute .tooltipNum")
@@ -700,7 +742,7 @@ function foo(selection) {
 	      .data(data)
 	      .enter().append("option")
 	      .attr("value", function(d) { return d.id; })
-	      .text(function(d) { return d.properties.name + ", " + STATES[d.properties.state]; });
+	      .text(function(d) { return d.properties.name + ", " + STATES[d.properties.STATE_NAME]; });
 	 
 	    $(function() {
 	      $( "#combobox" ).combobox();
@@ -937,10 +979,10 @@ function foo(selection) {
 					.datum(d)
 					.text(function(d){
 						if(assistance == "noAsst"){
-							return d["properties"]["noAsst" + year]
+							return comma(d["properties"]["noAsst" + year])
 						}
 						else{
-							return d["properties"]["asst" + year]
+							return comma(d["properties"]["asst" + year])
 						}
 					})
 				wrapper.append("div")
@@ -1015,7 +1057,7 @@ function foo(selection) {
 				.text("without assistance")
 		}
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
-			.text(function(d){ return d["properties"][a + year]});
+			.text(function(d){ return comma(d["properties"][a + year])});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])});
 		d3.selectAll(".fips_" + d.id + " .marker.bar" + ".y" + year).classed("hover", true)
@@ -1028,7 +1070,7 @@ function foo(selection) {
 				.text("with assistance")
 		}
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
-			.text(function(d){ return d["properties"][a + year]});
+			.text(function(d){ return comma(d["properties"][a + year])});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])});
 		d3.selectAll(".fips_" + d.id + " .asst.bar" + ".y" + year).classed("hover", true);
@@ -1039,7 +1081,7 @@ function foo(selection) {
 		d3.selectAll(".fips_" + d.id + ".caption.y" + year)
 			.text("")
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
-			.text(function(d){ return d["properties"][a + year]});
+			.text(function(d){ return comma(d["properties"][a + year])});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])});
 		d3.selectAll(".bar.hover" + ".y" + year).classed("hover",false);
@@ -1343,7 +1385,8 @@ d3.select(".help-button")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","60px")
+			.style("top","340px")
+			.style("left","33.1%")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){

@@ -65,7 +65,7 @@ body{
   padding-bottom: 23px;
   pointer-events: none;
 }
-.help.text.asst:after {
+/*.help.text.asst:after {
   content: '';
   position: absolute;
   top: -5px;
@@ -79,7 +79,7 @@ body{
   border-right: solid 5px transparent;
   pointer-events: none;
 }
-
+*/
 .header.label{
   font: 15px Lato;
   color: #333;
@@ -232,6 +232,15 @@ path.undefined{
 }
 
 /*Map tooltip*/
+.defaultTooltip .big{
+  font: 25px Lato;
+  font-style: italic;
+}
+.defaultTooltip .small{
+  font: 16px Lato;
+  font-style: italic;
+}
+
 .tooltip{
   width: 50px;
   /*height: 100%;*/
@@ -369,6 +378,9 @@ li {
  /*height: 36px;*/
  border-bottom: 1px solid #333;
  background: #ffffff;
+}
+ul#holder li:nth-child(2){
+  border-top: 1px solid #ccc;
 }
 
 li.ui-sortable-helper{
