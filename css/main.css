@@ -116,6 +116,7 @@ body{
 .year.button{
   width: 86px;
   height: 28px;
+  z-index: 1;
   vertical-align: middle;
 }
 
@@ -239,6 +240,7 @@ path.undefined{
   top: 60px;
   background: rgba(255,255,255,0);
   /*opacity: .3;*/
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -365,7 +367,7 @@ li {
  padding:12px 6px;
  z-index:1;
  /*height: 36px;*/
- border-bottom: 1px solid #cccccc;
+ border-bottom: 1px solid #333;
  background: #ffffff;
 }
 
@@ -850,6 +852,8 @@ li {
   background: #333;
   color: white;
   height: 795px;
+  top: -12px;
+  position: relative;
 }
 
 .footer.text{
@@ -858,6 +862,7 @@ li {
 .footer.title{
   font: 16px Lato;
   font-weight: 500;
+  clear: both;
 }
 hr{
   background: #b3b3b3;
@@ -875,8 +880,9 @@ hr{
 
 .right.footer{
   display: inline-block;
-  width: 460px;
-  left: -182px;
+  width: 490px;
+  left: 75px;
+  float: left;
   position: relative;
 }
 
@@ -902,14 +908,50 @@ hr{
   color: #0096d2;
 }
 
-.footer.read{
+.footer.read, .footer.data, .footer.print{
   float: left;
-  clear: both;
+  /*clear: both;*/
   height: 40px;
   width: 112px;
   border: 1px solid #f2f2f2;
   margin-right: 7px;
   margin-top: 45px;
+  margin-bottom: 57px;
+  cursor: pointer;
+  font: 13px Lato;
+  font-weight: 500;
+}
+.footer.read span{
+  top: 11px;
+  position: relative;
+  left: 21px;
+}
+.footer.data span{
+  position: relative;
+  top: 3px;
+  left: 16px;
+}
+.footer.data img{
+  position: relative;
+  top: 8px;
+  left: 10px;
+}
+.footer.data{
+  width: 135px;
+}
+.footer.print img{
+  height: 17px;
+  padding-top: 12px;
+  padding-left: 12px;
+  padding-right: 8px;
+}
+.footer.print span{
+  position: relative;
+  top: -5px;
+  left: 2px;
+}
+.footer.print{
+  width: 198px;
 }
 
 .left.credits{
