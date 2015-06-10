@@ -8,6 +8,14 @@ body{
 .header.container div{
   float: left;
 }
+.header.container.top{
+  height: 0px;
+  border: none;
+  position: relative;
+  top: -57px;
+  float: right;
+  left: 78%;
+}
 .header.container{
   height: 59px;
   width: 100%;
@@ -232,6 +240,9 @@ path.undefined{
 }
 
 /*Map tooltip*/
+.defaultTooltip{
+  margin-top: -90px;
+}
 .defaultTooltip .big{
   font: 25px Lato;
   font-style: italic;
@@ -246,7 +257,7 @@ path.undefined{
   /*height: 100%;*/
   position: absolute;
   /*left: 906px;*/
-  top: 60px;
+  top: 455px;
   background: rgba(255,255,255,0);
   /*opacity: .3;*/
   z-index: 0;
@@ -255,7 +266,7 @@ path.undefined{
 
 .text.container{
   height: 150px;
-  margin-top: 20px;
+  margin-top: 140px;
   margin-left: 20px;
   font: 14px Lato;
   color: #333;
