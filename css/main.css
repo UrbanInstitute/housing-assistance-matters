@@ -2,6 +2,7 @@ body{
   margin: 0;
   font: 12px Lato;
   color: #333;
+  background-color: #fff;
 }
 
 /*Header*/
@@ -31,9 +32,13 @@ body{
   border: 1px solid #b3b3b3;
   cursor: pointer;
 }
-.button.active, .button:hover{
+.button.active{
   color: #ffffff;
   background-color: #00a6d2;
+}
+.button:hover{
+  background-color: #FDBF11;
+  color: #fff;
 }
 
 .assistance.label{
