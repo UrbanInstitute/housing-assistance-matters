@@ -1227,7 +1227,7 @@ function foo(selection) {
 	dispatch.on("changeAssistance.details", function(a){
 		var year;
 		d3.selectAll(".bar.text")
-			.text(function(d){ year = d3.select(this).attr("data-year"); return d["properties"][a + year]})
+			.text(function(d){ year = d3.select(this).attr("data-year"); return comma(d["properties"][a + year])})
 		d3.selectAll(".total.units")
 			.text(function(d){ year = d3.select(this).attr("data-year"); return comma(d["properties"][a + "Num" + year])})
 		d3.selectAll(".total.bar .display.bar")
@@ -1388,7 +1388,7 @@ d3.select(".help-button")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","340px")
+			.style("top","740px")
 			.style("left","33.1%")
 			.style("opacity",1)
 	})

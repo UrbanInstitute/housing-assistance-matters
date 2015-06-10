@@ -894,7 +894,7 @@ hr{
 .left.footer{
   padding-top: 45px;
   width: 445px;
-  margin-left: 75px;
+  margin-left: 84px;
   font-size: 14px;
   font-weight: 200;
   float: left;
@@ -904,7 +904,7 @@ hr{
 .right.footer{
   display: inline-block;
   width: 490px;
-  left: 75px;
+  left: 84px;
   float: left;
   position: relative;
 }
@@ -943,6 +943,9 @@ hr{
   cursor: pointer;
   font: 13px Lato;
   font-weight: 500;
+}
+.footer.data:hover, .footer.print:hover, .footer.read:hover{
+  background-color: #fcb918;  
 }
 .footer.read span{
   top: 11px;

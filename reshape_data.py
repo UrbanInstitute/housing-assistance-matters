@@ -6,7 +6,7 @@ years = ["2013", "2006", "2000"]
 data = {}
 for year in years:
 	if year == "2000":
-		cr = csv.reader(open("data/source/HAI_commsoutput_%s.csv"%year, "rU"))
+		cr = csv.reader(open("data/source/hai_comms_2000_final.csv", "rU"))
 		head = cr.next()
 		i = 0
 		indices = {}
@@ -23,14 +23,24 @@ for year in years:
 			# 	name = row[indices["County Name"]]
 			# 	data[fips]["state"] = state
 			# 	data[fips]["name"] = name
+			flag = row[indices["state_flag"]]
+			data[fips][year]["flag"] = flag
 			data[fips]["FIPS"] = fips
-			data[fips][year]["asst"] = row[indices["Units per 100 renters"]]
-			data[fips][year]["noAsst"] = row[indices["Units per 100 renters (asst off)"]]
-			data[fips][year]["totalPop"] = row[indices["Total ELI renters"]]
-			data[fips][year]["asstNum"] = row[indices["AAA units"]]
-			data[fips][year]["noAsstNum"] = row[indices["AAA units (asst off)"]]
-			data[fips][year]["ami"] = row[indices["ELI_Cutoff"]]
-			data[fips][year]["flag"] = 0
+			if flag == "0":
+				data[fips][year]["asst"] = row[indices["per100"]]
+				data[fips][year]["noAsst"] = row[indices["per100_No_Assist"]]
+				data[fips][year]["totalPop"] = row[indices["Total00"]]
+				data[fips][year]["asstNum"] = row[indices["units00"]]
+				data[fips][year]["noAsstNum"] = row[indices["Units_No_Assist_00"]]
+				data[fips][year]["ami"] = row[indices["l30_4"]]
+			else:
+				data[fips][year]["asst"] = row[indices["State_per100"]]
+				data[fips][year]["noAsst"] = row[indices["State_per100_No_Assist"]]
+				data[fips][year]["totalPop"] = row[indices["state_total00"]]
+				data[fips][year]["asstNum"] = row[indices["state_units00"]]
+				data[fips][year]["noAsstNum"] = row[indices["State_Units_No_Assist_00"]]
+				data[fips][year]["ami"] = row[indices["l30_4"]]
+
 	elif year == "2006":
 		cr = csv.reader(open("data/source/hai_comms_2005_to_2007.csv", "rU"))
 		head = cr.next()

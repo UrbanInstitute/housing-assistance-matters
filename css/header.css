@@ -51,7 +51,8 @@ width:100%;
 }
 
 #logo {
-     display: inline-block;
+    margin-left: 84px;
+    display: inline-block;
 }
 
 
@@ -128,6 +129,8 @@ header{
 header .read{
  background-color: #0096d2;
     color: #ffffff;
+    font: 14px Lato;
+    font-weight: 500;
     float: right;
     height: 50px;
     width: 115px;
@@ -135,6 +138,7 @@ header .read{
     text-align: center;
         text-decoration: none;
     padding-top:13px;
+    margin-right: 54px;
     
 }
 
