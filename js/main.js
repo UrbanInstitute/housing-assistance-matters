@@ -365,7 +365,6 @@ function foo(selection) {
 		.attr("id", "legend")
 
 	function clicked(d) {
-		console.log(d)
 		var x,y,k;
 		if(typeof(d) == "undefined"){
 			d3.select(".tooltip")
@@ -427,7 +426,6 @@ function foo(selection) {
 
 	// var k = 1;
 	dispatch.on("zoomIn", function(){
-		console.log("foo")
 		d3.select(".tooltip")
 			.transition()
 			.style("background", "rgba(255,255,255,.9)")
@@ -814,7 +812,6 @@ function foo(selection) {
 		drawDetail(us, null, false, currentYear, "national", d)
 		var headerWidth = parseInt(d3.select(".headerRow").style("width").replace("px",""));
 		var gutterWidth = (containerWidth - 897)/4.0
-		console.log(containerWidth)
 		// d3.selectAll("li")
 			// .style("margin-left", (gutterWidth-42) + "px")
 		// d3.selectAll(".detail.container")

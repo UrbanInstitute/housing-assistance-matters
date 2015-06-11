@@ -419,6 +419,9 @@ li {
 li.lowPop{
   padding-top: 44px;
 }
+.expand .lowPopBottom{
+  display: none;
+}
 .lowPopBottom{
   width: 350%;
   position: absolute;
