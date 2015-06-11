@@ -838,6 +838,7 @@ function foo(selection) {
 		// 	.style("margin-left", (gutterWidth-42) + "px")
 	})
 	 		function drawDetail(listItem, under, expand, year, identifier, d){
+	 			console.log(d)
 	 			var natl = (d.id == "national")
 				assistance = getAssistance();
 	 			var type  = (expand) ? "expand":"detail";
@@ -869,7 +870,7 @@ function foo(selection) {
 				}
 				name.append("div")
 					.attr("class", type + " fullName")
-				if(!natl){ name.append("span").text(d.properties.name) }
+				if(!natl){ name.append("span").text(d.properties.name + ", " + STATES[d.properties.STATE_NAME]) }
 				else{
 					name.text("United States")
 //Commenting out the bottom menu here, but there is still code to support it. BLOAT. Should be removed.

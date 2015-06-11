@@ -18,7 +18,21 @@ h2{
   text-align: center;
   text-transform: uppercase;
 }
-
+h3{
+  color: #333;
+  font-size: 10px;
+  font-weight: 300;
+  font-style: italic;
+  width: 70%;
+  text-align: center;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+h3 span{
+	color: #1696d2;
+	font-weight: 500;
+}
 
 .scatter.container{
 	width: 8in;
