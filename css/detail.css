@@ -10,20 +10,31 @@ body{
 }
 /*.page-break { height:0; page-break-after:always; margin:0; border-top:none; }*/
 
+.head{
+  width: 81%;
+  margin: 0 auto;
+  font-size: 21px;
+  font-weight: 300;
+}
+.head span{
+  position: relative;
+  top: -21px;
+  left: 9px;
+}
 h2{
-  font-size: 28pt;
+  font-size: 21pt;
+  color: #1696d2;
   padding: 0px;
   margin: 0px;
-  font-weight: 400;
+  font-weight: 700;
   text-align: center;
-  text-transform: uppercase;
 }
 h3{
   color: #333;
   font-size: 10px;
   font-weight: 300;
   font-style: italic;
-  width: 70%;
+  width: 95%;
   text-align: center;
   margin: 0 auto;
   padding-bottom: 10px;
@@ -33,7 +44,16 @@ h3 span{
 	color: #1696d2;
 	font-weight: 500;
 }
-
+.caveat{
+  text-align: center;
+  margin: 0 auto;
+  font-style: italic;
+  width: 75%;
+}
+svg{
+	margin-top: 20px;
+	margin-left: 84px;
+}
 .scatter.container{
 	width: 8in;
 	/*height: 2in;*/
@@ -90,13 +110,24 @@ h3 span{
 	stroke: #c6c6c6;
 }
 
+.subtitle, .footnote, .footer{
+  margin: 0 auto;
+  /* text-align: center; */
+  width: 85%;
+  font-weight: 500;
+}
+
+.footer{
+	font-style: italic;
+	margin-top: 15px;
+}
 
 /*Table*/
 table{
-	margin-top: 150px;
+	margin-top: 15px;
 }
 tr{
-	height: 65px;
+	height: 45px;
 	border-bottom: 1px solid black;
 }
 td, th{
@@ -104,7 +135,8 @@ td, th{
 	/*border: 1pt solid black;*/	
 }
 td{
-	text-indent: 20px;
+	/*text-indent: 20px;*/
+	text-align: center
 }
 td.asst, th.asst{
 	background: #c6c6c6;
