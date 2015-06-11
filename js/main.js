@@ -144,6 +144,20 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 			}
 			window.open(url);
 		});
+	d3.select(".footer.print")
+		.on("click", function(){
+			var counties = d3.selectAll("#holder li")[0].filter(function(obj){
+				return d3.select(obj).classed("dummy") === false && d3.select(obj).classed("garbage") === false && d3.select(obj).classed("national") === false;
+			})
+			var url = "detail.html?fips=";
+			for(var i = 0; i<counties.length; i++){
+				url += d3.select(counties[i]).attr("id").split("_")[1];
+				if (i < (counties.length - 1)){
+					url += ",";
+				}
+			}
+			window.open(url);
+		});
 
 	dispatch.on("changeAssistance.map", function(asst){
 		var year = getYear();
@@ -513,7 +527,7 @@ function foo(selection) {
 		}
 		sidebar.append("div")
 			.attr("class", "lowPopTop")
-			.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011-2013 3-year American Community Survey sample")
+			.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011–13 3-year American Community Survey sample.")
 		var container = sidebar.append("div")
 			.attr("class", "text container")
 		container.append("div")
@@ -601,7 +615,13 @@ function foo(selection) {
 			d3.select(".absolute .tooltipNum")
 				.text(comma(d["properties"][assistance + "Num" + year]))
 			d3.select(".cutoff .tooltipYear")
-				.text(year)
+				.text(function(){
+					if( year == "2006"){
+						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
+						return "2007"
+					}
+					else{ return year}
+				})
 			d3.select(".cutoff .tooltipNum")
 				.text(function(){
 					var minELI = d["properties"]["minELI" + year]
@@ -623,7 +643,7 @@ function foo(selection) {
 						d3.select(".lowPopTop")
 							.transition()
 							.style("left","0px")
-						return "the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + " depending on location."
+						return "the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + ", depending on location."
 					}
 				})
 		}
@@ -845,7 +865,7 @@ function foo(selection) {
 				if (d["properties"]["flagged"] == "1"){
 					name.append("div")
 						.attr("class","lowPopBottom")
-						.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011-2013 3-year American Community Survey sample")
+						.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011–13 3-year American Community Survey sample.")
 				}
 				name.append("div")
 					.attr("class", type + " fullName")
@@ -941,16 +961,26 @@ function foo(selection) {
 				.append("div")
 					.attr("class", "help text ami fips_" + d.id + year)
 					.html(function(){
-						var minELI = d["properties"]["minELI" + year]
-						var maxELI = d["properties"]["maxELI" + year]
-						if (d["properties"]["flagged"] == "0"){
-							return "In " + year + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
-						}
-						else if(minELI == maxELI){
-							return "In " + year + ", ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+						var minELI, maxELI;
+						if(d.id == "national"){
+							var elis = {"2000":[9150,26200], "2006":[11650,33950], "2013":[12600,32800]}
+							minELI = elis[year][0]
+							maxELI = elis[year][1]
 						}
 						else{
-							return "In " + year + ", the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + " depending on location."
+							minELI = d["properties"]["minELI" + year]
+							maxELI = d["properties"]["maxELI" + year]
+						}
+						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
+						var newYear = (year == "2006") ? "2007": year
+						if (d["properties"]["flagged"] == "0"){
+							return "In " + newYear + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
+						}
+						else if(minELI == maxELI){
+							return "In " + newYear + ", ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+						}
+						else{
+							return "In " + newYear + ", the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + ", depending on location."
 						}
 					})
 				var total = wrapper.append("div")
@@ -1261,16 +1291,26 @@ function foo(selection) {
 				.append("div")
 					.attr("class", function(d){ return "help text ami fips_" + d.id + year})
 					.html(function(d){
-						var minELI = d["properties"]["minELI" + year]
-						var maxELI = d["properties"]["maxELI" + year]
-						if (d["properties"]["flagged"] == "0"){
-							return "In " + year + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
-						}
-						else if(minELI == maxELI){
-							return "In " + year + ", ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+						var minELI, maxELI;
+						if(d.id == "national"){
+							var elis = {"2000":[9150,26200], "2006":[11650,33950], "2013":[12600,32800]}
+							minELI = elis[year][0]
+							maxELI = elis[year][1]
 						}
 						else{
-							return "In " + year + ", the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + " depending on location."
+							minELI = d["properties"]["minELI" + year]
+							maxELI = d["properties"]["maxELI" + year]
+						}
+						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
+						var newYear = (year == "2006") ? "2007": year
+						if (d["properties"]["flagged"] == "0"){
+							return "In " + newYear + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
+						}
+						else if(minELI == maxELI){
+							return "In " + newYear + ", ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+						}
+						else{
+							return "In " + newYear + ", the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + ", depending on location."
 						}
 					})
 
@@ -1404,13 +1444,13 @@ d3.select(".population.header")
 		d3.select(this)
 			.style("background","#1696d2")
 			.style("border-top","solid 3px #1696d2")
-			.style("height","37px")
+			.style("height","27px")
 			.style("padding-top","3px")
 		d3.select(".help.text.pop")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-144px")
+			.style("top","-113px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1434,7 +1474,7 @@ d3.select(".per100.header")
 		d3.select(this)
 			.style("background","#1696d2")
 			.style("border-top","solid 5px #1696d2")
-			.style("height","30px")
+			.style("height","20px")
 			.style("padding-top","8px")
 		d3.select(".help.text.per")
 			.style("z-index",5)
@@ -1448,7 +1488,7 @@ d3.select(".per100.header")
 		d3.select(this)
 			.style("background","#b3b3b3")
 			.style("border-top","solid 3px " + col)
-			.style("height","28px")
+			.style("height","18px")
 			.style("padding-top","12px")
 		d3.select(".help.text.per")
 			.transition()
@@ -1464,13 +1504,13 @@ d3.select(".total.header")
 		d3.select(this)
 			.style("background","#1696d2")
 			.style("border-top","solid 5px #1696d2")
-			.style("height","30px")
+			.style("height","20px")
 			.style("padding-top","8px")
 		d3.select(".help.text.total")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-120px")
+			.style("top","-105px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1478,7 +1518,7 @@ d3.select(".total.header")
 		d3.select(this)
 			.style("background","#b3b3b3")
 			.style("border-top","solid 3px " + col)
-			.style("height","28px")
+			.style("height","18px")
 			.style("padding-top","12px")
 		d3.select(".help.text.total")
 			.transition()
