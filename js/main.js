@@ -3,6 +3,7 @@ var pymChild = null;
 var selectedCounties = [];
 var BAR_WIDTH = 171.0;
 var comma = d3.format(",f")
+var dollar = d3.format("$,")
 
 var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","totalPop2000":"8165441","asstNum2000":"3004106","noAsstNum2000":"1270140","asst2006":"33","noAsst2006":"9","totalPop2006":"9644199","asstNum2006":"3205087","noAsstNum2006":"892240","asst2013":"28","noAsst2013":"5","totalPop2013":"10985956","asstNum2013":"3104458","noAsstNum2013":"565716"}}
 var drawDetail = function(d){
@@ -485,7 +486,7 @@ function foo(selection) {
 			.append("div")
 			.attr("class","tooltip")
 			.style("width", width + "%")
-			.style("height", containerWidth/2 + "px")
+			// .style("height", containerWidth/2 + "px")
 			.style("left",(100-width) + "%")
 		
 		var legend = sidebar.append("div")
@@ -512,6 +513,9 @@ function foo(selection) {
 				.append("span")
 				.text((i*20))
 		}
+		sidebar.append("div")
+			.attr("class", "lowPopTop")
+			.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011-2013 3-year American Community Survey sample")
 		var container = sidebar.append("div")
 			.attr("class", "text container")
 		container.append("div")
@@ -536,7 +540,7 @@ function foo(selection) {
 			.style("display", "none")
 		container.append("div")
 			.attr("class", "ami cutoff tooltipDetail")
-			.html("In <span class = \"tooltipYear\"></span>, ELI households of four earned no more than <span class = \"tooltipNum\"></span>")
+			.html("In <span class = \"tooltipYear\"></span>, <span class = \"tooltipNum\"></span>")
 		container.append("div")
 			.attr("class", "absolute number tooltipDetail")
 			.html("<span class = \"tooltipNum\"></span> affordable, available and adequate units")
@@ -558,6 +562,9 @@ function foo(selection) {
 		hovered = d3.selectAll(".hover")
 		var hovered2 = d3.selectAll(".hover2")
 		if(hovered[0].length == 0 && selectedCounties.length == 0){
+			d3.select(".lowPopTop")
+				.transition()
+				.style("left","400px")
 			d3.selectAll(".defaultTooltip").style("display","block");
 			d3.selectAll(".tooltipDetail").style("display","none");
 		}
@@ -582,7 +589,7 @@ function foo(selection) {
 
 		}
 		function updateText(d){
-			console.log(d)
+			// console.log(d)
 			var year = getYear();
 			var assistance = getAssistance();
 			d3.select(".county-name")
@@ -595,6 +602,32 @@ function foo(selection) {
 				.text(comma(d["properties"]["totalPop" + year]))
 			d3.select(".absolute .tooltipNum")
 				.text(comma(d["properties"][assistance + "Num" + year]))
+			d3.select(".cutoff .tooltipYear")
+				.text(year)
+			d3.select(".cutoff .tooltipNum")
+				.text(function(){
+					var minELI = d["properties"]["minELI" + year]
+					var maxELI = d["properties"]["maxELI" + year]
+					if (d["properties"]["flagged"] == "0"){
+						// console.log(d3.s)
+						d3.select(".lowPopTop")
+							.transition()
+							.style("left","400px")
+						return "ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
+					}
+					else if(minELI == maxELI){
+						d3.select(".lowPopTop")
+							.transition()
+							.style("left","0px")
+						return "ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+					}
+					else{
+						d3.select(".lowPopTop")
+							.transition()
+							.style("left","0px")
+						return "the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + " depending on location."
+					}
+				})
 		}
 	});
 
@@ -791,6 +824,11 @@ function foo(selection) {
 	 			var natl = (d.id == "national")
 				assistance = getAssistance();
 	 			var type  = (expand) ? "expand":"detail";
+	 			// console.log(d.flagged)
+	 			// var lowPop = (d["properties"]["flagged"] == "1") ? "lowPop":"";
+	 			if (d["properties"]["flagged"] == "1"){
+	 				listItem.classed("lowPop",true);
+	 			}
 				var wrapper = listItem.append("div")
 					.datum(d)
 					.attr("class", type + " container " + "fips_" +  d.id)
@@ -807,6 +845,11 @@ function foo(selection) {
 				}
 				var name = wrapper.append("div")
 					.attr("class", type + " county name")
+				if (d["properties"]["flagged"] == "1"){
+					name.append("div")
+						.attr("class","lowPopBottom")
+						.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011-2013 3-year American Community Survey sample")
+				}
 				name.append("div")
 					.attr("class", type + " fullName")
 				if(!natl){ name.append("span").text(d.properties.name) }
@@ -882,6 +925,37 @@ function foo(selection) {
 					.text(comma(d["properties"]["totalPop" + year]))
 				.append("div")
 					.attr("class","ami-button")
+					.on("mouseover", function(){
+					d3.selectAll(".help.text.ami.fips_" + d.id + year)
+						.style("z-index",5)
+						.transition()
+						.duration(100)
+						.style("top","-124px")
+						.style("opacity",1)
+				})
+				.on("mouseout", function(){
+					d3.selectAll(".help.text.ami.fips_" + d.id + year)
+						.transition()
+						.duration(100)
+						.style("top","240px")
+						.style("opacity",0)
+						.style("z-index",-2)
+				})
+				.append("div")
+					.attr("class", "help text ami fips_" + d.id + year)
+					.html(function(){
+						var minELI = d["properties"]["minELI" + year]
+						var maxELI = d["properties"]["maxELI" + year]
+						if (d["properties"]["flagged"] == "0"){
+							return "In " + year + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
+						}
+						else if(minELI == maxELI){
+							return "In " + year + ", ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+						}
+						else{
+							return "In " + year + ", the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + " depending on location."
+						}
+					})
 				var total = wrapper.append("div")
 					.datum(d)
 					.attr("class", type + " hideOnExpand county total bar fips_" + d.id + " y" + year)
@@ -1165,12 +1239,47 @@ function foo(selection) {
 		d3.selectAll(".detail.year.label")
 			.attr("data-year", year)
 			.text(year)
-		d3.selectAll(".detail.totalPop.detail")
+		d3.selectAll(".detail.totalPop")
 			.attr("data-year", year)
 			.text(function(d){ return comma(d["properties"]["totalPop" +  year])})
+			// .empty()
+			.append("div")
+					.attr("class","ami-button")
+					.on("mouseover", function(d){
+					d3.selectAll(".help.text.ami.fips_" + d.id + year)
+						.style("z-index",5)
+						.transition()
+						.duration(100)
+						.style("top","-124px")
+						.style("opacity",1)
+				})
+				.on("mouseout", function(d){
+					d3.selectAll(".help.text.ami.fips_" + d.id + year)
+						.transition()
+						.duration(100)
+						.style("top","240px")
+						.style("opacity",0)
+						.style("z-index",-2)
+				})
+				.append("div")
+					.attr("class", function(d){ return "help text ami fips_" + d.id + year})
+					.html(function(d){
+						var minELI = d["properties"]["minELI" + year]
+						var maxELI = d["properties"]["maxELI" + year]
+						if (d["properties"]["flagged"] == "0"){
+							return "In " + year + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
+						}
+						else if(minELI == maxELI){
+							return "In " + year + ", ELI households of four in these counties earned no more than " + dollar(maxELI) + "."
+						}
+						else{
+							return "In " + year + ", the cut off for an ELI household of four in these counties ranged from " + dollar(minELI) + "-" + dollar(maxELI) + " depending on location."
+						}
+					})
+
 		d3.selectAll(".detail.bar.text")
 			.attr("data-year", year)
-			.text(function(d){ return d["properties"][a + year]})
+			.text(function(d){ return comma(d["properties"][a + year])})
 		d3.selectAll(".detail.total.units")
 			.attr("data-year", year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])})
@@ -1401,20 +1510,5 @@ d3.select(".help-button")
 			.style("z-index",-2)
 	})
 
-d3.select(".ami-button")
-	.on("mouseover", function(){
-		d3.select(".help.text.ami")
-			.style("z-index",5)
-			.transition()
-			.duration(100)
-			.style("top","60px")
-			.style("opacity",1)
-	})
-	.on("mouseout", function(){
-		d3.select(".help.text.ami")
-			.transition()
-			.duration(100)
-			.style("top","-240px")
-			.style("opacity",0)
-			.style("z-index",-2)
-	})
+// console.log("fooooo")
+

@@ -65,6 +65,16 @@ body{
   background-size: contain;
   background-repeat: no-repeat;
 }
+.help.text.ami{
+  /*opacity: .5;*/
+  color: #fff;
+  position: absolute;
+  width: 147px;
+  height: 70px;
+  top: -124px;
+  left: -35px;
+  pointer-events: none;
+}
 .help.text.asst{
   width: 206px;
   color: white;
@@ -257,9 +267,20 @@ path.undefined{
   font-style: italic;
 }
 
+.lowPopTop{
+  margin-right: 17%;
+  margin-top: 25px;
+  width: 156px;
+  float: right;
+  padding: 8px;
+  border-right: 5px solid;
+  border-color: #fdbf11;
+  position: relative;
+  left: 400px;
+}
 .tooltip{
   width: 50px;
-  /*height: 100%;*/
+  height: 536.5px;
   position: absolute;
   /*left: 906px;*/
   top: 455px;
@@ -309,7 +330,7 @@ path.undefined{
   display: inline-block;
   top: 2px;
   left: 8px;
-  pointer-events: all;
+  pointer-events: auto;
 }
 .ami-button:hover{
   background: url('../images/dollah-icon_hover.png');
@@ -333,7 +354,7 @@ path.undefined{
   color: 989898;
   background: #E5E5E5;
   border: 1pt solid #CCCCCB;
-  pointer-events: all;
+  pointer-events: auto;
   cursor: pointer;
 }
 
@@ -346,7 +367,7 @@ path.undefined{
 .legend.key{
   width: 22px;
   height: 32px;
-  pointer-events: all;
+  pointer-events: auto;
 }
 .legend.key span{
   position: relative;
@@ -395,6 +416,20 @@ li {
  border-bottom: 1px solid #333;
  background: #ffffff;
 }
+li.lowPop{
+  padding-top: 44px;
+}
+.lowPopBottom{
+  width: 350%;
+  position: absolute;
+  top: -38px;
+  font: 12px Lato;
+  font-style: italic;
+  color: #333;
+  border-left: 4px solid #fdbf11;
+  padding-top: 7px;
+  padding-left: 10px;
+}
 ul#holder li:nth-child(2){
   border-top: 1px solid #ccc;
 }
@@ -432,7 +467,7 @@ li {
     pointer-events: none;
 }
 .fips_national.total.bar{
-  pointer-events: all;
+  pointer-events: auto;
 }
 .us_caption_asst{
   font-style: italic;
@@ -584,7 +619,7 @@ li {
   z-index: -1;*/
 }
 .bar{
-  pointer-events: all;
+  pointer-events: auto;
 }
 .bar.hover{
   background: #fdbf11 !important;
@@ -793,7 +828,7 @@ li {
   height: 10px;
   background-size: contain;
   background-repeat: no-repeat;
-  pointer-events: all;
+  pointer-events: auto;
   position: relative;
   top: -13px;
   left: 106px;
@@ -837,7 +872,7 @@ li {
 .bottom_menu div{
   float: left;
   margin-top: 26px;
-  pointer-events: all;
+  pointer-events: auto;
 }
 .bottom_menu div.text{
   font: 13px Lato;
