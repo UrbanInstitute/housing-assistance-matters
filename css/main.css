@@ -747,9 +747,9 @@ li {
   width: 202px;
   height: 36px;
   float: left;
-  position: relative;
-  bottom: 36px;
-  left: 14px;
+  position: absolute;
+  top: 958px;
+  left: 30px;
   cursor: pointer;
 }
 .print.border{
