@@ -25,9 +25,13 @@ height: 0px;
   /* padding-left: 240px; */
   float: right;
 }
-.header.container{
-  height: 59px;
+.header.container.top{
   width: 100%;
+}
+.header.container.bottom{
+  height: 59px;
+  width: 1004px;
+  margin: 0 auto; 
   border-bottom: 1px solid #ccc;
 }
 .header .button{
@@ -88,7 +92,7 @@ height: 0px;
   color: white;
   float: left;
   clear: both;
-  position: fixed;
+  position: absolute;
   z-index: 2;
   padding-left: 37px;
   padding-right: 37px;
@@ -424,7 +428,12 @@ path.undefined{
 }
 */
 .detail.container, .expand.container{
-  margin-top: 50px;
+    margin-top: 50px;
+  width: 950px;
+  /* margin: 0 auto; */
+  margin-left: 0 auto;
+  margin-right: auto;
+  margin-left: auto;
 }
 ul#holder{ padding: 0;}
 li {
@@ -563,10 +572,11 @@ li {
 /*.close-button img{
   width: 29px;
   /*height: 29px;*/
-}*/
-.detail.container{
+
+.detail.container.swing{
   /*border: solid;*/
   /*border-width: 1px;*/
+  margin-top: -60px;
 }
 
 .county{
@@ -739,7 +749,7 @@ li {
   float: left;
   position: relative;
   bottom: 36px;
-  left: 84px;
+  left: 14px;
   cursor: pointer;
 }
 .print.border{
@@ -769,15 +779,22 @@ li {
   height: 17px;
 }
 .headerRow{
-  width: 100%;
+  width: 950px;
+  margin: 0 auto;
   height: 30px;
-  position: absolute;
   background-color: rgba(0,0,0,0);
   font: 14px Lato;
   font-weight: 900;
+  /*display: inline-block;*/
+  /*position: absolute;*/
   /*border-top: 3px solid #ccc;*/
 }
-
+.header.bg{
+    width: 100%;
+  height: 30px;
+  background-color: #b3b3b3;
+  position: absolute;
+}
 .headerRow .header{
   color: #fff;
   background-color: #b3b3b3;
