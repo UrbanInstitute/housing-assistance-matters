@@ -29,7 +29,7 @@ body{
   float:left;
   background-color: #e6e6e6;
   text-align: center;
-  border: 1px solid #b3b3b3;
+  border: 1px solid #fff;
   cursor: pointer;
 }
 .button.active{
@@ -70,7 +70,7 @@ body{
   color: #fff;
   position: absolute;
   width: 147px;
-  height: 70px;
+  height: 85px;
   top: -124px;
   left: -35px;
   pointer-events: none;
@@ -777,7 +777,7 @@ li {
 }
 .help.text{
   background: #333;
-  font: 12px Lato;
+  font: 14px Lato;
   font-weight: 300;
   font-style: italic;
   position: relative;

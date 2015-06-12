@@ -230,8 +230,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	d3.selectAll(".garbage").remove();
 
 	var width = (containerWidth >= 1070) ? 1070:containerWidth,
-	height = width/2,
-	centered;
+	height = width/2;
 	var projection = d3.geo.albersUsa()
 	    .scale(width)
 	    .translate([containerWidth / 2.2, height / 2]);
@@ -555,7 +554,7 @@ function foo(selection) {
 			.html("In <span class = \"tooltipYear\"></span>, <span class = \"tooltipNum\"></span>")
 		container.append("div")
 			.attr("class", "absolute number tooltipDetail")
-			.html("<span class = \"tooltipNum\"></span> affordable, available and adequate units")
+			.html("<span class = \"tooltipNum\"></span> adequate, affordable, and available units")
 			.style("display", "none")
 
 		sidebar.append("div")
@@ -948,7 +947,7 @@ function foo(selection) {
 						.style("z-index",5)
 						.transition()
 						.duration(100)
-						.style("top","-124px")
+						.style("top","-136px")
 						.style("opacity",1)
 				})
 				.on("mouseout", function(){
@@ -1451,7 +1450,7 @@ d3.select(".population.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-113px")
+			.style("top","-119px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1481,7 +1480,7 @@ d3.select(".per100.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-119px")
+			.style("top","-142px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1511,7 +1510,7 @@ d3.select(".total.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-105px")
+			.style("top","-125px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
@@ -1535,8 +1534,8 @@ d3.select(".help-button")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","740px")
-			.style("left","33.1%")
+			.style("top","660px")
+			.style("left","34%")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
