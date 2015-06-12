@@ -1,10 +1,9 @@
 var STATES = { "Alabama": "AL", "Alaska": "AK", "American Samoa": "AS", "Arizona": "AZ", "Arkansas": "AR", "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "District of Columbia": "DC", "Federated States Of Micronesia": "FM", "Florida": "FL", "Georgia": "GA", "Guam": "GU", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Marshall Islands": "MH", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", "Northern Mariana Islands": "MP", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Palau": "PW", "Pennsylvania": "PA", "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Vermont": "VT", "Virgin Islands": "VI", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "WY": "Wyoming" }
-var pymChild = null;
 var selectedCounties = [];
 var BAR_WIDTH = 171.0;
 var comma = d3.format(",f")
 var dollar = d3.format("$,")
-
+var MASTER_WIDTH = 950;
 var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","totalPop2000":"8165441","asstNum2000":"3004106","noAsstNum2000":"1270140","asst2006":"33","noAsst2006":"9","totalPop2006":"9644199","asstNum2006":"3205087","noAsstNum2006":"892240","asst2013":"28","noAsst2013":"5","totalPop2013":"10985956","asstNum2013":"3104458","noAsstNum2013":"565716"}}
 var drawDetail = function(d){
 	var detail;
@@ -244,7 +243,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 
 	svg.append("rect")
 	    .attr("class", "background")
-	    .attr("width", width)
+	    .attr("width", width*.7)
 	    .attr("height", height)
 	    .on("click", clicked);
 
@@ -496,9 +495,9 @@ function foo(selection) {
 		var sidebar = d3.select(".map.container")
 			.append("div")
 			.attr("class","tooltip")
-			.style("width", width + "%")
+			// .style("width", width + "%")
 			// .style("height", containerWidth/2 + "px")
-			.style("left",(100-width) + "%")
+			// .style("left",(100-width) + "%")
 		
 		var legend = sidebar.append("div")
 			.attr("class","legend container")
@@ -557,14 +556,7 @@ function foo(selection) {
 			.html("<span class = \"tooltipNum\"></span> adequate, affordable, and available units")
 			.style("display", "none")
 
-		sidebar.append("div")
-			.attr("class", "zoom in")
-			.text("+")
-			.on("click", function(){ dispatch.zoomIn() })
-		sidebar.append("div")
-			.attr("class", "zoom out")
-			.text("-")
-			.on("click", function(){ dispatch.zoomOut() })
+
 
 
 	});
@@ -575,7 +567,7 @@ function foo(selection) {
 		if(hovered[0].length == 0 && selectedCounties.length == 0){
 			d3.select(".lowPopTop")
 				.transition()
-				.style("left","400px")
+				.style("left","1200px")
 			d3.selectAll(".defaultTooltip").style("display","block");
 			d3.selectAll(".tooltipDetail").style("display","none");
 		}
@@ -629,7 +621,7 @@ function foo(selection) {
 						// console.log(d3.s)
 						d3.select(".lowPopTop")
 							.transition()
-							.style("left","400px")
+							.style("left","1200px")
 						return "ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
 					}
 					else if(minELI == maxELI){
@@ -1206,7 +1198,6 @@ function foo(selection) {
 				.attr("class", "expanded")
  			drawDetail(li, under, false, currentYear, identifier, d);
 
-			pymChild.sendHeight();
 		}
 		d3.select(".print.button")
 			.transition()
@@ -1235,7 +1226,6 @@ function foo(selection) {
 		 	.style("display", "none")
 		 	.attr("class", "garbage");
 		dispatch.updateTooltip();
-		pymChild.sendHeight();
 		if(selectedCounties.length == 0){
 		d3.select(".print.button")
 			.transition()
@@ -1436,7 +1426,6 @@ function foo(selection) {
                 setTimeout(next.css.bind(next, {' -moz-transition':'border-top-width 0.1s ease-in, background .2s ease-out;', '-webkit-transition':'border-top-width 0.1s ease-in, background .2s ease-out;','-o-transition':'border-top-width 0.1s ease-in, background .2s ease-out;','transition':'border-top-width 0.1s ease-in, background .2s ease-out;'})); }
         });
 
-pymChild = new pym.Child({ renderCallback: drawGraphic, polling: 50});
 
 d3.select(".population.header")
 	.style("cursor","pointer")
@@ -1546,6 +1535,11 @@ d3.select(".help-button")
 			.style("opacity",0)
 			.style("z-index",-2)
 	})
-
+	
+d3.select(".zoom.in")
+	.on("click", function(){ dispatch.zoomIn() })
+d3.select(".zoom.out")
+	.on("click", function(){ dispatch.zoomOut() })
 // console.log("fooooo")
 
+drawGraphic(MASTER_WIDTH)

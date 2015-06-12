@@ -4,18 +4,26 @@ body{
   color: #333;
   background-color: #fff;
 }
+.map.container{
+  width: 950px;
+  margin: 0 auto;
+}
 
 /*Header*/
 .header.container div{
   float: left;
 }
 .header.container.top{
-  height: 0px;
+height: 0px;
   border: none;
   position: relative;
   top: -57px;
+  left: 82%;
+  margin-left: 350px;
+  clear: both;
+  /* overflow: hidden; */
+  /* padding-left: 240px; */
   float: right;
-  left: 78%;
 }
 .header.container{
   height: 59px;
@@ -119,7 +127,7 @@ body{
 }
 .assistance.container, .year.container{
   height: 43px;
-  padding-top: 0px;
+  padding-top: 10px;
   padding-left: 5px;
   padding-right: 10px;
 }
@@ -278,11 +286,13 @@ path.undefined{
   border-right: 5px solid;
   border-color: #fdbf11;
   position: relative;
-  left: 400px;
+  left: 1200px;
 }
 .tooltip{
-  width: 50px;
-  height: 536.5px;
+  width: 349px;
+  left: 50%;
+  margin-left: 199px;
+  height: 476.5px;
   position: absolute;
   /*left: 906px;*/
   top: 455px;
@@ -342,14 +352,23 @@ path.undefined{
   background-repeat: no-repeat;
 }
 .zoom.in{
-  margin-top: 80px; 
+  position: relative;
+  top: 11px;
+}
+.zoom.out{
+  position: relative;
+  left: -22px;
+  top: 32px;
+}
+.zoom span{
+  padding-bottom: 5px;
 }
 .zoom{
   position: relative;
-  left: 80%;
-  bottom: 50px;
-  width: 24px;
-  height: 30px;
+  /*left: 80%;*/
+  /*bottom: 50px;*/
+  width: 20px;
+  height: 20px;
   font: 20px Lato;
   font-weight: 700;
   text-align: center;
