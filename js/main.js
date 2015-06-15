@@ -238,6 +238,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	    .projection(projection);
 
 	var svg = d3.select(".map.container").append("svg")
+		.attr("id","map-svg")
 	    .attr("width", containerWidth)
 	    .attr("height", height);
 
