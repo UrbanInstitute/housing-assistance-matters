@@ -1,8 +1,10 @@
+
 body{
   margin: 0;
   font: 12px Lato;
   color: #333;
   background-color: #fff;
+/*    min-width: 950px;*/
 }
 .map.container{
   width: 950px;
