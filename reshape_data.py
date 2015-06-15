@@ -28,7 +28,7 @@ for year in years:
 			data[fips]["FIPS"] = fips
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
-			data[fips][year]["hud"] = row[indices]["hud_units00"]
+			data[fips][year]["hud"] = row[indices["hud_units00"]]
 
 			if flag == "0":
 				data[fips][year]["asst"] = row[indices["per100"]]
@@ -68,7 +68,7 @@ for year in years:
 			data[fips]["FIPS"] = fips
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
-			data[fips][year]["hud"] = row[indices]["hud_units06"]
+			data[fips][year]["hud"] = row[indices["hud_units06"]]
 			if flag == "0":
 				data[fips][year]["asst"] = row[indices["per100"]]
 				data[fips][year]["noAsst"] = row[indices["per100_No_Assist"]]
@@ -107,7 +107,7 @@ for year in years:
 			data[fips][year]["ami"] = row[indices["l30_4"]]
 			flag = row[indices["state_flag"]]
 			data[fips][year]["flag"] = flag
-			data[fips][year]["hud"] = row[indices]["Avg_units_hud_12_13"]
+			data[fips][year]["hud"] = row[indices["Avg_units_hud_12_13"]]
 			if flag == "0":
 				data[fips][year]["asst"] = row[indices["per100"]]
 				data[fips][year]["noAsst"] = row[indices["per100_No_Assist"]]

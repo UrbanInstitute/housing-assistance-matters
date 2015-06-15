@@ -1255,7 +1255,7 @@ function foo(selection) {
 
 		d3.selectAll(".detail.year.label")
 			.attr("data-year", year)
-			.text(year)
+			.text(threeYearNameUpdate(year))
 		d3.selectAll(".detail.totalPop")
 			.attr("data-year", year)
 			.text(function(d){ return comma(d["properties"]["totalPop" +  year])})
