@@ -654,6 +654,7 @@ li {
   text-align: right;
   position: relative;
   top: -38px;
+  clear: both;
 }
 /*.expand_bg{
   width: 100%;
