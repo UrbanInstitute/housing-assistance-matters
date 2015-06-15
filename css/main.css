@@ -749,7 +749,7 @@ li {
   float: left;
   position: absolute;
   top: 958px;
-  left: 30px;
+  left: 15%;
   cursor: pointer;
 }
 .print.border{
@@ -962,7 +962,8 @@ li {
 .footerRow{
   background: #333;
   color: white;
-  height: 795px;
+    height:auto;
+  min-height: 795px;
   top: -12px;
   position: relative;
 }
@@ -978,11 +979,14 @@ li {
 hr{
   background: #b3b3b3;
 }
-
+.footer-container{
+ width: 70%;
+    margin: 0 auto;
+}
 .left.footer{
   padding-top: 45px;
   width: 445px;
-  margin-left: 84px;
+/*  margin-left: 84px;*/
   font-size: 14px;
   font-weight: 200;
   float: left;
@@ -1084,3 +1088,17 @@ hr{
 .national_key{
   /*display: none;*/
 }
+
+@media (max-width: 1335px){
+ .footerRow{
+  height: 1200px;   
+ }
+    .right.footer{
+     left: 0;   
+    }
+    
+    .print.button{
+     left: 30px;   
+    }
+}
+
