@@ -1,8 +1,10 @@
+
 body{
   margin: 0;
   font: 12px Lato;
   color: #333;
   background-color: #fff;
+/*    min-width: 950px;*/
 }
 .map.container{
   width: 950px;
@@ -10,6 +12,9 @@ body{
 }
 
 /*Header*/
+#header-wrapper{
+  min-width: 950px;
+}
 .header.container div{
   float: left;
 }
@@ -499,8 +504,12 @@ li {
     top: 31px;
     pointer-events: none;
 }
+.fips_national.bar.text{
+    top: -49px;
+}
 .fips_national.total.bar{
   pointer-events: auto;
+  top: -47px;
 }
 .us_caption_asst{
   font-style: italic;
@@ -558,7 +567,7 @@ li {
   height: 29px;
   background-size: contain;
   background-repeat: no-repeat;
-  top: -57px;
+  top: -36px;
   position: relative;
   margin-right: 17px;
 }
@@ -591,6 +600,9 @@ li {
   position: relative;
   top: -56px;
 }
+.fullName{
+  margin-top: 19px;
+}
 .year.label{
   font: 15px Lato;
   font-weight: 700;
@@ -604,7 +616,7 @@ li {
   color: white;
   background: #999;
   text-align: center;
-  margin-top: 12px;
+  margin-top: 8px;
   cursor: pointer;
 }
 .expand_years span{
@@ -672,7 +684,7 @@ li {
 }
 
 .total.bar{
-  width: 171px;
+  width: 155px;
   height: 34px;
   background: #fff;
   border: 1px solid #999999;
@@ -687,7 +699,7 @@ li {
   float: left;
   text-indent: 19px;
   top: -32px;
-  left: 28px;
+  left: 45px;
   position: relative;
 }
 .display.bar{
@@ -749,7 +761,7 @@ li {
   float: left;
   position: absolute;
   top: 958px;
-  left: 30px;
+  left: 15%;
   cursor: pointer;
 }
 .print.border{
@@ -847,7 +859,8 @@ li {
 }
 .location.header{
   background-color: #b3b3b3;
-  width: 267px;
+  width: 291px;
+  text-indent: 42px;
 }
 .population.header{
   width: 212px;
@@ -962,7 +975,7 @@ li {
 .footerRow{
   background: #333;
   color: white;
-  height: 1200px;
+  min-height: 795px;
   top: -12px;
   position: relative;
 }
@@ -978,11 +991,14 @@ li {
 hr{
   background: #b3b3b3;
 }
-
+.footer-container{
+ width: 70%;
+    margin: 0 auto;
+}
 .left.footer{
   padding-top: 45px;
   width: 445px;
-  margin-left: 84px;
+/*  margin-left: 84px;*/
   font-size: 14px;
   font-weight: 200;
   float: left;
@@ -1073,9 +1089,12 @@ hr{
   clear: both;
   width: 228px;
 }
-
+.fips_national.total.units{
+  top: -41px;
+}
 .fips_national .county.name{
   left: 54px;
+  padding-top: 20px;
 }
 .totalPop.fips_national{
   left: 58px;
@@ -1084,3 +1103,17 @@ hr{
 .national_key{
   /*display: none;*/
 }
+
+@media (max-width: 1335px){
+  .footerRow{
+  height: 1200px;   
+  }
+  .right.footer{
+   left: 0;   
+  }
+      
+  .print.button{
+   left: 30px;   
+  }
+}
+
