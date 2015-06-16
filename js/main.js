@@ -4,7 +4,7 @@ var BAR_WIDTH = 155.0;
 var comma = d3.format(",f")
 var dollar = d3.format("$,")
 var MASTER_WIDTH = 950;
-var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","totalPop2000":"8165441","asstNum2000":"3004106","noAsstNum2000":"1270140","asst2006":"33","noAsst2006":"9","totalPop2006":"9644199","asstNum2006":"3205087","noAsstNum2006":"892240","asst2013":"28","noAsst2013":"5","totalPop2013":"10985956","asstNum2013":"3104458","noAsstNum2013":"565716"}}
+var usData = {"id":"national","properties":{"asst2000":"37","noAsst2000":"16","totalPop2000":"8165441","asstNum2000":"3004106","noAsstNum2000":"1270140","asst2006":"33","noAsst2006":"9","totalPop2006":"9664610","asstNum2006":"3195460","noAsstNum2006":"882613","asst2013":"28","noAsst2013":"5","totalPop2013":"11341484","asstNum2013":"3193920","noAsstNum2013":"609802"}}
 var drawDetail = function(d){
 	var detail;
 }
