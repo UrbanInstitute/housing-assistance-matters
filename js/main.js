@@ -362,7 +362,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      .attr("id", "county-borders")
 	      .attr("d", path);
 	  g.append("path")
-	      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return a !== b; }))
+	      .datum(topojson.mesh(us, us.objects.cb_2013_us_state_500k, function(a, b) { return (a !== b && a.properties.GEOID != "11" && b.properties.GEOID != "11"); }))
 	      .attr("id", "state-borders")
 	      .attr("d", path);
 
@@ -830,7 +830,6 @@ function foo(selection) {
 		// 	.style("margin-left", (gutterWidth-42) + "px")
 	})
 	 		function drawDetail(listItem, under, expand, year, identifier, d){
-	 			console.log(d)
 	 			var natl = (d.id == "national")
 				assistance = getAssistance();
 	 			var type  = (expand) ? "expand":"detail";
@@ -1543,4 +1542,6 @@ d3.select(".zoom.out")
 	.on("click", function(){ dispatch.zoomOut() })
 // console.log("fooooo")
 
+
 drawGraphic(MASTER_WIDTH)
+
