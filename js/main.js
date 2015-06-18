@@ -342,10 +342,10 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      .on("click", clicked)
 	      .on("mouseover", function(){
 	      	var obj = d3.select(this)
-	      	var stateClass = "state_" + obj.attr("class").split("state_")[1]
+	      	var stateClass = "state_" + obj.attr("class").split("state_")[1].replace(" active","")
 	      	// obj.style("fill","#ffda91 !important")
 	      	if(obj.classed("ignored")){
-	      		// console.log("FOOOOO")
+	      		console.log(stateClass)
 	      		d3.selectAll(".ignored." + stateClass).classed("hover", true);
 	      		obj.classed("hover",false)
 	      		obj.classed("hover2",true)
