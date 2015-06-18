@@ -345,7 +345,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      	var stateClass = "state_" + obj.attr("class").split("state_")[1].replace(" active","")
 	      	// obj.style("fill","#ffda91 !important")
 	      	if(obj.classed("ignored")){
-	      		console.log(stateClass)
 	      		d3.selectAll(".ignored." + stateClass).classed("hover", true);
 	      		obj.classed("hover",false)
 	      		obj.classed("hover2",true)
