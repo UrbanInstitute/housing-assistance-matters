@@ -1,5 +1,6 @@
 
 body{
+  overflow-x: hidden;
   margin: 0;
   font: 12px Lato;
   color: #333;
