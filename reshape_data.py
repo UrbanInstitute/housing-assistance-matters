@@ -49,7 +49,7 @@ for year in years:
 
 
 	elif year == "2006":
-		cr = csv.reader(open("data/source/hai_comms_2005_to_2007.csv", "rU"))
+		cr = csv.reader(open("data/source/HAI_COMMS_2006_to_2008_Final.csv", "rU"))
 		head = cr.next()
 		i = 0
 		indices = {}
@@ -72,25 +72,25 @@ for year in years:
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
 			if flag == "0":
-				data[fips][year]["asst"] = row[indices["per100"]]
-				data[fips][year]["noAsst"] = row[indices["per100_No_Assist"]]
-				data[fips][year]["totalPop"] = row[indices["Avg_ELITotal_05_07"]]
-				data[fips][year]["asstNum"] = row[indices["Avg_Units_05_07"]]
-				data[fips][year]["noAsstNum"] = row[indices["Avg_Units_No_Assist_05_07"]]
+				data[fips][year]["asst"] = row[indices["per100_06_08"]]
+				data[fips][year]["noAsst"] = row[indices["per100_No_HUD_USDA_06_08"]]
+				data[fips][year]["totalPop"] = row[indices["Avg_ELITotal_06_08"]]
+				data[fips][year]["asstNum"] = row[indices["Avg_Units_06_08"]]
+				data[fips][year]["noAsstNum"] = row[indices["Avg_Units_No_HUD_USDA_06_08"]]
 				data[fips][year]["ami"] = row[indices["l30_4"]]
-				data[fips][year]["hud"] = row[indices["hud_units06"]]
+				data[fips][year]["hud"] = row[indices["Avg_units_hud_06_08"]]
 			else:
-				data[fips][year]["asst"] = row[indices["State_per100"]]
-				data[fips][year]["noAsst"] = row[indices["State_per100_No_Assist"]]
-				data[fips][year]["totalPop"] = row[indices["State_Avg_ELITotal_05_07"]]
-				data[fips][year]["asstNum"] = row[indices["State_Avg_Units_05_07"]]
-				data[fips][year]["noAsstNum"] = row[indices["State_Avg_Units_No_Assist_05_07"]]
+				data[fips][year]["asst"] = row[indices["ST_per100_06_08"]]
+				data[fips][year]["noAsst"] = row[indices["ST_per100_No_HUD_USDA_06_08"]]
+				data[fips][year]["totalPop"] = row[indices["ST_Avg_ELITotal_06_08"]]
+				data[fips][year]["asstNum"] = row[indices["ST_Avg_Units_06_08"]]
+				data[fips][year]["noAsstNum"] = row[indices["ST_Avg_Units_No_HUD_USDA_06_08"]]
 				data[fips][year]["ami"] = row[indices["l30_4"]]
-				data[fips][year]["hud"] = row[indices["state_hud_units06"]]
+				data[fips][year]["hud"] = row[indices["ST_Avg_units_hud_06_08"]]
 
 			
 	elif year == "2013":
-		cr = csv.reader(open("data/source/hai_comms_2011_to_2013.csv", "rU"))
+		cr = csv.reader(open("data/source/HAI_COMMS_2012_to_2014_Final.csv", "rU"))
 		head = cr.next()
 		i = 0
 		indices = {}
@@ -112,19 +112,19 @@ for year in years:
 			flag = row[indices["state_flag"]]
 			data[fips][year]["flag"] = flag
 			if flag == "0":
-				data[fips][year]["asst"] = row[indices["per100"]]
-				data[fips][year]["noAsst"] = row[indices["per100_No_Assist"]]
-				data[fips][year]["totalPop"] = row[indices["Avg_ELITotal_11_13"]]
-				data[fips][year]["asstNum"] = row[indices["Avg_Units_11_13"]]
-				data[fips][year]["noAsstNum"] = row[indices["Avg_Units_No_Assist_11_13"]]
-				data[fips][year]["hud"] = row[indices["Avg_units_hud_12_13"]]
+				data[fips][year]["asst"] = row[indices["per100_12_14"]]
+				data[fips][year]["noAsst"] = row[indices["per100_No_HUD_USDA_12_14"]]
+				data[fips][year]["totalPop"] = row[indices["Avg_ELITotal_12_14"]]
+				data[fips][year]["asstNum"] = row[indices["Avg_Units_12_14"]]
+				data[fips][year]["noAsstNum"] = row[indices["Avg_Units_No_HUD_USDA_12_14"]]
+				data[fips][year]["hud"] = row[indices["Avg_units_hud_12_14"]]
 			else:
-				data[fips][year]["asst"] = row[indices["State_per100"]]
-				data[fips][year]["noAsst"] = row[indices["State_per100_No_Assist"]]
-				data[fips][year]["totalPop"] = row[indices["State_Avg_ELITotal_11_13"]]
-				data[fips][year]["asstNum"] = row[indices["State_Avg_Units_11_13"]]
-				data[fips][year]["noAsstNum"] = row[indices["State_Avg_Units_No_Assist_11_13"]]
-				data[fips][year]["hud"] = row[indices["State_Avg_units_hud_12_13"]]
+				data[fips][year]["asst"] = row[indices["ST_per100_12_14"]]
+				data[fips][year]["noAsst"] = row[indices["ST_per100_No_HUD_USDA_12_14"]]
+				data[fips][year]["totalPop"] = row[indices["ST_Avg_ELITotal_12_14"]]
+				data[fips][year]["asstNum"] = row[indices["ST_Avg_Units_12_14"]]
+				data[fips][year]["noAsstNum"] = row[indices["ST_Avg_Units_No_HUD_USDA_12_14"]]
+				data[fips][year]["hud"] = row[indices["ST_Avg_units_hud_12_14"]]
 
 		
 
