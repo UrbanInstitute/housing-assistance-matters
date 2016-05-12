@@ -31,14 +31,19 @@ height: 0px;
   /* padding-left: 240px; */
   float: right;
 }
+.header.container.top span{
+  left: -120px !important;
+}
 .header.container.top{
   width: 100%;
 }
 .header.container.bottom{
   height: 59px;
   width: 1004px;
-  margin: 0 auto; 
-  border-bottom: 1px solid #ccc;
+  margin: 0 auto;
+  margin-bottom: 40px;
+ 
+  /*border-bottom: 1px solid #ccc;*/
 }
 .header .button{
   font: 14px Lato;
@@ -124,6 +129,7 @@ height: 0px;
 #map-svg{
   position: relative;
   overflow: hidden;
+  /*margin-top: -20px;*/
 }
 .header.label{
   font: 15px Lato;
@@ -137,7 +143,8 @@ height: 0px;
 }
 
 .assistance.container{
-  margin-left: 30%;
+  margin-left: 30px;
+  /*margin-top: -40px;*/
 }
 .assistance.container, .year.container{
   height: 43px;
@@ -309,7 +316,7 @@ path.undefined{
   height: 476.5px;
   position: absolute;
   /*left: 906px;*/
-  top: 455px;
+  top: 415px;
   background: rgba(255,255,255,0);
   /*opacity: .3;*/
   z-index: 0;
@@ -883,6 +890,7 @@ li {
   position: relative;
   bottom: 4px;
 }
+
 .population.header span{
   bottom: -4px;
 }

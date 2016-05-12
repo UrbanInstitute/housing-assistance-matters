@@ -48,16 +48,21 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 			return "2000";
 		}
 		else if (year == "2006"){
-			return "2005 — '07";
+			return "2006 — '08";
 		}
 		else if (year == "2013"){
-			return "2011 — '13";
+			return "2012 — '14";
 		}
 	}
 	var getAssistance = function(){
-		var btn = d3.select(".assistance.button.active");
-		if (btn.classed("turnOn")){return "asst"}
-		else{ return "noAsst"}
+		var hud_btn = d3.select(".hud.assistance.button.active");
+		var usda_btn = d3.select(".usda.assistance.button.active");
+		// if (btn.classed("turnOn")){return "asst"}
+		// else{ return "noAsst"}
+		// var str = ""
+		var usda_str = (usda_btn.classed("turnOn")) ? "usdaOn" : "usdaOff";
+		var hud_str = (hud_btn.classed("turnOn")) ? "hudOn" : "hudOff";
+		return usda_str + "_" + hud_str;
 	}
 
 	var getYear = function(){
@@ -73,31 +78,55 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	d3.selectAll(".assistance.button")
 		.on("click", function(){
 		// var btn = d3.select(this)
-		var active = d3.select(".assistance.button.active")
-		if(active.classed("turnOn")){
-			active.classed("active", false);
-			d3.select(".assistance.button.turnOff")
-				.classed("active", true);
-			dispatch.changeAssistance("noAsst");
-		}
-		if(active.classed("turnOff")){
-			active.classed("active", false);
-			d3.select(".assistance.button.turnOn")
-				.classed("active", true);
-			dispatch.changeAssistance("asst");
-		}		
+		// var active = d3.select(".assistance.button.active")
+		// d3.select(d3.select(this).node().parentNode).select(".active").classed("active",false)
+		var usda = (d3.select(this).classed("usda")) ? "usda" : "hud"
+		d3.select(".assistance.button.active." + usda).classed("active",false)
+		d3.select(this).classed("active",true)
+		// console.log(getAssistance())
+		dispatch.changeAssistance(getAssistance())
+
+		// if(active.classed("turnOn")){
+		// 	active.classed("active", false);
+		// 	d3.select(".assistance.button.turnOff")
+		// 		.classed("active", true);
+		// 	dispatch.changeAssistance("noAsst");
+		// }
+		// if(active.classed("turnOff")){
+		// 	active.classed("active", false);
+		// 	d3.select(".assistance.button.turnOn")
+		// 		.classed("active", true);
+		// 				// console.log(getAssistance())
+
+		// 	dispatch.changeAssistance("asst");
+		// }		
 	});
 	dispatch.on("changeAssistance", function(assistance){
 		dispatch.updateTooltip();
 
-		if(assistance == "asst"){
-			d3.selectAll(".turnOn").classed("active", true)
-			d3.selectAll(".turnOff").classed("active", false)
+		if(assistance == "usdaOn_hudOn"){
+			d3.select(".usda.turnOn").classed("active", true)
+			d3.select(".usda.turnOff").classed("active", false)
+			d3.select(".hud.turnOn").classed("active", true)
+			d3.select(".hud.turnOff").classed("active", false)
 		}
-		else{
-			d3.selectAll(".turnOn").classed("active", false)
-			d3.selectAll(".turnOff").classed("active", true)
+		else if(assistance == "usdaOff_hudOn"){
+			d3.select(".usda.turnOn").classed("active", false)
+			d3.select(".usda.turnOff").classed("active", true)
+			d3.select(".hud.turnOn").classed("active", true)
+			d3.select(".hud.turnOff").classed("active", false)		}
+		else if(assistance == "usdaOn_hudOff"){
+			d3.select(".usda.turnOn").classed("active", true)
+			d3.select(".usda.turnOff").classed("active", false)
+			d3.select(".hud.turnOn").classed("active", false)
+			d3.select(".hud.turnOff").classed("active", true)
+		}else{
+			d3.select(".usda.turnOn").classed("active", false)
+			d3.select(".usda.turnOff").classed("active", true)
+			d3.select(".hud.turnOn").classed("active", false)
+			d3.select(".hud.turnOff").classed("active", true)
 		}
+
 	});
 	dispatch.on("changeYear", function(year){
 		dispatch.updateTooltip();
@@ -299,13 +328,13 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      .attr("d", path)
 	      .style("fill", function(d){
 	      	if(d.properties.flagged !== "1"){
-	      		return COLORS[quantize(d.properties.asst2013)];
+	      		return COLORS[quantize(d.properties.usdaOn_hudOn2013)];
 	      	}
 	      	else{
 	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
 	      		// return GREYS["q" + temp + "-5"]
-	      		return COLORS[quantize(d.properties.asst2013)];
+	      		return COLORS[quantize(d.properties.usdaOn_hudOn2013)];
 	      	}
 	      })
   	      .style("stroke", function(d){
@@ -316,7 +345,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
 	      		// return GREYS["q" + temp + "-5"]
-	      		return COLORS[quantize(d.properties.asst2013)];
+	      		return COLORS[quantize(d.properties.usdaOn_hudOn2013)];
 	      		// return "#fe0103";
 	      		// return "none"
 	      	}
@@ -337,7 +366,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	          .attr("class", function(d) {
 	          	var ignored = (d.properties.flagged == "1") ? " ignored" : "notIgnored";
 	          	var fips = "fips_" + d.id
-	          	return ignored + " " + fips + " " + quantize(d.properties.asst2013) + " " + "state_" + d.properties.STATE_FIPS;
+	          	return ignored + " " + fips + " " + quantize(d.properties.usdaOn_hudOn2013) + " " + "state_" + d.properties.STATE_FIPS;
 	          })
 	      .on("click", clicked)
 	      .on("mouseover", function(){

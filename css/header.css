@@ -120,7 +120,7 @@ width:100%;
 
 header{
   background-image: url("../images/building.jpg");
-    height: 405px;
+    height: 365px;
     margin-top: 50px;
   z-index: 10;
     
@@ -159,7 +159,7 @@ header h1{
  font-size:30px;
  color:#ffffff;
     font-weight: 400; 
-padding-top: 150px;
+padding-top: 120px;
 }
 
 header h2{
