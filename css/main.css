@@ -39,7 +39,7 @@ height: 0px;
 }
 .header.container.bottom{
   height: 59px;
-  width: 1004px;
+  width: 1190px;
   margin: 0 auto;
   margin-bottom: 40px;
  
@@ -67,6 +67,7 @@ height: 0px;
 .assistance.label{
   margin-top: 4px;
   margin-right: 4px;
+  padding-left: 54px;
 }
 
 .help-button{
@@ -136,6 +137,23 @@ height: 0px;
   color: #333;
   font-weight: 700;
 }
+#fader{
+  position: absolute;
+  width: 281px;
+  background: rgba(255,255,255,0);
+  height: 0px;
+  z-index: 3;
+  margin-top: -6px;
+  /*pointer-events: none;*/
+}
+#faderText{
+  position: absolute;
+  margin-top: 33px;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: italic;
+  opacity: 0;
+}
 
 .button span{
   position: relative;
@@ -159,7 +177,7 @@ height: 0px;
 }
 
 .header.container .year.label{
-  margin-left: 22px;
+  margin-left: 32px;
   padding-top: 5px;
 }
 .year.label{

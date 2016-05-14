@@ -64,7 +64,7 @@ function drawGraphic(containerWidth){
 	var fips = params.fips
 	var width = 600;
 	var height = 300;
-	var margin = {left:50, right:30, top:30, bottom: 30}
+	var margin = {left:50, right:30, top:80, bottom: 30}
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
 		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
@@ -118,9 +118,10 @@ function drawGraphic(containerWidth){
 		// var x = d3.scale.linear()
 		// 		.range([margin.left,width-margin.left])
 		// 		.domain([1999.5,2013.5])
+		var REMAP = {"2000" : "2000", "2006": "2008", "2013":"2014"}
 		var x = d3.scale.ordinal()
     		.rangeRoundBands([0, width], .3)
-    		.domain([2000,2006,2013]);
+    		.domain([2000,2008,2014]);
 		var y = d3.scale.linear()
 				.range([height-margin.bottom,margin.bottom])
 				.domain([0,100])
@@ -134,19 +135,21 @@ function drawGraphic(containerWidth){
 		var xAxis = d3.svg.axis()
 		    .scale(x)
 		    .orient("bottom")
-		    // .tickValues([2000,2006,2013])
+		    .tickValues([2000,2008,2014])
 		    // .tickFormat(d3.format("0"))
 		    .outerTickSize(0);
 
 		var yAxis = d3.svg.axis()
 		    .scale(y)
+		    .tickValues([20,40,60,80,100])
 		    .orient("left")
 		    .ticks(5);
 
 		var svg = containers.append("svg")
-				.attr("height",height)
+				.attr("height",height + margin.top)
 				.attr("width",width)
-				.append("g");
+				.append("g")
+
 		// for(var t= 1; t <= 5; t++){
 		// 	svg.append("line")
 		// 		.attr("class", "grid-line")
@@ -157,12 +160,12 @@ function drawGraphic(containerWidth){
 		// }
 		svg.append("g")
 		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + (height-margin.bottom) + ")")
+		      .attr("transform", "translate(0," + (height-margin.bottom+margin.top) + ")")
 		      .call(xAxis);
 
 		svg.append("g")
 		      .attr("class", "y axis")
-		      .attr("transform", "translate(" + margin.left + ",0)")
+		      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 		      .call(yAxis)
 		    .append("text")
 		      .attr("transform", "rotate(-90)")
@@ -188,7 +191,7 @@ function drawGraphic(containerWidth){
 
 			// }
 			svg.append("rect")
-				.attr("class", "asst bar")
+				.attr("class", "usdaOnhudOn legend")
 				.attr("x", 50)
 				.attr("y", 0)
 				.attr("width", 15)
@@ -197,32 +200,80 @@ function drawGraphic(containerWidth){
 				.text("Units per 100 ELI households")
 				.attr("x",70)
 				.attr("y",13)
+
 			svg.append("rect")
-				.attr("class", "noAsst bar")
+				.attr("class", "usdaOffhudOn legend")
 				.attr("x", 250)
 				.attr("y", 0)
 				.attr("width", 15)
 				.attr("height", 15)
 			svg.append("text")
-				.text("Units per 100 ELI households without HUD assistance ")
+				.text("Units per 100 ELI households without USDA assistance")
 				.attr("x",270)
 				.attr("y",13)
 
 			svg.append("rect")
-				.attr("class","asst bar")
-				.attr("x", x(years[i]))
-				.attr("y", function(d) { return y(d.properties["asst" + years[i]]) })
-				.attr("width", x.rangeBand())
-				.attr("height", function(d){ return height - margin.bottom - y(d.properties["asst" + years[i]])})
-				// .attr("cx",x(years[i]))
-				// .attr("cy", function(d){ return y(d.properties["asst" + years[i]])})
-				// .attr("r",4)
+				.attr("class", "usdaOnhudOff legend")
+				.attr("x", 50)
+				.attr("y", 30)
+				.attr("width", 15)
+				.attr("height", 15)
+			svg.append("text")
+				.text("Units per 100 ELI households")
+				.attr("x",70)
+				.attr("y",43)
+			svg.append("text")
+				.text("without HUD assistance")
+				.attr("x",70)
+				.attr("y",59)
+
 			svg.append("rect")
-				.attr("class","noAsst bar")
-				.attr("x", x(years[i])+x.rangeBand()*.1)
-				.attr("y", function(d) { return y(d.properties["noAsst" + years[i]]) })
+				.attr("class", "usdaOffhudOff legend")
+				.attr("x", 250)
+				.attr("y", 30)
+				.attr("width", 15)
+				.attr("height", 15)
+			svg.append("text")
+				.text("Units per 100 ELI households without HUD")
+				.attr("x",270)
+				.attr("y",43)
+			svg.append("text")
+				.text("and USDA assistance")
+				.attr("x",270)
+				.attr("y",59)
+
+			svg.append("rect")
+				.attr("class","usdaOnhudOn bar y" + REMAP[years[i]])
+				.attr("x", x(REMAP[years[i]]))
+				.attr("y", function(d) { console.log(years, d); return y(d.properties["usdaOnhudOn" + years[i]]) })
+				.attr("width", x.rangeBand())
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOnhudOn" + years[i]])})
+
+			svg.append("rect")
+				.attr("class","usdaOffhudOn bar y" + REMAP[years[i]])
+				.attr("x", x(REMAP[years[i]])+x.rangeBand()*.1)
+				.attr("y", function(d) { return y(d.properties["usdaOffhudOn" + years[i]]) })
 				.attr("width", x.rangeBand()*.8)
-				.attr("height", function(d){ return height - margin.bottom - y(d.properties["noAsst" + years[i]])})
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOffhudOn" + years[i]])})
+
+			svg.append("rect")
+				.attr("class","usdaOnhudOff bar y" + REMAP[years[i]])
+				.classed("opaque", function(d){ return (d.properties["usdaOnhudOff" + years[i]] >= d.properties["usdaOnhudOff" + years[i]]) && years[i] != "2000"})
+				.attr("x", x(REMAP[years[i]])+x.rangeBand()*.2)
+				.attr("y", function(d) { return y(d.properties["usdaOnhudOff" + years[i]]) })
+				.attr("width", x.rangeBand()*.6)
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOnhudOff" + years[i]])})
+
+			svg.append("rect")
+				.attr("class","usdaOffhudOff bar y" + REMAP[years[i]])
+				.attr("x", x(REMAP[years[i]])+x.rangeBand()*.3)
+				.attr("y", function(d) { return y(d.properties["usdaOffhudOff" + years[i]]) })
+				.attr("width", x.rangeBand()*.4)
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOffhudOff" + years[i]])})
+
+			svg.selectAll(".bar")
+				.attr("transform", "translate(0," + (margin.top) + ")")
+
 
 		}
 		containers.append("div")

@@ -103,15 +103,20 @@
 <div class = "header container bottom">
 	<div class = "assistance container">
 		<div class = "assistance header label">HUD Assistance</div>
-		<div class = "help-button">
-				<div class = "help text asst">Federal housing assistance data come from the US Department of Housing and Urban Development’s (HUD’s) administrative databases. Because these data come from HUD’s systems, we consider them more complete than data tabulations from the American Housing Survey, which may be used to estimate federal rental assistance. However, some HUD programs—for example, housing assistance programs for Native Americans—are not captured in these data. Federal rental assistance funded by the US Department of Agriculture is also not included</div>
+		<div class = "help-button hud">
+				<div class = "help text hud asst">These data come from the US Department of Housing and Urban Development’s (HUD) administrative databases.  It is important to note that because HUD has provided the data from its administrative systems, we consider it more complete compared to data tabulations from the American Housing Survey that may be used to estimate federal rental assistance. However, not all HUD programs are captured, for example, housing assistance programs to Native Americans.
+</div>
 		</div>
 		<div class = "hud assistance button turnOn active"><span>ON</span></div>
 		<div class = "hud assistance button turnOff"><span>OFF</span></div>
-		
-		<div class = "assistance header label">USDA Assistance</div>
-		<div class = "help-button">
-				<div class = "help text asst">Federal housing assistance data come from the US Department of Housing and Urban Development’s (HUD’s) administrative databases. Because these data come from HUD’s systems, we consider them more complete than data tabulations from the American Housing Survey, which may be used to estimate federal rental assistance. However, some HUD programs—for example, housing assistance programs for Native Americans—are not captured in these data. Federal rental assistance funded by the US Department of Agriculture is also not included</div>
+		<div class = "assistance header label">
+				<div id = "fader"></div>
+				<div id = "faderText">Data on USDA housing assistance programs in 2000 were unavailable.</div>
+
+		USDA Assistance
+		</div>
+		<div class = "help-button usda">
+				<div class = "help text asst usda">These data come from the US Department of Agriculture’s (USDA) administrative databases.</div>
 		</div>
 		<div class = "usda assistance button turnOn active"><span>ON</span></div>
 		<div class = "usda assistance button turnOff"><span>OFF</span></div>
@@ -120,7 +125,7 @@
 	<div class = "year container">
 		<div class = "year header label">Year</div>
 		<div class = "year button" id = "button_2000"><span>2000</span></div>
-		<div class = "year button" id = "button_2006"><span>2008—'06</span></div>
+		<div class = "year button" id = "button_2006"><span>2006—'08</span></div>
 		<div class = "year button active" id = "button_2013"><span>2012—'14</span></div>
 	</div>
 	<div class = "zoom in"><span>+</span></div>
@@ -155,16 +160,19 @@
     <div class="footer-container">
 	<div class = "left footer">
 		<div class = "footer title">ABOUT THIS MAP</div>
-		<div class = "footer text"><p>The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renter households by county in the United States. The data analyzed come from multiple sources: the American Community Survey (ACS) Public Use Microdata Sample from the Census Bureau (via the Integrated Public Use Microdata Series from the Minnesota Population Center), the US Department of Housing and Urban Development’s (HUD’s) Public and Indian Housing Information Center and Tenant Rental Assistance Certification System, the HUD Section 8 income limits, and ACS pretabulated data from the Census Bureau.</p>
-		<p>The data on HUD-assisted housing represent a best estimate of the total number of HUD-subsidized ELI households. We include only those programs for which we can obtain data from HUD—public housing, Housing Choice vouchers, moderate rehabilitation, and Section 8 new construction and substantial rehabilitation—and only those recipients who are not rent-burdened. Because we were unable to obtain county-level data on rental housing programs funded through the US Department of Agriculture, federal assistance to ELI renter households in rural counties is undercounted.</p>
+		<div class = "footer text"><p>The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renter households at the county level in the United States. The data analyzed come from multiple sources – the American Community Survey (ACS) Public Use Microdata Sample (PUMS) from the Census (via the Integrated Public Use Microdata Series from the Minnesota Population Center), data provided by the US Department of Housing and Urban Development (HUD) from the Public and Indian Housing Information Center (PIC) and Tenant Rental Assistance Certification System (TRACs), the HUD Section 8 Income Limits, US Department of Agriculture’s Rural Housing Service and ACS pre-tabulated data from the Census. The data on HUD assisted housing represents a best estimate of the total number of HUD subsidized ELI households. We include only those programs for which we can obtain data from HUD, namely, Public Housing, Housing Choice Vouchers, Moderate Rehabilitation, and Section 8 New Construction and Substantial Rehabilitation, and only those recipients who are not rent-burdened.</p>
+		<p>The data on rental housing programs funded through the US Department of Agriculture, are counts of extremely low-income households living in USDA Section 515 properties and receiving USDA Section 521 Rental Assistance.</p>
 		<hr style="border-color: #b3b3b3">
 		<p><em>The Assisted Housing Initiative is a project of the Urban Institute, made possible by support from Housing Authority Insurance, Inc.  (HAI, Inc.), to provide fact-based analysis about public and assisted housing. The Urban Institute is a non-profit, nonpartisan research organization and retains independent and exclusive control over substance and quality of any Assisted Housing Initiative products. The views expressed in this and other Assisted Housing Initiative commentaries are those of the authors and should not be attributed to the Urban Institute or HAI, Inc.</em></p>
 </div>
 	</div>
 	<div class = "right footer">
 		<div class = "buttonRow">
+			
 			<a href = "http://www.urban.org/research/publication/housing-affordability-gap-extremely-low-income-renters-2013"><div class = "footer read"><span>Read report</span></div></a>
+			
 			<a href = "data/HAI_map_data.zip"><div class = "footer data"><img src = "images/download-icon.png"/><span>Download Data</span></div></a>
+
 			<div class = "footer print"><img src = "images/print-icon.png"/><span>View/print county details</span></div>
 		</div>
 		<div class = "footer title">PROJECT CREDITS</div>

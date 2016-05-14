@@ -96,19 +96,41 @@ svg{
 	stroke-dasharray: 4, 4;
 }
 
-.asst.bar{
-	fill: #c6c6c6;
+.usdaOnhudOn.bar, .usdaOnhudOn.legend{
+	fill: #5c5859;
 }
-.asst.line{
+.usdaOnhudOn.line{
+	stroke: #5c5859;
+}
+
+.usdaOffhudOn.bar, .usdaOffhudOn.legend{
+	fill: #fdbf11;
+}
+.usdaOffhudOn.line{
+	stroke: #fdbf11;
+}
+
+.usdaOnhudOff.bar, .usdaOnhudOff.legend{
+	fill: #1696d2;
+}
+.usdaOnhudOff.line{
 	stroke: #1696d2;
 }
 
-.noAsst.bar{
-	fill: #1696d2;
+.usdaOffhudOff.bar, .usdaOffhudOff.legend{
+	fill: #55b748;
 }
-.noAsst.line{
-	stroke: #c6c6c6;
+.usdaOffhudOff.line{
+	stroke: #55b748;
 }
+
+.usdaOffhudOn.bar.y2000, .usdaOffhudOn.line.y2000, .usdaOffhudOff.bar.y2000, .usdaOffhudOff.line.y2000{
+	display: none;
+}
+.bar.opaque{
+	opacity: .9;
+}
+
 
 .subtitle, .footnote, .footer{
   margin: 0 auto;

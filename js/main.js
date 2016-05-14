@@ -62,7 +62,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		// var str = ""
 		var usda_str = (usda_btn.classed("turnOn")) ? "usdaOn" : "usdaOff";
 		var hud_str = (hud_btn.classed("turnOn")) ? "hudOn" : "hudOff";
-		return usda_str + "_" + hud_str;
+		return usda_str + hud_str;
 	}
 
 	var getYear = function(){
@@ -104,18 +104,18 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	dispatch.on("changeAssistance", function(assistance){
 		dispatch.updateTooltip();
 
-		if(assistance == "usdaOn_hudOn"){
+		if(assistance == "usdaOnhudOn"){
 			d3.select(".usda.turnOn").classed("active", true)
 			d3.select(".usda.turnOff").classed("active", false)
 			d3.select(".hud.turnOn").classed("active", true)
 			d3.select(".hud.turnOff").classed("active", false)
 		}
-		else if(assistance == "usdaOff_hudOn"){
+		else if(assistance == "usdaOffhudOn"){
 			d3.select(".usda.turnOn").classed("active", false)
 			d3.select(".usda.turnOff").classed("active", true)
 			d3.select(".hud.turnOn").classed("active", true)
 			d3.select(".hud.turnOff").classed("active", false)		}
-		else if(assistance == "usdaOn_hudOff"){
+		else if(assistance == "usdaOnhudOff"){
 			d3.select(".usda.turnOn").classed("active", true)
 			d3.select(".usda.turnOff").classed("active", false)
 			d3.select(".hud.turnOn").classed("active", false)
@@ -328,13 +328,13 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      .attr("d", path)
 	      .style("fill", function(d){
 	      	if(d.properties.flagged !== "1"){
-	      		return COLORS[quantize(d.properties.usdaOn_hudOn2013)];
+	      		return COLORS[quantize(d.properties.usdaOnhudOn2013)];
 	      	}
 	      	else{
 	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
 	      		// return GREYS["q" + temp + "-5"]
-	      		return COLORS[quantize(d.properties.usdaOn_hudOn2013)];
+	      		return COLORS[quantize(d.properties.usdaOnhudOn2013)];
 	      	}
 	      })
   	      .style("stroke", function(d){
@@ -345,7 +345,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
 	      		// console.log(temp, GREYS[temp])
 	      		// return GREYS["q" + temp + "-5"]
-	      		return COLORS[quantize(d.properties.usdaOn_hudOn2013)];
+	      		return COLORS[quantize(d.properties.usdaOnhudOn2013)];
 	      		// return "#fe0103";
 	      		// return "none"
 	      	}
@@ -366,7 +366,7 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	          .attr("class", function(d) {
 	          	var ignored = (d.properties.flagged == "1") ? " ignored" : "notIgnored";
 	          	var fips = "fips_" + d.id
-	          	return ignored + " " + fips + " " + quantize(d.properties.usdaOn_hudOn2013) + " " + "state_" + d.properties.STATE_FIPS;
+	          	return ignored + " " + fips + " " + quantize(d.properties.usdaOnhudOn2013) + " " + "state_" + d.properties.STATE_FIPS;
 	          })
 	      .on("click", clicked)
 	      .on("mouseover", function(){
@@ -638,9 +638,9 @@ function foo(selection) {
 				.text(function(){
 					if( year == "2006"){
 						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
-						return "2007"
-					}
-					else{ return year}
+						return "2008"
+					}else if (year == "2013") return "2014" 
+					else{ return "2000"}
 				})
 			d3.select(".cutoff .tooltipNum")
 				.text(function(){
@@ -992,7 +992,11 @@ function foo(selection) {
 							maxELI = d["properties"]["maxELI" + year]
 						}
 						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
-						var newYear = (year == "2006") ? "2007": year
+						var newYear;
+						if(year == "2006") newYear = "2008"
+						else if(year == "2013") newYear = "2014"
+						else newYear = "2000"
+
 						if (d["properties"]["flagged"] == "0"){
 							return "In " + newYear + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
 						}
@@ -1270,6 +1274,27 @@ function foo(selection) {
 		}
 	})
 	dispatch.on("changeYear.details", function(year){
+		if(year == "2000"){
+			d3.select("#fader")
+				.style("height","34px")
+				.transition()
+				// .duration(1000)
+				.style("background","rgba(255,255,255,.7)")
+			d3.select("#faderText")
+				.transition()
+				.duration(1000)
+				.style("opacity",1)
+		}else{
+			d3.select("#fader")
+				.transition()
+				// .duration(1000)
+				.style("background","rgba(255,255,255,.0)")
+				.each("end", function(){ d3.select("#fader").style("height","0px") })
+			d3.select("#faderText")
+				.transition()
+				.duration(1000)
+				.style("opacity",0)
+		}
 		var a = getAssistance();
 		d3.selectAll(".y2013")
 			.classed("y2013",false)
@@ -1320,7 +1345,9 @@ function foo(selection) {
 							maxELI = d["properties"]["maxELI" + year]
 						}
 						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
-						var newYear = (year == "2006") ? "2007": year
+						if(year == "2006") newYear = "2008"
+						else if(year == "2013") newYear = "2014"
+						else newYear = "2000"
 						if (d["properties"]["flagged"] == "0"){
 							return "In " + newYear + ", ELI households of four earned no more than " + dollar(d["properties"]["ami" + year]) + "."
 						}
@@ -1545,24 +1572,48 @@ d3.select(".total.header")
 			.style("z-index",-2)
 	})
 
-d3.select(".help-button")
+d3.select(".help-button.hud")
 	.on("mouseover", function(){
-		d3.select(".help.text.asst")
+		d3.select(".help.text.asst.hud")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-345px")
-			.style("left","-90px")
+			.style("top","-293px")
+			.style("left","-88px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
-		d3.select(".help.text.asst")
+		d3.select(".help.text.asst.hud")
 			.transition()
 			.duration(100)
 			.style("top","-240px")
 			.style("opacity",0)
 			.style("z-index",-2)
 	})
+
+d3.select(".help-button.usda")
+	.on("mouseover", function(){
+		d3.select(".help.text.asst.usda")
+			.style("z-index",5)
+			.transition()
+			.duration(100)
+			.style("top","-107px")
+			.style("left","-88px")
+			.style("opacity",1)
+	})
+	.on("mouseout", function(){
+		d3.select(".help.text.asst.usda")
+			.transition()
+			.duration(100)
+			.style("top","-240px")
+			.style("opacity",0)
+			.style("z-index",-2)
+	})
+
+d3.select( "#fader" ).on("mouseover", function() {
+  d3.event.stopPropagation();
+  // Do something
+});
 
 d3.select(".zoom.in")
 	.on("click", function(){ dispatch.zoomIn() })
