@@ -95,7 +95,7 @@ height: 0px;
   position: absolute;
   width: 147px;
   height: 85px;
-  top: -124px;
+  /*top: -124px;*/
   left: -35px;
   pointer-events: none;
 }
@@ -567,6 +567,46 @@ li {
   position: absolute;
   top: -26px;
 }
+
+
+
+/****************************** BOTTOM BAR CHART NEW STYLES ***************/
+
+
+
+.unassisted.bar{
+  background: #1696d2;
+  border: 1px solid #1696d2;
+}
+
+.hud_only.bar{
+  background: #000000;
+  border: 1px solid #000000;
+
+}
+
+.usda_only.bar{
+  background: #e6e6e6;
+  border: 1px solid #e6e6e6;
+
+}
+
+.unassisted.bar, .hud_only.bar, .usda_only.bar{
+  height: 34px;
+  display: inline-block;
+  position: absolute;
+  top: -1px; 
+  left: -1px;
+}
+.bar.hidden{
+  border: none !important;
+}
+
+
+
+
+/****************************** BOTTOM BAR CHART NEW STYLES ***************/
+
 /*.national_key.stick {
     position: fixed;
     top: 0;
@@ -615,7 +655,7 @@ li {
 .detail.container.swing{
   /*border: solid;*/
   /*border-width: 1px;*/
-  margin-top: -60px;
+  margin-top: -20px;
 }
 
 .county{
