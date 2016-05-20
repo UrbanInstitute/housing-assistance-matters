@@ -1110,42 +1110,42 @@ function foo(selection) {
 					.attr("class", "fips_" + d.id + " caption y" + year)
 				if(natl){
 					caption
-						.attr("class", "us_caption_asst")
+						.attr("class", "us_caption_usda")
 						.text("USDA assisted units")
 						.style("text-indent", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
 						.append("div")
-						.attr("class", "us_line_asst")
+						.attr("class", "us_line_usda")
 						.style("left", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 
 						})
 					total.append("div")
-						.attr("class", "us_caption_asst")
+						.attr("class", "us_caption_hud")
 						.text("HUD assisted units")
 						.style("text-indent", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
 						.append("div")
-						.attr("class", "us_line_noAsst")
+						.attr("class", "us_line_hud")
 						.style("left", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
 
 					total.append("div")
-						.attr("class", "us_caption_asst")
+						.attr("class", "us_caption_baseline")
 						.text("Units without assistance")
 						.style("text-indent", function(){
 							var val = (parseFloat(d["properties"]["usdaOffhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
 						.append("div")
-						.attr("class", "us_line_noAsst")
+						.attr("class", "us_line_baseline")
 						.style("left", function(){
 							var val = (parseFloat(d["properties"]["usdaOffhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
@@ -1371,7 +1371,7 @@ function foo(selection) {
 						.style("z-index",5)
 						.transition()
 						// .duration(200)
-						.style("top","-194px")
+						.style("top","-142px")
 						.style("opacity",1)
 				})
 				.on("mouseout", function(d){
@@ -1468,45 +1468,190 @@ function foo(selection) {
 	})
 	dispatch.on("changeAssistance.details", function(a){
 		var year;
+		console.log(a)
 		d3.selectAll(".bar.text")
 			.text(function(d){ year = d3.select(this).attr("data-year"); return comma(d["properties"][a + year])})
 		d3.selectAll(".total.units")
 			.text(function(d){ year = d3.select(this).attr("data-year"); return comma(d["properties"][a + "Num" + year])})
-		d3.selectAll(".total.bar .display.bar")
-			.transition()
-			.style("width", function(d){
-				var year = d3.select(this).attr("data-year");
-				var asst = d.properties["asst" + year]
-				var noAsst = d.properties["noAsst" + year]
-				if(a == "noAsst"){
-					return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-				}
-				else{
-					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-				}
-			})
-			.style("background", function(d){
-				var year = d3.select(this).attr("data-year");
-				var asst = d.properties["asst" + year]
-				var noAsst = d.properties["noAsst" + year]
-				if(a == "noAsst"){
-					return COLORS[quantize(noAsst)]
-				}
-				else{
-					return COLORS[quantize(asst)]
-				}
-			})
-			.style("border-color", function(d){
-				var year = d3.select(this).attr("data-year");
-				var asst = d.properties["asst" + year]
-				var noAsst = d.properties["noAsst" + year]
-				if(a == "noAsst"){
-					return COLORS[quantize(noAsst)]
-				}
-				else{
-					return COLORS[quantize(asst)]
-				}
-			})
+		if(a == "usdaOnhudOff"){
+			d3.selectAll(".usda_only.bar")
+				.transition()
+				.style("background","#353535")
+				.style("border-color","#353535")
+				.style("border-left","0px solid")
+				.style("border-right","1.5px solid")
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.selectAll(".hud_only.bar")
+				.transition()
+				.style("background","rgba(255,255,255,0)")
+				.style("border-color","#999999")
+				.style("border-left","0px solid")
+				.style("border-right","1.5px solid")
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_caption_usda")
+				.style("z-index",10)
+				.transition()
+				.delay(800)
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_usda")
+				.style("z-index",10)
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_caption_hud")
+				.style("z-index", 9)
+				.transition()
+				.delay(800)
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_hud")
+				.style("z-index", 9)
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+		}
+		else if( a == "usdaOffhudOn"){
+			d3.selectAll(".hud_only.bar")
+				.transition()
+				.style("background","#696969")
+				.style("border-color","#696969")
+				.style("border-left","0px solid")
+				.style("border-right","1.5px solid")
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.selectAll(".usda_only.bar")
+				.transition()
+				.style("background","rgba(255,255,255,0)")
+				.style("border-color","#999999")
+				.style("border-left","0px solid")
+				.style("border-right","1.5px solid")
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_caption_hud")
+				.style("z-index", 9)
+				.transition()
+				.delay(800)
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_hud")
+				.style("z-index", 9)
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_caption_usda")
+				.style("z-index",10)
+				.transition()
+				.delay(800)
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_usda")
+				.style("z-index",10)
+				.transition()
+				.delay(800)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+		}
+		else{
+			if(a.search("usdaOff") != -1){
+				d3.selectAll(".usda_only.bar")
+					.transition()
+					.style("background","rgba(255,255,255,0)")
+					.style("border-color","#999999")
+			}
+			else if(a.search("usdaOn") != -1){
+				d3.selectAll(".usda_only.bar")
+					.transition()
+					.style("background","#353535")
+					.style("border-color","#353535")
+			}
+			if(a.search("hudOff") != -1){
+				d3.selectAll(".hud_only.bar")
+					.transition()
+					.style("background","rgba(255,255,255,0)")
+					.style("border-color","#999999")
+
+			}
+			else if(a.search("hudOn") != -1){
+				d3.selectAll(".hud_only.bar")
+					.transition()
+					.style("background","#696969")
+					.style("border-color","#696969")
+			}
+		}
+
+		// d3.selectAll(".total.bar .display.bar")
+		// 	.transition()
+		// 	.style("width", function(d){
+		// 		var year = d3.select(this).attr("data-year");
+		// 		var asst = d.properties["asst" + year]
+		// 		var noAsst = d.properties["noAsst" + year]
+		// 		if(a == "noAsst"){
+		// 			return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
+		// 		}
+		// 		else{
+		// 			return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
+		// 		}
+		// 	})
+		// 	.style("background", function(d){
+		// 		var year = d3.select(this).attr("data-year");
+		// 		var asst = d.properties["asst" + year]
+		// 		var noAsst = d.properties["noAsst" + year]
+		// 		if(a == "noAsst"){
+		// 			return COLORS[quantize(noAsst)]
+		// 		}
+		// 		else{
+		// 			return COLORS[quantize(asst)]
+		// 		}
+		// 	})
+		// 	.style("border-color", function(d){
+		// 		var year = d3.select(this).attr("data-year");
+		// 		var asst = d.properties["asst" + year]
+		// 		var noAsst = d.properties["noAsst" + year]
+		// 		if(a == "noAsst"){
+		// 			return COLORS[quantize(noAsst)]
+		// 		}
+		// 		else{
+		// 			return COLORS[quantize(asst)]
+		// 		}
+		// 	})
 		})
 	// for(var t=0; t< selectedCounties.length; t+=1){
 	// 	dispatch.deselectCounty(selectedCounties[t])

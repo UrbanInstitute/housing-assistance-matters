@@ -541,26 +541,36 @@ li {
   pointer-events: auto;
   top: -47px;
 }
-.us_caption_asst{
+.us_caption_usda{
   font-style: italic;
   position: relative;
   top: 48px
 }
-.us_line_asst{
+.us_caption_baseline{
+  font-style: italic;
+  position: relative;
+  top: 48px
+}
+.us_line_baseline{
+  width: 1px;
+  height: 41px;
+  background: #ccc;
+  position: absolute;
+  top: -41px;
+}
+.us_line_usda{
   width: 1px;
   height: 12px;
   background: #ccc;
   position: absolute;
   top: -10px;
 }
-.us_caption_noAsst{
+.us_caption_hud{
   font-style: italic;
-  font-weight: 700;
-  color: #1696D2;
   position: relative;
   top: 49px;
 }
-.us_line_noAsst{
+.us_line_hud{
   width: 1px;
   height: 26px;
   background: #ccc;
@@ -575,19 +585,20 @@ li {
 
 
 .unassisted.bar{
-  background: #1696d2;
-  border: 1px solid #1696d2;
+  background: #9d9d9d;
+  border: 1px solid #9d9d9d;
 }
 
 .hud_only.bar{
-  background: #000000;
-  border: 1px solid #000000;
+  background: #696969;
+  border: 1px solid #696969;
 
 }
 
 .usda_only.bar{
-  background: #e6e6e6;
-  border: 1px solid #e6e6e6;
+  background: #353535;
+  border: 1px solid #353535;
+  border-right: 1.5px solid;
 
 }
 
