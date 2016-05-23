@@ -104,9 +104,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	var getAssistance = function(){
 		var hud_btn = d3.select(".hud.assistance.button.active");
 		var usda_btn = d3.select(".usda.assistance.button.active");
-		// if (btn.classed("turnOn")){return "asst"}
-		// else{ return "noAsst"}
-		// var str = ""
 		var usda_str = (usda_btn.classed("turnOn")) ? "usdaOn" : "usdaOff";
 		var hud_str = (hud_btn.classed("turnOn")) ? "hudOn" : "hudOff";
 		return usda_str + hud_str;
@@ -124,29 +121,12 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 		})
 	d3.selectAll(".assistance.button")
 		.on("click", function(){
-		// var btn = d3.select(this)
-		// var active = d3.select(".assistance.button.active")
-		// d3.select(d3.select(this).node().parentNode).select(".active").classed("active",false)
 		var usda = (d3.select(this).classed("usda")) ? "usda" : "hud"
 		d3.select(".assistance.button.active." + usda).classed("active",false)
 		d3.select(this).classed("active",true)
-		// console.log(getAssistance())
 		dispatch.changeAssistance(getAssistance())
 
-		// if(active.classed("turnOn")){
-		// 	active.classed("active", false);
-		// 	d3.select(".assistance.button.turnOff")
-		// 		.classed("active", true);
-		// 	dispatch.changeAssistance("noAsst");
-		// }
-		// if(active.classed("turnOff")){
-		// 	active.classed("active", false);
-		// 	d3.select(".assistance.button.turnOn")
-		// 		.classed("active", true);
-		// 				// console.log(getAssistance())
-
-		// 	dispatch.changeAssistance("asst");
-		// }		
+	
 	});
 	dispatch.on("changeAssistance", function(assistance){
 		dispatch.updateTooltip();
@@ -176,33 +156,148 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 
 	});
 	dispatch.on("changeYear", function(year){
+		var opacity = (year == "2000") ? 0.3 : 1;
+		var pointerEvents = (year == "2000") ? "none" : "auto";
+		var display = (year == "2000") ? "none" : "block";
 		dispatch.updateTooltip();
-		d3.selectAll(".radio").classed("clicked", false)
-		d3.selectAll(".radio.yr"+year).classed("clicked", true)
-
 		d3.selectAll(".year.button").classed("active", false)
 		d3.selectAll("#button_"+year).classed("active", true)
+		// var a = getAssistance()
+		d3.selectAll(".bar")
+			.attr("data-year",year)
 
-		d3.select(".us_caption_asst")
+		if(d3.select(".usda_only.bar").classed("crossed")){
+
+			d3.selectAll(".unassisted.bar")
 			.transition()
-			.style("text-indent", function(d){
-				return(parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH/2) + "px"
+			.each("end", function(){ d3.select(this).classed("hidden", function(d){ return parseFloat(d["properties"]["usdaOffhudOff" + year]) < 0.5})})
+			.style("width", function(d){
+				var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 			})
-		d3.select(".us_line_asst")
+			d3.selectAll(".usda_only.bar")
 			.transition()
+			.each("end", function(){ d3.select(this).style("display",display).classed("hidden", function(d){ return parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]) < 0.5})})
+			.style("width", function(d){
+				var val = parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})
 			.style("left", function(d){
-				return(parseFloat(d["properties"]["asst" + year]/100.0) * BAR_WIDTH/2) + "px"
+				var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})	  
+			d3.selectAll(".hud_only.bar")
+			.transition()					
+			.each("end", function(){ d3.select(this).classed("hidden", function(d){ return parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) < 0.5})})
+			.style("width", function(d){
+				var val = parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 			})
-		d3.select(".us_caption_noAsst")
-			.transition()
-			.style("text-indent", function(d){
-				return(parseFloat(d["properties"]["noAsst" + year]/100.0) * BAR_WIDTH/2) + "px"
-			})
-		d3.select(".us_line_noAsst")
-			.transition()
 			.style("left", function(d){
-				return(parseFloat(d["properties"]["noAsst" + year]/100.0) * BAR_WIDTH/2) + "px"
+				var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})	
+
+
+
+			d3.select(".us_caption_usda")
+				.style("z-index",10)
+				.style("pointer-events", pointerEvents)
+				.transition()
+				.style("opacity",opacity)
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_usda")
+				.style("z-index",10)
+				.transition()
+				.style("opacity",opacity)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_caption_hud")
+				.style("z-index", 9)
+				.transition()
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_hud")
+				.style("z-index", 9)
+				.transition()
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+		}else{
+
+			d3.selectAll(".unassisted.bar")
+			.transition()
+			.each("end", function(){ d3.select(this).classed("hidden", function(d){ return parseFloat(d["properties"]["usdaOffhudOff" + year]) < 0.5})})
+			.style("width", function(d){
+				var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 			})
+			d3.selectAll(".usda_only.bar")
+			.transition()
+			.each("end", function(){ d3.select(this).style("display",display).classed("hidden", function(d){ return parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]) < 0.5})})
+			.style("width", function(d){
+				var val = parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})
+			.style("left", function(d){
+				var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})	  
+			d3.selectAll(".hud_only.bar")
+			.transition()					
+			.each("end", function(){ d3.select(this).classed("hidden", function(d){ return parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) < 0.5})})
+			.style("width", function(d){
+				var val = parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})
+			.style("left", function(d){
+				var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+				return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+			})	
+
+
+
+			d3.select(".us_caption_hud")
+				.style("z-index", 10)
+				.transition()
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_hud")
+				.style("z-index", 10)
+				.transition()
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_caption_usda")
+				.style("pointer-events", pointerEvents)
+				.style("z-index",9)
+				.transition()
+				.style("opacity",opacity)
+				.style("text-indent", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+			d3.select(".us_line_usda")
+				.style("z-index",9)
+				.transition()
+				.style("opacity",opacity)
+				.style("left", function(d){
+					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
+					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+				})
+		}
+
 
 	});
 	d3.select(".print.button")
@@ -1057,17 +1152,6 @@ function foo(selection) {
 				var total = wrapper.append("div")
 					.datum(d)
 					.attr("class", type + " hideOnExpand county total bar fips_" + d.id + " y" + year)
-					// .on("click", function(){
-					// 	assistance = getAssistance();
-					// 	if(assistance == "asst"){
-					// 		assistance = "noAsst";
-					// 		dispatch.changeAssistance("noAsst");
-					// 	}
-					// 	else{
-					// 		assistance ="asst"
-					// 		dispatch.changeAssistance("asst");
-					// 	}
-					// })
 					.classed(year, true);	
 
 				total.append("div")
@@ -1079,8 +1163,20 @@ function foo(selection) {
 						var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
 						return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 					})
+					.on("mouseover",highlightUnasst)
+					.on("mouseout",deHover)
 				total.append("div")
 					.attr("class", "usda_only bar" + " y" + year)
+					.style("border-color", function(){
+						console.log(assistance, assistance.search("usdaOff"))
+						if(assistance.search("usdaOff") != -1) return "#999999"
+						else return "#353535"
+					})
+					.style("background", function(){
+						console.log(assistance, assistance.search("usdaOff"))
+						if(assistance.search("usdaOff") != -1) return "rgba(255,255,255,0)"
+						else return "#353535"
+					})
 					.classed("hidden", function(){ return parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]) < 0.5})
 					.attr("data-year", year)
 					.datum(d)
@@ -1089,11 +1185,29 @@ function foo(selection) {
 						return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 					})
 					.style("left", function(){
-						var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
-						return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
-					})	  
+						var crossed = (natl) ? false : d3.select(".fips_national .usda_only.bar").classed("crossed")
+						if(!crossed){
+							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
+							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+						}else{
+							var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+						}
+					})
+					.on("mouseover",highlightUsda)
+					.on("mouseout",deHover)
 				total.append("div")
 					.attr("class", "hud_only bar" + " y" + year)
+					.style("border-color", function(){
+						console.log(assistance, assistance.search("usdaOff"))
+						if(assistance.search("hudOff") != -1) return "#999999"
+						else return "#696969"
+					})
+					.style("background", function(){
+						console.log(assistance, assistance.search("usdaOff"))
+						if(assistance.search("hudOff") != -1) return "rgba(255,255,255,0)"
+						else return "#696969"
+					})
 					.classed("hidden", function(){ return  parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) < 0.5})
 					.attr("data-year", year)
 					.datum(d)
@@ -1102,50 +1216,70 @@ function foo(selection) {
 						return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 					})
 					.style("left", function(){
-						var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
-						return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
-					})	
+						var crossed = (natl) ? false : d3.select(".fips_national .usda_only.bar").classed("crossed")
+						if(!crossed){
+							var val = parseFloat(d["properties"]["usdaOffhudOff" + year])
+							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+						}else{
+							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
+							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
+						}
+					})
+					.on("mouseover",highlightHud)
+					.on("mouseout",deHover)
 
 				var caption = total.append("div")
 					.attr("class", "fips_" + d.id + " caption y" + year)
 				if(natl){
 					caption
-						.attr("class", "us_caption_usda")
+						.attr("class", "us_caption_usda captionText")
+						.attr("data-year",year)
 						.text("USDA assisted units")
 						.style("text-indent", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
+						.datum(d)
+						.on("mouseover",highlightUsda)
+						.on("mouseout",deHover)
 						.append("div")
-						.attr("class", "us_line_usda")
+						.attr("class", "us_line_usda captionLine")
 						.style("left", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 
 						})
 					total.append("div")
-						.attr("class", "us_caption_hud")
+						.attr("class", "us_caption_hud captionText")
+						.attr("data-year",year)
 						.text("HUD assisted units")
 						.style("text-indent", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
+						.datum(d)
+						.on("mouseover",highlightHud)
+						.on("mouseout",deHover)
 						.append("div")
-						.attr("class", "us_line_hud")
+						.attr("class", "us_line_hud captionLine")
 						.style("left", function(){
 							var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
 
 					total.append("div")
-						.attr("class", "us_caption_baseline")
+						.attr("class", "us_caption_baseline captionText")
+						.attr("data-year",year)
 						.text("Units without assistance")
 						.style("text-indent", function(){
 							var val = (parseFloat(d["properties"]["usdaOffhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 						})
+						.datum(d)
+						.on("mouseover",highlightUnasst)
+						.on("mouseout",deHover)
 						.append("div")
-						.attr("class", "us_line_baseline")
+						.attr("class", "us_line_baseline captionLine")
 						.style("left", function(){
 							var val = (parseFloat(d["properties"]["usdaOffhudOff" + year]))/2
 							return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
@@ -1157,12 +1291,7 @@ function foo(selection) {
 					.attr("class", type + " hideOnExpand bar text fips_" + d.id + " y" + year)
 					.datum(d)
 					.text(function(d){
-						if(assistance == "noAsst"){
-							return comma(d["properties"]["noAsst" + year])
-						}
-						else{
-							return comma(d["properties"]["asst" + year])
-						}
+						return comma(d["properties"][assistance + year])
 					})
 				wrapper.append("div")
 					.datum(d)
@@ -1204,22 +1333,7 @@ function foo(selection) {
 					menu.append("div")
 						.attr("class", "text right")
 						.text("Federal Assistance")
-					menu.append("div")
-						.attr("class", "small_button turnOn active")
-						.html("<span>ON</span>")
-						.on("click", function(){
-							var assistance = getAssistance();
-							var a = (assistance == "asst") ? "noAsst": "asst"
-							dispatch.changeAssistance(a)
-						})
-					menu.append("div")
-						.attr("class", "small_button turnOff")
-						.html("<span>OFF</span>")
-						.on("click", function(){
-							var assistance = getAssistance();
-							var a = (assistance == "asst") ? "noAsst": "asst"
-							dispatch.changeAssistance(a)
-						})
+
 					menu
 						.style("height", "0px")
 						.style("opacity",0)
@@ -1228,31 +1342,65 @@ function foo(selection) {
 				 }
 			}
 
-	function highlightNoAsst(d){
+
+	function highlightUnasst(d){
 		var year = d3.select(this).attr("data-year")
-		var a = "noAsst";
+		var a = "usdaOffhudOff";
 		if(d.id != "national"){
 			d3.selectAll(".fips_" + d.id + ".caption.y" + year)
-				.text("without assistance")
+				.text("Units without assistance")
+		}
+		else{
+			d3.select(".us_caption_baseline").classed("hover",true)
+			d3.select(".us_line_baseline").classed("hover",true)
+			d3.select(".fips_national .unassisted.bar").classed("hover",true)
 		}
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
 			.text(function(d){ return comma(d["properties"][a + year])});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])});
-		d3.selectAll(".fips_" + d.id + " .marker.bar" + ".y" + year).classed("hover", true)
+		d3.select(this).classed("hover", true)
 	}
-	function highlightAsst(d){
+	function highlightHud(d){
 		var year = d3.select(this).attr("data-year")
-		var a = "asst";
+		var val = parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])
+		var valNum = parseFloat(d["properties"]["usdaOnhudOnNum" + year]) - parseFloat(d["properties"]["usdaOnhudOffNum" + year])
+
 		if(d.id != "national"){
 			d3.selectAll(".fips_" + d.id + ".caption.y" + year)
-				.text("with assistance")
+				.text("HUD assisted units")
+		}
+		else{
+			d3.select(".us_caption_hud").classed("hover",true)
+			d3.select(".us_line_hud").classed("hover",true)
+			d3.select(".fips_national .hud_only.bar").classed("hover",true)
+
 		}
 		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
-			.text(function(d){ return comma(d["properties"][a + year])});
+			.text(function(d){ return comma(val)});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
-			.text(function(d){ return comma(d["properties"][a + "Num" + year])});
-		d3.selectAll(".fips_" + d.id + " .asst.bar" + ".y" + year).classed("hover", true);
+			.text(function(d){ return comma(valNum)});
+		d3.select(this).classed("hover", true)
+	}
+	function highlightUsda(d){
+		var year = d3.select(this).attr("data-year")
+		var val = parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
+		var valNum = parseFloat(d["properties"]["usdaOnhudOnNum" + year]) - parseFloat(d["properties"]["usdaOffhudOnNum" + year])
+
+		if(d.id != "national"){
+			d3.selectAll(".fips_" + d.id + ".caption.y" + year)
+				.text("USDA assisted units")
+		}
+		else{
+			d3.select(".us_caption_usda").classed("hover",true)
+			d3.select(".us_line_usda").classed("hover",true)
+			d3.select(".fips_national .usda_only.bar").classed("hover",true)
+		}
+		d3.selectAll(".fips_" + d.id + ".bar.text" + ".y" + year)
+			.text(function(d){ return comma(val)});
+		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
+			.text(function(d){ return comma(valNum)});
+		d3.select(this).classed("hover", true)
 	}
 	function deHover(d){
 		var year = d3.select(this).attr("data-year")
@@ -1263,15 +1411,17 @@ function foo(selection) {
 			.text(function(d){ return comma(d["properties"][a + year])});
 		d3.selectAll(".fips_" + d.id + ".total.units" + ".y" + year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])});
-		d3.selectAll(".bar.hover" + ".y" + year).classed("hover",false);
+		d3.selectAll(".bar.hover").classed("hover",false);
+		d3.selectAll(".captionText").classed("hover",false)
+		d3.selectAll(".captionLine").classed("hover",false)
 	}
 	dispatch.on("selectCounty.details", function(d){
 		d3.selectAll(".garbage").remove();
 		var assistance = getAssistance();
 		var currentYear = getYear();
 		var identifier = (typeof(d) == "undefined") ? null : assistance +  currentYear + "_" + d.id;
-		var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + currentYear]
-		var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + currentYear]
+		// var asst = (typeof(d) == "undefined") ? null : d.properties["asst" + currentYear]
+		// var noAsst = (typeof(d) == "undefined") ? null : d.properties["noAsst" + currentYear]
 		if(typeof(d) != "undefined" && selectedCounties.indexOf(identifier) === -1){
 			selectedCounties.push(identifier)
 			var li = d3.select(".detail.list")
@@ -1416,54 +1566,7 @@ function foo(selection) {
 		d3.selectAll(".detail.total.units")
 			.attr("data-year", year)
 			.text(function(d){ return comma(d["properties"][a + "Num" + year])})
-		d3.selectAll(".detail.total.bar .display.bar")
-			.attr("data-year", year)
-			.transition()
-			.style("width", function(d){
-				var asst = d.properties["asst" + year]
-				var noAsst = d.properties["noAsst" + year]
-				if(a == "noAsst"){
-					return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-				}
-				else{
-					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-				}
-			})
-			.style("background", function(d){
-				var asst = d.properties["asst" + year]
-				var noAsst = d.properties["noAsst" + year]
-				if(a == "noAsst"){
-					return COLORS[quantize(noAsst)]
-				}
-				else{
-					return COLORS[quantize(asst)]
-				}
-			})
-			.style("border-color", function(d){
-				var asst = d.properties["asst" + year]
-				var noAsst = d.properties["noAsst" + year]
-				if(a == "noAsst"){
-					return COLORS[quantize(noAsst)]
-				}
-				else{
-					return COLORS[quantize(asst)]
-				}
-			})
-			d3.selectAll(".detail.total.bar .asst.bar")
-				.attr("data-year", year)
-				.transition()
-				.style("width", function(d){
-					var asst = d.properties["asst" + year]
-					return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-				})
-			d3.selectAll(".detail.total.bar .bar.marker")
-				.attr("data-year", year)
-				.transition()
-				.style("width", function(d){
-					var asst = d.properties["asst" + year]
-					var noAsst = d.properties["noAsst" + year]
-						return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px";
-				})
+
 
 	})
 	dispatch.on("changeAssistance.details", function(a){
@@ -1475,6 +1578,7 @@ function foo(selection) {
 			.text(function(d){ year = d3.select(this).attr("data-year"); return comma(d["properties"][a + "Num" + year])})
 		if(a == "usdaOnhudOff"){
 			d3.selectAll(".usda_only.bar")
+				.classed("crossed",true)
 				.transition()
 				.style("background","#353535")
 				.style("border-color","#353535")
@@ -1545,6 +1649,7 @@ function foo(selection) {
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
 			d3.selectAll(".usda_only.bar")
+				.classed("crossed",false)
 				.transition()
 				.style("background","rgba(255,255,255,0)")
 				.style("border-color","#999999")
@@ -1557,7 +1662,7 @@ function foo(selection) {
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
 			d3.select(".us_caption_hud")
-				.style("z-index", 9)
+				.style("z-index", 10)
 				.transition()
 				.delay(800)
 				.style("text-indent", function(d){
@@ -1565,7 +1670,7 @@ function foo(selection) {
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
 			d3.select(".us_line_hud")
-				.style("z-index", 9)
+				.style("z-index", 10)
 				.transition()
 				.delay(800)
 				.style("left", function(d){
@@ -1573,7 +1678,7 @@ function foo(selection) {
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
 			d3.select(".us_caption_usda")
-				.style("z-index",10)
+				.style("z-index",9)
 				.transition()
 				.delay(800)
 				.style("text-indent", function(d){
@@ -1581,7 +1686,7 @@ function foo(selection) {
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
 			d3.select(".us_line_usda")
-				.style("z-index",10)
+				.style("z-index",9)
 				.transition()
 				.delay(800)
 				.style("left", function(d){
@@ -1617,46 +1722,7 @@ function foo(selection) {
 			}
 		}
 
-		// d3.selectAll(".total.bar .display.bar")
-		// 	.transition()
-		// 	.style("width", function(d){
-		// 		var year = d3.select(this).attr("data-year");
-		// 		var asst = d.properties["asst" + year]
-		// 		var noAsst = d.properties["noAsst" + year]
-		// 		if(a == "noAsst"){
-		// 			return (parseFloat(noAsst/100.0) * BAR_WIDTH) + "px"
-		// 		}
-		// 		else{
-		// 			return (parseFloat(asst/100.0) * BAR_WIDTH) + "px"
-		// 		}
-		// 	})
-		// 	.style("background", function(d){
-		// 		var year = d3.select(this).attr("data-year");
-		// 		var asst = d.properties["asst" + year]
-		// 		var noAsst = d.properties["noAsst" + year]
-		// 		if(a == "noAsst"){
-		// 			return COLORS[quantize(noAsst)]
-		// 		}
-		// 		else{
-		// 			return COLORS[quantize(asst)]
-		// 		}
-		// 	})
-		// 	.style("border-color", function(d){
-		// 		var year = d3.select(this).attr("data-year");
-		// 		var asst = d.properties["asst" + year]
-		// 		var noAsst = d.properties["noAsst" + year]
-		// 		if(a == "noAsst"){
-		// 			return COLORS[quantize(noAsst)]
-		// 		}
-		// 		else{
-		// 			return COLORS[quantize(asst)]
-		// 		}
-		// 	})
 		})
-	// for(var t=0; t< selectedCounties.length; t+=1){
-	// 	dispatch.deselectCounty(selectedCounties[t])
-	// }
-	
 
 }
 

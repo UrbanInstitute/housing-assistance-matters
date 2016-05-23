@@ -167,18 +167,16 @@ td.asst, th.asst{
 td.noAsst, th.noAsst{
 	background: #1696d2;
 }
-td:nth-child(6), th:nth-child(6){
+td:nth-child(10), th:nth-child(10){
 	background: rgba(92,88,89,.2);
 }
-td:nth-child(7), th:nth-child(7){
+td:nth-child(8), th:nth-child(8){
 	background: rgba(22,150,210,.2);
 }
 td:nth-child(9), th:nth-child(9){
 	background: rgba(253,191,17,.2);
 }
-td:nth-child(10), th:nth-child(10){
-	background: rgba(85,183,72,.2);
-}
+
 /*.scatter .text{
 	color: white;
 	font: 12pt Helvetica;

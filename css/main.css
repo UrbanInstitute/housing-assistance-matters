@@ -544,7 +544,8 @@ li {
 .us_caption_usda{
   font-style: italic;
   position: relative;
-  top: 48px
+  top: 48px;
+  background-color: rgba(255,255,255,.5);
 }
 .us_caption_baseline{
   font-style: italic;
@@ -557,6 +558,7 @@ li {
   background: #ccc;
   position: absolute;
   top: -41px;
+  z-index: 11;
 }
 .us_line_usda{
   width: 1px;
@@ -577,7 +579,17 @@ li {
   position: absolute;
   top: -26px;
 }
-
+.captionText.hover{
+  font-weight: bold;
+  color: #1696d2;
+}
+.captionLine.hover{
+  width: 1.5px;
+  background: #1696d2;
+}
+.captionText, .bar{
+  cursor: pointer;
+}
 
 
 /****************************** BOTTOM BAR CHART NEW STYLES ***************/
@@ -596,9 +608,12 @@ li {
 }
 
 .usda_only.bar{
-  background: #353535;
-  border: 1px solid #353535;
+  /*background: #353535;*/
+  /*border: 1px solid #353535;*/
   border-right: 1.5px solid;
+  border-left: 0px solid;
+  border-bottom: 1px solid;
+  border-top: 1px solid;
 
 }
 
@@ -752,6 +767,7 @@ li {
 .bar.hover{
   background: #fdbf11 !important;
   border: 1px solid #fdbf11 !important;
+  border-left: 0px solid !important;
   opacity: 1;
   z-index: 2;
 }
