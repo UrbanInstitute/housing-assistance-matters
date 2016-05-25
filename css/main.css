@@ -545,7 +545,7 @@ li {
   font-style: italic;
   position: relative;
   top: 48px;
-  background-color: rgba(255,255,255,.5);
+  /*background-color: rgba(255,255,255,.5);*/
 }
 .us_caption_baseline{
   font-style: italic;

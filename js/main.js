@@ -1610,6 +1610,7 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("top","64px")
 			d3.select(".us_line_usda")
 				.style("z-index",10)
 				.transition()
@@ -1618,6 +1619,9 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("height","28px")
+				.style("top","-27px")
+
 			d3.select(".us_caption_hud")
 				.style("z-index", 9)
 				.transition()
@@ -1626,6 +1630,7 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("top","33px")
 			d3.select(".us_line_hud")
 				.style("z-index", 9)
 				.transition()
@@ -1634,6 +1639,8 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("height","12px")
+				.style("top","-11px")
 		}
 		else if( a == "usdaOffhudOn"){
 			d3.selectAll(".hud_only.bar")
@@ -1669,6 +1676,8 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("top","49px")
+
 			d3.select(".us_line_hud")
 				.style("z-index", 10)
 				.transition()
@@ -1677,6 +1686,9 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("height","26px")
+				.style("top","-26px")
+
 			d3.select(".us_caption_usda")
 				.style("z-index",9)
 				.transition()
@@ -1685,6 +1697,8 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("top","48px")
+
 			d3.select(".us_line_usda")
 				.style("z-index",9)
 				.transition()
@@ -1693,6 +1707,9 @@ function foo(selection) {
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOnhudOff" + year])) + (parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year]))*.5
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
+				.style("height","12px")
+				.style("top","-10px")
+
 		}
 		else{
 			if(a.search("usdaOff") != -1){
