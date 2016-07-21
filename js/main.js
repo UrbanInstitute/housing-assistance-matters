@@ -776,6 +776,7 @@ function foo(selection) {
 				.text(comma(d["properties"]["totalPop" + year]))
 			d3.select(".absolute .tooltipNum")
 				.text(comma(d["properties"][assistance + "Num" + year]))
+			console.log(d, d["properties"][assistance + "Num" + year])
 			d3.select(".cutoff .tooltipYear")
 				.text(function(){
 					if( year == "2006"){
