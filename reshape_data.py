@@ -15,6 +15,13 @@ for year in years:
 			i+= 1
 		for row in cr:
 			fips = row[indices["county"]]
+			# print fips
+			# break
+			# print len(fips)
+
+			if len(str(fips)) == 4:
+				fips = "0" + str(fips)
+				print fips
 			if fips not in data:
 				data[fips] = {"name":"", "2000":{"hud":"","maxELI":"", "minELI":"", "ami":"","usdaOn_hudOn":"","usdaOn_hudOff":"","usdaOff_hudOn":"","usdaOff_hudOff":"","totalPop":"","usdaOn_hudOnNum":"","usdaOn_hudOffNum":"","usdaOff_hudOnNum":"", "usdaOff_hudOffNum":"","flag":""}, "2006":{"usda":"", "hud":"", "maxELI":"", "minELI":"", "ami":"","usdaOn_hudOn":"","usdaOn_hudOff":"","usdaOff_hudOn":"","usdaOff_hudOff":"","totalPop":"","usdaOn_hudOnNum":"","usdaOn_hudOffNum":"","usdaOff_hudOnNum":"", "usdaOff_hudOffNum":"","flag":""}, "2013": {"usda":"", "hud":"", "maxELI":"", "minELI":"", "ami":"","usdaOn_hudOn":"","usdaOn_hudOff":"","usdaOff_hudOn":"","usdaOff_hudOff":"","totalPop":"","usdaOn_hudOnNum":"","usdaOn_hudOffNum":"","usdaOff_hudOnNum":"", "usdaOff_hudOffNum":"","flag":""}}
 			# if year == "2013":
@@ -24,9 +31,12 @@ for year in years:
 			# 	data[fips]["state"] = state
 			# 	data[fips]["name"] = name
 			flag = row[indices["state_flag"]]
+			if(flag != "0"):
+				flag = "1"
 			data[fips][year]["flag"] = flag
 			data[fips]["FIPS"] = fips
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
+			data[fips][year]["minELI"] = row[indices["MinEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
 
 			if flag == "0":
@@ -72,34 +82,38 @@ for year in years:
 			# 	data[fips]["state"] = state
 			# 	data[fips]["name"] = name
 			flag = row[indices["state_flag"]]
+			if(flag != "0"):
+				flag = "1"
 			data[fips][year]["flag"] = flag
 			data[fips]["FIPS"] = fips
+			data[fips]["name"] = row[indices["countyname"]]
+
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
 			if flag == "0":
-				data[fips][year]["usdaOn_hudOn"] = row[indices["per100_06_08"]]
-				data[fips][year]["usdaOn_hudOff"] = row[indices["per100_No_HUD_06_08"]]
-				data[fips][year]["usdaOff_hudOn"] = row[indices["per100_No_USDA_06_08"]]
-				data[fips][year]["usdaOff_hudOff"] = row[indices["per100_No_HUD_USDA_06_08"]]
-				data[fips][year]["totalPop"] = row[indices["Avg_ELITotal_06_08"]]
-				data[fips][year]["usdaOn_hudOnNum"] = row[indices["Avg_Units_06_08"]]
-				data[fips][year]["usdaOn_hudOffNum"] = row[indices["Avg_Units_No_HUD_06_08"]]
-				data[fips][year]["usdaOff_hudOnNum"] = row[indices["Avg_Units_No_USDA_06_08"]]
-				data[fips][year]["usdaOff_hudOffNum"] = row[indices["Avg_Units_No_HUD_USDA_06_08"]]
-				data[fips][year]["hud"] = row[indices["Avg_units_hud_06_08"]]
-				data[fips][year]["usda"] = row[indices["Avg_units_USDA_06_08"]]
+				data[fips][year]["usdaOn_hudOn"] = row[indices["per100"]]
+				data[fips][year]["usdaOn_hudOff"] = row[indices["Per100_No_HUD"]]
+				data[fips][year]["usdaOff_hudOn"] = row[indices["per100_no_USDA"]]
+				data[fips][year]["usdaOff_hudOff"] = row[indices["Per100_No_Assisted"]]
+				data[fips][year]["totalPop"] = row[indices["Total"]]
+				data[fips][year]["usdaOn_hudOnNum"] = row[indices["Units"]]
+				data[fips][year]["usdaOn_hudOffNum"] = row[indices["Units_No_HUD"]]
+				data[fips][year]["usdaOff_hudOnNum"] = row[indices["units_no_USDA"]]
+				data[fips][year]["usdaOff_hudOffNum"] = row[indices["unitsnoasst"]]
+				data[fips][year]["hud"] = row[indices["eli"]]
+				data[fips][year]["usda"] = row[indices["usda"]]
 			else:
-				data[fips][year]["usdaOn_hudOn"] = row[indices["ST_per100_06_08"]]
-				data[fips][year]["usdaOn_hudOff"] = row[indices["ST_per100_No_HUD_06_08"]]
-				data[fips][year]["usdaOff_hudOn"] = row[indices["ST_per100_No_USDA_06_08"]]
-				data[fips][year]["usdaOff_hudOff"] = row[indices["ST_per100_No_HUD_USDA_06_08"]]
-				data[fips][year]["totalPop"] = row[indices["ST_Avg_ELITotal_06_08"]]
-				data[fips][year]["usdaOn_hudOnNum"] = row[indices["ST_Avg_Units_06_08"]]
-				data[fips][year]["usdaOn_hudOffNum"] = row[indices["ST_Avg_Units_No_HUD_06_08"]]
-				data[fips][year]["usdaOff_hudOnNum"] = row[indices["ST_Avg_Units_No_USDA_06_08"]]
-				data[fips][year]["usdaOff_hudOffNum"] = row[indices["ST_Avg_Units_No_HUD_USDA_06_08"]]
-				data[fips][year]["hud"] = row[indices["ST_Avg_units_hud_06_08"]]
-				data[fips][year]["usda"] = row[indices["ST_Avg_units_USDA_06_08"]]
+				data[fips][year]["usdaOn_hudOn"] = row[indices["ST_per100"]]
+				data[fips][year]["usdaOn_hudOff"] = row[indices["ST_per100_No_HUD"]]
+				data[fips][year]["usdaOff_hudOn"] = row[indices["ST_Per100_No_USDA"]]
+				data[fips][year]["usdaOff_hudOff"] = row[indices["ST_Per100_No_Assisted"]]
+				data[fips][year]["totalPop"] = row[indices["ST_Total"]]
+				data[fips][year]["usdaOn_hudOnNum"] = row[indices["ST_Units"]]
+				data[fips][year]["usdaOn_hudOffNum"] = row[indices["ST_Units_No_HUD"]]
+				data[fips][year]["usdaOff_hudOnNum"] = row[indices["ST_Units_no_USDA"]]
+				data[fips][year]["usdaOff_hudOffNum"] = row[indices["ST_Unitsnoasst"]]
+				data[fips][year]["hud"] = row[indices["ST_eli"]]
+				data[fips][year]["usda"] = row[indices["ST_usda"]]
 
 			
 	elif year == "2013":
@@ -110,45 +124,43 @@ for year in years:
 		for h in head:
 			indices[h] = i
 			i+= 1
-		print indices
 		for row in cr:
 			fips = row[indices["county"]]
 			if fips not in data:
 				data[fips] = {"name":"", "2000":{"hud":"","maxELI":"", "minELI":"", "ami":"","usdaOn_hudOn":"","usdaOn_hudOff":"","usdaOff_hudOn":"","usdaOff_hudOff":"","totalPop":"","usdaOn_hudOnNum":"","usdaOn_hudOffNum":"","usdaOff_hudOnNum":"", "usdaOff_hudOffNum":"","flag":""}, "2006":{"usda":"", "hud":"", "maxELI":"", "minELI":"", "ami":"","usdaOn_hudOn":"","usdaOn_hudOff":"","usdaOff_hudOn":"","usdaOff_hudOff":"","totalPop":"","usdaOn_hudOnNum":"","usdaOn_hudOffNum":"","usdaOff_hudOnNum":"", "usdaOff_hudOffNum":"","flag":""}, "2013": {"usda":"", "hud":"", "maxELI":"", "minELI":"", "ami":"","usdaOn_hudOn":"","usdaOn_hudOff":"","usdaOff_hudOn":"","usdaOff_hudOff":"","totalPop":"","usdaOn_hudOnNum":"","usdaOn_hudOffNum":"","usdaOff_hudOnNum":"", "usdaOff_hudOffNum":"","flag":""}}
 			# ignore = 0
 			# state = row[indices["State Name"]]
-			name = row[indices["countyname"]]
-			data[fips]["name"] = name
+			flag = row[indices["state_flag"]]
+			if(flag != "0"):
+				flag = "1"
+			data[fips][year]["flag"] = flag
 			data[fips]["FIPS"] = fips
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
-			data[fips][year]["ami"] = row[indices["l30_4"]]
-			flag = row[indices["state_flag"]]
-			data[fips][year]["flag"] = flag
 			if flag == "0":
-				data[fips][year]["usdaOn_hudOn"] = row[indices["per100_12_14"]]
-				data[fips][year]["usdaOn_hudOff"] = row[indices["per100_No_HUD_12_14"]]
-				data[fips][year]["usdaOff_hudOn"] = row[indices["per100_No_USDA_12_14"]]
-				data[fips][year]["usdaOff_hudOff"] = row[indices["per100_No_HUD_USDA_12_14"]]
-				data[fips][year]["totalPop"] = row[indices["Avg_ELITotal_12_14"]]
-				data[fips][year]["usdaOn_hudOnNum"] = row[indices["Avg_Units_12_14"]]
-				data[fips][year]["usdaOn_hudOffNum"] = row[indices["Avg_Units_No_HUD_12_14"]]
-				data[fips][year]["usdaOff_hudOnNum"] = row[indices["Avg_Units_No_USDA_12_14"]]
-				data[fips][year]["usdaOff_hudOffNum"] = row[indices["Avg_Units_No_HUD_USDA_12_14"]]
-				data[fips][year]["hud"] = row[indices["Avg_units_hud_12_14"]]
-				data[fips][year]["usda"] = row[indices["Avg_units_USDA_12_14"]]
+				data[fips][year]["usdaOn_hudOn"] = row[indices["per100"]]
+				data[fips][year]["usdaOn_hudOff"] = row[indices["Per100_No_HUD"]]
+				data[fips][year]["usdaOff_hudOn"] = row[indices["per100_no_USDA"]]
+				data[fips][year]["usdaOff_hudOff"] = row[indices["Per100_No_Assisted"]]
+				data[fips][year]["totalPop"] = row[indices["Total"]]
+				data[fips][year]["usdaOn_hudOnNum"] = row[indices["Units"]]
+				data[fips][year]["usdaOn_hudOffNum"] = row[indices["Units_No_HUD"]]
+				data[fips][year]["usdaOff_hudOnNum"] = row[indices["units_no_USDA"]]
+				data[fips][year]["usdaOff_hudOffNum"] = row[indices["unitsnoasst"]]
+				data[fips][year]["hud"] = row[indices["eli"]]
+				data[fips][year]["usda"] = row[indices["usda"]]
 			else:
-				data[fips][year]["usdaOn_hudOn"] = row[indices["ST_per100_12_14"]]
-				data[fips][year]["usdaOn_hudOff"] = row[indices["ST_per100_No_HUD_12_14"]]
-				data[fips][year]["usdaOff_hudOn"] = row[indices["ST_per100_No_USDA_12_14"]]
-				data[fips][year]["usdaOff_hudOff"] = row[indices["ST_per100_No_HUD_USDA_12_14"]]
-				data[fips][year]["totalPop"] = row[indices["ST_Avg_ELITotal_12_14"]]
-				data[fips][year]["usdaOn_hudOnNum"] = row[indices["ST_Avg_Units_12_14"]]
-				data[fips][year]["usdaOn_hudOffNum"] = row[indices["ST_Avg_Units_No_HUD_12_14"]]
-				data[fips][year]["usdaOff_hudOnNum"] = row[indices["ST_Avg_Units_No_USDA_12_14"]]
-				data[fips][year]["usdaOff_hudOffNum"] = row[indices["ST_Avg_Units_No_HUD_USDA_12_14"]]
-				data[fips][year]["hud"] = row[indices["ST_Avg_units_hud_12_14"]]
-				data[fips][year]["usda"] = row[indices["ST_Avg_units_USDA_12_14"]]
+				data[fips][year]["usdaOn_hudOn"] = row[indices["ST_per100"]]
+				data[fips][year]["usdaOn_hudOff"] = row[indices["ST_per100_No_HUD"]]
+				data[fips][year]["usdaOff_hudOn"] = row[indices["ST_Per100_No_USDA"]]
+				data[fips][year]["usdaOff_hudOff"] = row[indices["ST_Per100_No_Assisted"]]
+				data[fips][year]["totalPop"] = row[indices["ST_Total"]]
+				data[fips][year]["usdaOn_hudOnNum"] = row[indices["ST_Units"]]
+				data[fips][year]["usdaOn_hudOffNum"] = row[indices["ST_Units_No_HUD"]]
+				data[fips][year]["usdaOff_hudOnNum"] = row[indices["ST_Units_no_USDA"]]
+				data[fips][year]["usdaOff_hudOffNum"] = row[indices["ST_Unitsnoasst"]]
+				data[fips][year]["hud"] = row[indices["ST_eli"]]
+				data[fips][year]["usda"] = row[indices["ST_usda"]]
 
 		
 
