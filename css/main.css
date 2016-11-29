@@ -590,6 +590,9 @@ li {
 .captionText, .bar{
   cursor: pointer;
 }
+.captionText{
+  width: 240px;
+}
 
 
 /****************************** BOTTOM BAR CHART NEW STYLES ***************/
