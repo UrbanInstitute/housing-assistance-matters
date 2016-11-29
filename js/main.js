@@ -473,9 +473,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		return COLORS[quantize(d.properties.usdaOnhudOn2013)];
 	      	}
 	      	else{
-	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
-	      		// console.log(temp, GREYS[temp])
-	      		// return GREYS["q" + temp + "-5"]
 	      		return COLORS[quantize(d.properties.usdaOnhudOn2013)];
 	      	}
 	      })
@@ -484,9 +481,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      		return "#fff";
 	      	}
 	      	else{
-	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
-	      		// console.log(temp, GREYS[temp])
-	      		// return GREYS["q" + temp + "-5"]
 	      		return COLORS[quantize(d.properties.usdaOnhudOn2013)];
 	      		// return "#fe0103";
 	      		// return "none"
@@ -498,7 +492,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 	      	}
 	      	else{
 	      		// var temp = parseInt(d.properties.STATE_FIPS)%5
-	      		// console.log(temp, GREYS[temp])
 	      		// return GREYS["q" + temp + "-5"]
 	      		return "1px"
 	      	}
@@ -538,8 +531,6 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 
 	d3.selectAll(".notIgnored").each(function(){ d3.select(this).node().parentNode.appendChild(d3.select(this).node()) })
 function foo(selection) {
-	// console.log(this)
-	// console.log(selection.node())
   selection.node().parentNode.appendChild(selection.node())
 }
 	});
@@ -763,7 +754,6 @@ function foo(selection) {
 
 		}
 		function updateText(d){
-			// console.log(d)
 			var year = getYear();
 			var assistance = getAssistance();
 			d3.select(".county-name")
@@ -776,7 +766,6 @@ function foo(selection) {
 				.text(comma(d["properties"]["totalPop" + year]))
 			d3.select(".absolute .tooltipNum")
 				.text(comma(d["properties"][assistance + "Num" + year]))
-			console.log(d, d["properties"][assistance + "Num" + year])
 			d3.select(".cutoff .tooltipYear")
 				.text(function(){
 					if( year == "2006"){
@@ -790,7 +779,6 @@ function foo(selection) {
 					var minELI = d["properties"]["minELI" + year]
 					var maxELI = d["properties"]["maxELI" + year]
 					if (d["properties"]["flagged"] == "0"){
-						// console.log(d3.s)
 						d3.select(".lowPopTop")
 							.transition()
 							.style("left","1200px")
@@ -1004,8 +992,6 @@ function foo(selection) {
 	 			var natl = (d.id == "national")
 				assistance = getAssistance();
 	 			var type  = (expand) ? "expand":"detail";
-	 			// console.log(d.flagged)
-	 			// var lowPop = (d["properties"]["flagged"] == "1") ? "lowPop":"";
 	 			if (d["properties"]["flagged"] == "1"){
 	 				listItem.classed("lowPop",true);
 	 			}
@@ -1169,12 +1155,10 @@ function foo(selection) {
 				total.append("div")
 					.attr("class", "usda_only bar" + " y" + year)
 					.style("border-color", function(){
-						console.log(assistance, assistance.search("usdaOff"))
 						if(assistance.search("usdaOff") != -1) return "#999999"
 						else return "#353535"
 					})
 					.style("background", function(){
-						console.log(assistance, assistance.search("usdaOff"))
 						if(assistance.search("usdaOff") != -1) return "rgba(255,255,255,0)"
 						else return "#353535"
 					})
@@ -1200,12 +1184,10 @@ function foo(selection) {
 				total.append("div")
 					.attr("class", "hud_only bar" + " y" + year)
 					.style("border-color", function(){
-						console.log(assistance, assistance.search("usdaOff"))
 						if(assistance.search("hudOff") != -1) return "#999999"
 						else return "#696969"
 					})
 					.style("background", function(){
-						console.log(assistance, assistance.search("usdaOff"))
 						if(assistance.search("hudOff") != -1) return "rgba(255,255,255,0)"
 						else return "#696969"
 					})
@@ -1572,7 +1554,6 @@ function foo(selection) {
 	})
 	dispatch.on("changeAssistance.details", function(a){
 		var year;
-		console.log(a)
 		d3.selectAll(".bar.text")
 			.text(function(d){ year = d3.select(this).attr("data-year"); return comma(d["properties"][a + year])})
 		d3.selectAll(".total.units")
@@ -1600,6 +1581,7 @@ function foo(selection) {
 				.transition()
 				.delay(800)
 				.style("left", function(d){
+					console.log(d)
 					var val = parseFloat(d["properties"]["usdaOffhudOff" + year]) + parseFloat(d["properties"]["usdaOnhudOn" + year]) - parseFloat(d["properties"]["usdaOffhudOn" + year])
 					return (parseFloat(val/100.0) * BAR_WIDTH) + "px"
 				})
@@ -1899,7 +1881,6 @@ d3.select(".zoom.in")
 	.on("click", function(){ dispatch.zoomIn() })
 d3.select(".zoom.out")
 	.on("click", function(){ dispatch.zoomOut() })
-// console.log("fooooo")
 
 
 drawGraphic(MASTER_WIDTH)

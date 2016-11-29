@@ -79,9 +79,9 @@ for year in years:
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
 			if flag == "0":
 				data[fips][year]["usdaOn_hudOn"] = row[indices["per100"]]
-				data[fips][year]["usdaOn_hudOff"] = float(row[indices["per100_no_HUD"]])*100
+				data[fips][year]["usdaOn_hudOff"] = float(row[indices["per100_no_HUD"]])
 				data[fips][year]["usdaOff_hudOn"] = row[indices["per100_no_USDA"]]
-				data[fips][year]["usdaOff_hudOff"] = float(row[indices["per100_no_assisted"]])*100
+				data[fips][year]["usdaOff_hudOff"] = float(row[indices["per100_no_assisted"]])
 				data[fips][year]["totalPop"] = row[indices["Total"]]
 				data[fips][year]["usdaOn_hudOnNum"] = row[indices["Units"]]
 				data[fips][year]["usdaOn_hudOffNum"] = row[indices["Units_No_HUD"]]
@@ -129,10 +129,11 @@ for year in years:
 			data[fips][year]["maxELI"] = row[indices["MaxEli"]]
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
 			if flag == "0":
+				S = float(row[indices["Units"]]) / float(row[indices["Total"]])
 				data[fips][year]["usdaOn_hudOn"] = row[indices["per100"]]
-				data[fips][year]["usdaOn_hudOff"] = float(row[indices["per100_no_HUD"]])*100
-				data[fips][year]["usdaOff_hudOn"] = row[indices["per100_no_USDA"]]
-				data[fips][year]["usdaOff_hudOff"] = float(row[indices["per100_no_assisted"]])*100
+				data[fips][year]["usdaOn_hudOff"] = float(row[indices["per100_no_HUD"]]) * S
+				data[fips][year]["usdaOff_hudOn"] = float(row[indices["per100_no_USDA"]]) * S
+				data[fips][year]["usdaOff_hudOff"] = float(row[indices["per100_no_assisted"]]) * S
 				data[fips][year]["totalPop"] = row[indices["Total"]]
 				data[fips][year]["usdaOn_hudOnNum"] = row[indices["Units"]]
 				data[fips][year]["usdaOn_hudOffNum"] = row[indices["Units_No_HUD"]]
