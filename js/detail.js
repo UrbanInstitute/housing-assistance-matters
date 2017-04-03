@@ -118,10 +118,10 @@ function drawGraphic(containerWidth){
 		// var x = d3.scale.linear()
 		// 		.range([margin.left,width-margin.left])
 		// 		.domain([1999.5,2013.5])
-		var REMAP = {"2000" : "2000", "2006": "2008", "2013":"2014"}
+		var REMAP = {"2000" : "2000", "2006": "2005 — '09", "2013":"2010 — '14"}
 		var x = d3.scale.ordinal()
     		.rangeRoundBands([0, width], .4)
-    		.domain([2000,2008,2014]);
+    		.domain([2000,"2005 — '09","2010 — '14"]);
 		var y = d3.scale.linear()
 				.range([height-margin.bottom,margin.bottom])
 				.domain([0,100])
@@ -135,7 +135,7 @@ function drawGraphic(containerWidth){
 		var xAxis = d3.svg.axis()
 		    .scale(x)
 		    .orient("bottom")
-		    .tickValues([2000,2008,2014])
+		    .tickValues([2000,"2005 — '09","2010 — '14"])
 		    // .tickFormat(d3.format("0"))
 		    .outerTickSize(0);
 

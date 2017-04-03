@@ -98,10 +98,10 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 			return "2000";
 		}
 		else if (year == "2006"){
-			return "2006 — '08";
+			return "2005 — '09";
 		}
 		else if (year == "2013"){
-			return "2012 — '14";
+			return "2010 — '14";
 		}
 	}
 	var getAssistance = function(){
