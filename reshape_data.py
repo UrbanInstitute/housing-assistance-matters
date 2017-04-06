@@ -141,10 +141,10 @@ for year in years:
 			data[fips][year]["minELI"] = row[indices["MinEli"]]
 			if flag == "0":
 				S = float(row[indices["units"]]) / float(row[indices["Total"]])
-				data[fips][year]["scalar"] = float(row[indices["per100"]]) / (S*100)
-				data[fips][year]["usdaOn_hudOn"] = S*100
-				data[fips][year]["usdaOn_hudOff"] = float(row[indices["Per100_No_HUD"]])
-				data[fips][year]["usdaOff_hudOn"] = float(row[indices["Per100_No_USDA"]])
+				data[fips][year]["scalar"] = 1
+				data[fips][year]["usdaOn_hudOn"] = float(row[indices["per100"]])
+				data[fips][year]["usdaOn_hudOff"] = float(row[indices["USDAper100"]]) + float(row[indices["per100_no_assisted"]])
+				data[fips][year]["usdaOff_hudOn"] = float(row[indices["per100"]]) - float(row[indices["USDAper100"]])
 				data[fips][year]["usdaOff_hudOff"] = float(row[indices["per100_no_assisted"]])
 				data[fips][year]["totalPop"] = row[indices["Total"]]
 				data[fips][year]["usdaOn_hudOnNum"] = row[indices["units"]]
