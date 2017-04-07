@@ -124,9 +124,7 @@ svg{
 	stroke: #55b748;
 }
 
-.usdaOffhudOn.bar.y2000, .usdaOffhudOn.line.y2000, .usdaOffhudOff.bar.y2000, .usdaOffhudOff.line.y2000{
-	display: none;
-}
+
 .bar.opaque{
 	opacity: .8;
 }

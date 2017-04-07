@@ -110,7 +110,7 @@ function drawGraphic(containerWidth){
 		.attr("class","caveat")
 		.text(function(d){
 			if(d.properties.flagged == "1"){
-				return "This area represents all counties in the state with fewer than 20,000 people according to the 2011-2013 3-year American Community Survey sample."
+				return "This area represents all counties in the state with fewer than 20,000 people according to the 2010-2014 4-year American Community Survey sample."
 			}
 		})
 
@@ -367,11 +367,16 @@ function drawGraphic(containerWidth){
 			row2013.append("td")
 				.html(comma(d.properties.usdaOffhudOff2013))
 
+			if(d.properties.flagged == "1"){
+				c.append("div")
+					.attr("class", "footnote")
+					.html("* Extremely low-income households earn no more than 30 percent of the area median income. In these counties, the income cutoff for a household of four ranged from " + dollar(d.properties.minELI2000) + "&ndash;" + dollar(d.properties.maxELI2000) + " in 2000, " + dollar(d.properties.minELI2006) + "&ndash;" + dollar(d.properties.maxELI2006) + " in 2009, and " + dollar(d.properties.minELI2013) + "&ndash;" + dollar(d.properties.maxELI2013) + " in 2014.")
 
-
-			c.append("div")
-				.attr("class", "footnote")
-				.text("* Extremely low-income households earn no more than 30 percent of the area median income. In this county, the income cutoff for a household of four was " + dollar(d.properties.ami2000) + " in 2000, " + dollar(d.properties.ami2006) + " in 2008, and " + dollar(d.properties.ami2013) + " in 2014.")
+			}else{
+				c.append("div")
+					.attr("class", "footnote")
+					.text("* Extremely low-income households earn no more than 30 percent of the area median income. In this county, the income cutoff for a household of four was " + dollar(d.properties.ami2000) + " in 2000, " + dollar(d.properties.ami2006) + " in 2009, and " + dollar(d.properties.ami2013) + " in 2014.")
+			}
 
 
 		}	

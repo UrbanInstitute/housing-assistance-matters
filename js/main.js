@@ -12,33 +12,33 @@ var usData = {
 	 "ami2000" : "",
 	"ami2006" : "",
 	"ami2013" : "",
-	 "usdaOnhudOn2000" : "56.62476773",
-	"usdaOnhudOff2000" : "31.26709262",
-	"usdaOffhudOn2000" : "56.62476773",
-	"usdaOffhudOff2000" : "31.26709262",
+	 "usdaOnhudOn2000" : "47.16209449",
+	"usdaOnhudOff2000" : "26.18935095",
+	"usdaOffhudOn2000" : "44.11653945",
+	"usdaOffhudOff2000" : "23.14379591",
 	"totalPop2000" : "8165441",
-	 "usdaOnhudOnNum2000" : "4623662",
-	"usdaOnhudOffNum2000" : "2553096",
-	"usdaOffhudOnNum2000" : "4623662",
-	"usdaOffhudOffNum2000" : "2553096",
-	 "usdaOnhudOn2006" : "58.78428965",
-	"usdaOnhudOff2006" : "27.013917",
-	"usdaOffhudOn2006" : "55.94126225",
-	"usdaOffhudOff2006" : "24.1708896",
-	"totalPop2006" : "9240326",
-	 "usdaOnhudOnNum2006" : "5431860",
-	"usdaOnhudOffNum2006" : "2496174",
-	"usdaOffhudOnNum2006" : "5169155",
-	"usdaOffhudOffNum2006" : "2233469",
-	 "usdaOnhudOn2013" : "58.28461611",
-	"usdaOnhudOff2013" : "23.3619501",
-	"usdaOffhudOn2013" : "55.15776584",
-	"usdaOffhudOff2013" : "20.2350998",
-	"totalPop2013" : "8877080",
-	 "usdaOnhudOnNum2013" : "5173972",
-	"usdaOnhudOffNum2013" : "2073859",
-	"usdaOffhudOnNum2013" : "4896399",
-	"usdaOffhudOffNum2013" : "1796286",
+	 "usdaOnhudOnNum2000" : "3850993",
+	"usdaOnhudOffNum2000" : "2138476",
+	"usdaOffhudOnNum2000" : "3602310",
+	"usdaOffhudOffNum2000" : "1889793",
+	 "usdaOnhudOn2006" : "42.80367476",
+	"usdaOnhudOff2006" : "19.62526066",
+	"usdaOffhudOn2006" : "40.14984604",
+	"usdaOffhudOff2006" : "16.97143193",
+	"totalPop2006" : "9899094",
+	 "usdaOnhudOnNum2006" : "4237176",
+	"usdaOnhudOffNum2006" : "1942723",
+	"usdaOffhudOnNum2006" : "3974471",
+	"usdaOffhudOffNum2006" : "1680018",
+	 "usdaOnhudOn2013" : "45.64328655",
+	"usdaOnhudOff2013" : "23.79047034",
+	"usdaOffhudOn2013" : "43.28610501",
+	"usdaOffhudOff2013" : "21.4332888",
+	"totalPop2013" : "11775631",
+	 "usdaOnhudOnNum2013" : "5374785",
+	"usdaOnhudOffNum2013" : "2801478",
+	"usdaOffhudOnNum2013" : "5097212",
+	"usdaOffhudOffNum2013" : "2523905",
 	"maxELI2000" : "",
 	"minELI2000" : "",
 	"maxELI2006" : "",
@@ -159,9 +159,9 @@ d3.select(".total.header").style("width", (173 + gutterWidth) + "px")
 
 	});
 	dispatch.on("changeYear", function(year){
-		var opacity = (year == "2000") ? 0.3 : 1;
-		var pointerEvents = (year == "2000") ? "none" : "auto";
-		var display = (year == "2000") ? "none" : "block";
+		var opacity = (year == "2000") ? 1 : 1;
+		var pointerEvents = (year == "2000") ? "auto" : "auto";
+		var display = (year == "2000") ? "block" : "block";
 		dispatch.updateTooltip();
 		d3.selectAll(".year.button").classed("active", false)
 		d3.selectAll("#button_"+year).classed("active", true)
@@ -690,7 +690,7 @@ function foo(selection) {
 		}
 		sidebar.append("div")
 			.attr("class", "lowPopTop")
-			.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011–13 3-year American Community Survey sample.")
+			.text("This area represents all counties in the state with fewer than 20,000 people according to the 2010–14 5-year American Community Survey sample.")
 		var container = sidebar.append("div")
 			.attr("class", "text container")
 		container.append("div")
@@ -729,7 +729,7 @@ function foo(selection) {
 	dispatch.on("updateTooltip", function(){
 		hovered = d3.selectAll(".hover")
 		var hovered2 = d3.selectAll(".hover2")
-		if(hovered[0].length == 0 && selectedCounties.length == 0){
+		if(hovered[0].length == 0 && selectedCounties.length == 0 && hovered2[0].length == 0){
 			d3.select(".lowPopTop")
 				.transition()
 				.style("left","1200px")
@@ -773,7 +773,7 @@ function foo(selection) {
 				.text(function(){
 					if( year == "2006"){
 						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
-						return "2008"
+						return "2009"
 					}else if (year == "2013") return "2014" 
 					else{ return "2000"}
 				})
@@ -961,8 +961,7 @@ function foo(selection) {
 	    })
 	    d3.selectAll("a.ui-button").remove();
 	    var span = d3.select(".search.container span")
-	    span.append("div")
-	    	.attr("class", "search-icon_background")
+
 	    span.append("img")
 	    	.attr("src","images/search-icon.png")
 	    	.attr("class","search-icon")
@@ -1017,7 +1016,7 @@ function foo(selection) {
 				if (d["properties"]["flagged"] == "1"){
 					name.append("div")
 						.attr("class","lowPopBottom")
-						.text("This area represents all counties in the state with fewer than 20,000 people according to the 2011–13 3-year American Community Survey sample.")
+						.text("This area represents all counties in the state with fewer than 20,000 people according to the 2010–14 5-year American Community Survey sample.")
 				}
 				name.append("div")
 					.attr("class", type + " fullName")
@@ -1115,7 +1114,7 @@ function foo(selection) {
 					.html(function(){
 						var minELI, maxELI;
 						if(d.id == "national"){
-							var elis = {"2000":[9150,30700], "2006":[12100,35350], "2013":[21250 ,37250]}
+							var elis = {"2000":[9150,26200], "2006":[12550,33950], "2013":[21250 ,33850]}
 							minELI = elis[year][0]
 							maxELI = elis[year][1]
 						}
@@ -1125,7 +1124,7 @@ function foo(selection) {
 						}
 						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
 						var newYear;
-						if(year == "2006") newYear = "2008"
+						if(year == "2006") newYear = "2009"
 						else if(year == "2013") newYear = "2014"
 						else newYear = "2000"
 
@@ -1461,27 +1460,27 @@ function foo(selection) {
 		}
 	})
 	dispatch.on("changeYear.details", function(year){
-		if(year == "2000"){
-			d3.select("#fader")
-				.style("height","34px")
-				.transition()
-				// .duration(1000)
-				.style("background","rgba(255,255,255,.7)")
-			d3.select("#faderText")
-				.transition()
-				.duration(1000)
-				.style("opacity",1)
-		}else{
-			d3.select("#fader")
-				.transition()
-				// .duration(1000)
-				.style("background","rgba(255,255,255,.0)")
-				.each("end", function(){ d3.select("#fader").style("height","0px") })
-			d3.select("#faderText")
-				.transition()
-				.duration(1000)
-				.style("opacity",0)
-		}
+		// if(year == "2000"){
+		// 	d3.select("#fader")
+		// 		.style("height","34px")
+		// 		.transition()
+		// 		// .duration(1000)
+		// 		.style("background","rgba(255,255,255,.7)")
+		// 	d3.select("#faderText")
+		// 		.transition()
+		// 		.duration(1000)
+		// 		.style("opacity",1)
+		// }else{
+		// 	d3.select("#fader")
+		// 		.transition()
+		// 		// .duration(1000)
+		// 		.style("background","rgba(255,255,255,.0)")
+		// 		.each("end", function(){ d3.select("#fader").style("height","0px") })
+		// 	d3.select("#faderText")
+		// 		.transition()
+		// 		.duration(1000)
+		// 		.style("opacity",0)
+		// }
 		var a = getAssistance();
 		d3.selectAll(".y2013")
 			.classed("y2013",false)
@@ -1532,7 +1531,7 @@ function foo(selection) {
 							maxELI = d["properties"]["maxELI" + year]
 						}
 						//ELI cutoff numbers are for 2000, 2007, and 2013 (last year in ranges)
-						if(year == "2006") newYear = "2008"
+						if(year == "2006") newYear = "2009"
 						else if(year == "2013") newYear = "2014"
 						else newYear = "2000"
 						if (d["properties"]["flagged"] == "0"){
