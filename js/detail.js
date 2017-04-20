@@ -64,7 +64,7 @@ function drawGraphic(containerWidth){
 	var fips = params.fips
 	var width = 600;
 	var height = 300;
-	var margin = {left:50, right:30, top:30, bottom: 30}
+	var margin = {left:50, right:30, top:80, bottom: 30}
 	var quantize = d3.scale.quantize()
 		.domain([0, 100])
 		.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
@@ -110,7 +110,7 @@ function drawGraphic(containerWidth){
 		.attr("class","caveat")
 		.text(function(d){
 			if(d.properties.flagged == "1"){
-				return "This area represents all counties in the state with fewer than 20,000 people according to the 2011-2013 3-year American Community Survey sample."
+				return "This area represents all counties in the state with fewer than 20,000 people according to the 2010-2014 4-year American Community Survey sample."
 			}
 		})
 
@@ -118,9 +118,10 @@ function drawGraphic(containerWidth){
 		// var x = d3.scale.linear()
 		// 		.range([margin.left,width-margin.left])
 		// 		.domain([1999.5,2013.5])
+		var REMAP = {"2000" : "2000", "2006": "2005 — '09", "2013":"2010 — '14"}
 		var x = d3.scale.ordinal()
-    		.rangeRoundBands([0, width], .3)
-    		.domain([2000,2006,2013]);
+    		.rangeRoundBands([0, width], .4)
+    		.domain([2000,"2005 — '09","2010 — '14"]);
 		var y = d3.scale.linear()
 				.range([height-margin.bottom,margin.bottom])
 				.domain([0,100])
@@ -134,19 +135,21 @@ function drawGraphic(containerWidth){
 		var xAxis = d3.svg.axis()
 		    .scale(x)
 		    .orient("bottom")
-		    // .tickValues([2000,2006,2013])
+		    .tickValues([2000,"2005 — '09","2010 — '14"])
 		    // .tickFormat(d3.format("0"))
 		    .outerTickSize(0);
 
 		var yAxis = d3.svg.axis()
 		    .scale(y)
+		    .tickValues([20,40,60,80,100])
 		    .orient("left")
 		    .ticks(5);
 
 		var svg = containers.append("svg")
-				.attr("height",height)
+				.attr("height",height + margin.top)
 				.attr("width",width)
-				.append("g");
+				.append("g")
+
 		// for(var t= 1; t <= 5; t++){
 		// 	svg.append("line")
 		// 		.attr("class", "grid-line")
@@ -157,12 +160,12 @@ function drawGraphic(containerWidth){
 		// }
 		svg.append("g")
 		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + (height-margin.bottom) + ")")
+		      .attr("transform", "translate(0," + (height-margin.bottom+margin.top) + ")")
 		      .call(xAxis);
 
 		svg.append("g")
 		      .attr("class", "y axis")
-		      .attr("transform", "translate(" + margin.left + ",0)")
+		      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 		      .call(yAxis)
 		    .append("text")
 		      .attr("transform", "rotate(-90)")
@@ -188,41 +191,83 @@ function drawGraphic(containerWidth){
 
 			// }
 			svg.append("rect")
-				.attr("class", "asst bar")
+				.attr("class", "usdaOnhudOn legend")
 				.attr("x", 50)
 				.attr("y", 0)
 				.attr("width", 15)
 				.attr("height", 15)
 			svg.append("text")
-				.text("Units per 100 ELI households")
+				.text("Units per 100 ELI households with no assistance")
 				.attr("x",70)
 				.attr("y",13)
+
+			// svg.append("rect")
+			// 	.attr("class", "usdaOffhudOn legend")
+			// 	.attr("x", 250)
+			// 	.attr("y", 0)
+			// 	.attr("width", 15)
+			// 	.attr("height", 15)
+			// svg.append("text")
+			// 	.text("Units per 100 ELI households without USDA assistance")
+			// 	.attr("x",270)
+			// 	.attr("y",13)
+
 			svg.append("rect")
-				.attr("class", "noAsst bar")
-				.attr("x", 250)
-				.attr("y", 0)
+				.attr("class", "usdaOffhudOn legend")
+				.attr("x", 50)
+				.attr("y", 30)
 				.attr("width", 15)
 				.attr("height", 15)
 			svg.append("text")
-				.text("Units per 100 ELI households without HUD assistance ")
-				.attr("x",270)
-				.attr("y",13)
+				.text("Units per 100 ELI households")
+				.attr("x",70)
+				.attr("y",43)
+			svg.append("text")
+				.text("with USDA assistance")
+				.attr("x",70)
+				.attr("y",59)
 
 			svg.append("rect")
-				.attr("class","asst bar")
-				.attr("x", x(years[i]))
-				.attr("y", function(d) { return y(d.properties["asst" + years[i]]) })
-				.attr("width", x.rangeBand())
-				.attr("height", function(d){ return height - margin.bottom - y(d.properties["asst" + years[i]])})
-				// .attr("cx",x(years[i]))
-				// .attr("cy", function(d){ return y(d.properties["asst" + years[i]])})
-				// .attr("r",4)
+				.attr("class", "usdaOnhudOff legend")
+				.attr("x", 250)
+				.attr("y", 30)
+				.attr("width", 15)
+				.attr("height", 15)
+			svg.append("text")
+				.text("Units per 100 ELI households")
+				.attr("x",270)
+				.attr("y",43)
+			svg.append("text")
+				.text("with HUD assistance")
+				.attr("x",270)
+				.attr("y",59)
+
+
+
 			svg.append("rect")
-				.attr("class","noAsst bar")
-				.attr("x", x(years[i])+x.rangeBand()*.1)
-				.attr("y", function(d) { return y(d.properties["noAsst" + years[i]]) })
-				.attr("width", x.rangeBand()*.8)
-				.attr("height", function(d){ return height - margin.bottom - y(d.properties["noAsst" + years[i]])})
+				.attr("class","usdaOnhudOn bar y" + REMAP[years[i]])
+				.attr("x", x(REMAP[years[i]]))
+				.attr("y", function(d) { return y(d.properties["usdaOnhudOn" + years[i]]) })
+				.attr("width", x.rangeBand())
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOnhudOn" + years[i]])})
+
+			svg.append("rect")
+				.attr("class","usdaOffhudOn bar y" + REMAP[years[i]])
+				.attr("x", x(REMAP[years[i]]))
+				.attr("y", function(d) { return y(parseFloat(d.properties["usdaOnhudOn" + years[i]]))})
+				.attr("width", x.rangeBand())
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOnhudOn" + years[i]] - d.properties["usdaOffhudOn" + years[i]])})
+
+			svg.append("rect")
+				.attr("class","usdaOnhudOff bar y" + REMAP[years[i]])
+				.attr("x", x(REMAP[years[i]]))
+				.attr("y", function(d) { return y(parseFloat(d.properties["usdaOffhudOn" + years[i]])) })
+				.attr("width", x.rangeBand())
+				.attr("height", function(d){ return height - margin.bottom - y(d.properties["usdaOnhudOn" + years[i]] - d.properties["usdaOnhudOff" + years[i]])})
+
+			svg.selectAll(".bar")
+				.attr("transform", "translate(0," + (margin.top) + ")")
+
 
 		}
 		containers.append("div")
@@ -244,60 +289,94 @@ function drawGraphic(containerWidth){
 	 		headers.append("th")
 				.html("Units serving ELI households with HUD assistance")
 	 		headers.append("th")
-				.html("Units per 100 ELI households")
+				.html("Units serving ELI households with USDA assistance")
 	 		headers.append("th")
-				.html("Units per 100 ELI households without HUD assistance ")
-			
+				.html("Units serving ELI households with no assistance")
+	 		headers.append("th")
+				.html("Units per 100 ELI households with HUD assistance")
+	 		headers.append("th")
+				.html("Units per 100 ELI households with USDA assistance")
+	 		headers.append("th")
+				.html("Units per 100 ELI households with no assistance")
+
+
 			row2000 = table.append("tr")
 			row2000.append("td")
 				.html("2000")
 			row2000.append("td")
 				.html(comma(d.properties.totalPop2000))
 			row2000.append("td")
-				.html(comma(d.properties.asstNum2000))
+				.html(comma(d.properties.usdaOnhudOnNum2000))
 			row2000.append("td")
-				.html(comma(parseFloat(d.properties.totalPop2000)-parseFloat(d.properties.asstNum2000)))
+				.html(comma(parseFloat(d.properties.totalPop2000)-parseFloat(d.properties.usdaOnhudOnNum2000)))
 			row2000.append("td")
-				.html(comma(d.properties.hud2000))
+				.html(comma(d.properties.usdaOnhudOnNum2000))
 			row2000.append("td")
-				.html(comma(d.properties.asst2000))
+				.html(comma(d.properties.usdaOnhudOn2000))
 			row2000.append("td")
-				.html(comma(d.properties.noAsst2000))
+				.html(comma(d.properties.usdaOnhudOff2000))
+			row2000.append("td")
+				.html("*")
+			row2000.append("td")
+				.html("*")
+			row2000.append("td")
+				.html("*")
+
 
 			row2006 = table.append("tr")
 			row2006.append("td")
-				.html("2005&mdash;'07")
+				.html("2006&ndash;'08")
 			row2006.append("td")
 				.html(comma(d.properties.totalPop2006))
 			row2006.append("td")
-				.html(comma(d.properties.asstNum2006))
+				.html(comma(d.properties.usdaOnhudOnNum2006))
 			row2006.append("td")
-				.html(comma(parseFloat(d.properties.totalPop2006)-parseFloat(d.properties.asstNum2006)))
+				.html(comma(parseFloat(d.properties.totalPop2006)-parseFloat(d.properties.usdaOnhudOnNum2006)))
 			row2006.append("td")
 				.html(comma(d.properties.hud2006))
 			row2006.append("td")
-				.html(comma(d.properties.asst2006))
+				.html(comma(d.properties.usda2006))
 			row2006.append("td")
-				.html(comma(d.properties.noAsst2006))
+				.html(comma(d.properties.usdaOffhudOffNum2006))
+			row2006.append("td")
+				.html(comma(d.properties.usdaOnhudOn2006 - d.properties.usdaOnhudOff2006))
+			row2006.append("td")
+				.html(comma(d.properties.usdaOnhudOn2006 - d.properties.usdaOffhudOn2006))
+			row2006.append("td")
+				.html(comma(d.properties.usdaOffhudOff2006))
 
 			row2013 = table.append("tr")
 			row2013.append("td")
-				.html("2011&mdash;'13")
+				.html("2013&ndash;'08")
 			row2013.append("td")
 				.html(comma(d.properties.totalPop2013))
 			row2013.append("td")
-				.html(comma(d.properties.asstNum2013))
+				.html(comma(d.properties.usdaOnhudOnNum2013))
 			row2013.append("td")
-				.html(comma(parseFloat(d.properties.totalPop2013)-parseFloat(d.properties.asstNum2013)))
+				.html(comma(parseFloat(d.properties.totalPop2013)-parseFloat(d.properties.usdaOnhudOnNum2013)))
 			row2013.append("td")
 				.html(comma(d.properties.hud2013))
 			row2013.append("td")
-				.html(comma(d.properties.asst2013))
+				.html(comma(d.properties.usda2013))
 			row2013.append("td")
-				.html(comma(d.properties.noAsst2013))
-			c.append("div")
-				.attr("class", "footnote")
-				.text("* Extremely low-income households earn no more than 30 percent of the area median income. In this county, the income cutoff for a household of four was" + dollar(d.properties.ami2000) + " in 2000, " + dollar(d.properties.ami2006) + " in 2007, and " + dollar(d.properties.ami2013) + " in 2013. ")
+				.html(comma(d.properties.usdaOffhudOffNum2013))
+			row2013.append("td")
+				.html(comma(d.properties.usdaOnhudOn2013 - d.properties.usdaOnhudOff2013))
+			row2013.append("td")
+				.html(comma(d.properties.usdaOnhudOn2013 - d.properties.usdaOffhudOn2013))
+			row2013.append("td")
+				.html(comma(d.properties.usdaOffhudOff2013))
+
+			if(d.properties.flagged == "1"){
+				c.append("div")
+					.attr("class", "footnote")
+					.html("* Extremely low-income households earn no more than 30 percent of the area median income. In these counties, the income cutoff for a household of four ranged from " + dollar(d.properties.minELI2000) + "&ndash;" + dollar(d.properties.maxELI2000) + " in 2000, " + dollar(d.properties.minELI2006) + "&ndash;" + dollar(d.properties.maxELI2006) + " in 2009, and " + dollar(d.properties.minELI2013) + "&ndash;" + dollar(d.properties.maxELI2013) + " in 2014.")
+
+			}else{
+				c.append("div")
+					.attr("class", "footnote")
+					.text("* Extremely low-income households earn no more than 30 percent of the area median income. In this county, the income cutoff for a household of four was " + dollar(d.properties.ami2000) + " in 2000, " + dollar(d.properties.ami2006) + " in 2009, and " + dollar(d.properties.ami2013) + " in 2014.")
+			}
 
 
 		}	
@@ -356,7 +435,7 @@ function drawGraphic(containerWidth){
 
 		containers.append("div")
 			.attr("class", "footer")
-			.text("The Assisted Housing Initiative is a project of the Urban Institute, made possible by support from Housing Authority Insurance, Inc. (HAI, Inc.), to provide fact-based analysis about public and assisted housing. The Urban Institute is a nonprofit, nonpartisan research organization and retains independent and exclusive control over substance and quality of any Assisted Housing Initiative products. The views expressed in this and other Assisted Housing Initiative commentaries are those of the authors and should not be attributed to the Urban Institute or HAI, Inc.")
+			.text("The Urban Institute’s Housing Assistance Matters Initiative is funded by Housing Authority Insurance, Inc. (HAI, Inc.), to provide fact-based analysis about public and assisted housing. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission.")
 		containers.append("div")
 			.attr("class","page-break")
 
