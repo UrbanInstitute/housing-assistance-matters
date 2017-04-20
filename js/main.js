@@ -1460,27 +1460,17 @@ function foo(selection) {
 		}
 	})
 	dispatch.on("changeYear.details", function(year){
-		// if(year == "2000"){
-		// 	d3.select("#fader")
-		// 		.style("height","34px")
-		// 		.transition()
-		// 		// .duration(1000)
-		// 		.style("background","rgba(255,255,255,.7)")
-		// 	d3.select("#faderText")
-		// 		.transition()
-		// 		.duration(1000)
-		// 		.style("opacity",1)
-		// }else{
-		// 	d3.select("#fader")
-		// 		.transition()
-		// 		// .duration(1000)
-		// 		.style("background","rgba(255,255,255,.0)")
-		// 		.each("end", function(){ d3.select("#fader").style("height","0px") })
-		// 	d3.select("#faderText")
-		// 		.transition()
-		// 		.duration(1000)
-		// 		.style("opacity",0)
-		// }
+		if(year == "2000"){
+			d3.select("#faderText")
+				.transition()
+				.duration(1000)
+				.style("opacity",1)
+		}else{
+			d3.select("#faderText")
+				.transition()
+				.duration(1000)
+				.style("opacity",0)
+		}
 		var a = getAssistance();
 		d3.selectAll(".y2013")
 			.classed("y2013",false)
