@@ -435,7 +435,7 @@ function drawGraphic(containerWidth){
 
 		containers.append("div")
 			.attr("class", "footer")
-			.text("The Urban Institute’s Housing Assistance Matters Initiative is funded by Housing Authority Insurance, Inc. (HAI, Inc.), to provide fact-based analysis about public and assisted housing. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission.")
+			.html("The Urban Institute&rsquo;s Housing Assistance Matters Initiative is funded by Housing Authority Insurance, Inc. (HAI, Inc.), to provide fact-based analysis about public and assisted housing. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission.")
 		containers.append("div")
 			.attr("class","page-break")
 

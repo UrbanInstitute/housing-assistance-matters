@@ -100,6 +100,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div id="introtext">
     <h1>MAPPING AMERICA'S RENTAL HOUSING CRISIS</h1>
     <h2>Many households struggle to afford a decent, safe place to live. Over the past five years, rents have risen while the number of renters needing affordable housing has increased. These two pressures make finding affordable housing even tougher for America’s poorest households.</h2>
+    <h2 id = "dataUpdate">The data used to create this map were updated on April 27, 2017. See below for details.</h2>
     </div> 
 </header>
 </div>
@@ -125,7 +126,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		USDA Assistance
 		</div>
 		<div class = "help-button usda">
-				<div class = "help text asst usda">These data come from the US Department of Agriculture’s (USDA) administrative databases.</div>
+				<div class = "help text asst usda">These data come from the US Department of Agriculture’s (USDA) administrative databases. Note that USDA data for 2000 were unavailable, and are imputed using 2006 and 2012 USDA data.</div>
 		</div>
 		<div class = "usda assistance button turnOn active"><span>ON</span></div>
 		<div class = "usda assistance button turnOff"><span>OFF</span></div>
@@ -148,7 +149,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	<!-- <div class = "header left gutter"></div> -->
 	<div class = "location header"><span>LOCATION</span></div>
 	<div class = "population header"><span>ELI RENTER HOUSEHOLDS</span>
-		<div class = "help text pop">Extremely low income (ELI) households earn no more than 30 percent area median income.</div>
+		<div class = "help text pop">Extremely low income (ELI) households earn no more than 30 percent area median income. The 2014 federal Appropriations Act changed the definition of ELI as of July 1, 2014 to represent the higher the 30% of Income Limits published by HUD <i class = "emph">or</i> the current federal poverty level. For more information, <a href = "https://www.gpo.gov/fdsys/pkg/FR-2014-06-25/pdf/2014-14915.pdf">click here</a>. 
+</div>
 	</div>
 	<div class = "per100 header"><span>UNITS PER 100</span>
 		<div class = "help text per">The number of adequate, affordable, and available rental units for every 100 extremely low-income renter households.</div>
@@ -169,10 +171,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="footer-container">
 	<div class = "left footer">
 		<div class = "footer title">ABOUT THIS MAP</div>
-		<div class = "footer text"><p>The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renter households at the county level in the United States. The data analyzed come from multiple sources – the American Community Survey (ACS) Public Use Microdata Sample (PUMS) from the Census (via the Integrated Public Use Microdata Series from the Minnesota Population Center), data provided by the US Department of Housing and Urban Development (HUD) from the Public and Indian Housing Information Center (PIC) and Tenant Rental Assistance Certification System (TRACs), the HUD Section 8 Income Limits, US Department of Agriculture’s Rural Housing Service and ACS pre-tabulated data from the Census. The data on HUD assisted housing represents a best estimate of the total number of HUD subsidized ELI households. We include only those programs for which we can obtain data from HUD, namely, Public Housing, Housing Choice Vouchers, Moderate Rehabilitation, and Section 8 New Construction and Substantial Rehabilitation, and only those recipients who are not rent-burdened.</p>
-		<p>The data on rental housing programs funded through the US Department of Agriculture, are counts of extremely low-income households living in USDA Section 515 properties and receiving USDA Section 521 Rental Assistance.</p>
+		<div class = "footer text"><p>The figures in this analysis represent a best estimate of the affordable rental housing gap and federal assistance for extremely low-income (ELI) renter households at the county level in the United States. The data analyzed come from multiple sources – the American Community Survey (ACS) Public Use Microdata Sample (PUMS) from the Census (via the Integrated Public Use Microdata Series from the Minnesota Population Center), data provided by the US Department of Housing and Urban Development (HUD) from the Public and Indian Housing Information Center (PIC) and Tenant Rental Assistance Certification System (TRACs), the HUD Section 8 Income Limits, US Department of Agriculture’s Rural Housing Service and ACS pre-tabulated data from the Census. The data on HUD assisted housing represents a best estimate of the total number of HUD subsidized ELI households. We include only those programs for which we can obtain data from HUD, namely, Public Housing, Housing Choice Vouchers, Moderate Rehabilitation, and Section 8 New Construction, Substantial Rehabilitation, and other Multifamily, and only those recipients who are not rent-burdened.</p>
+		<p>The data on rental housing programs funded through the US Department of Agriculture are counts of extremely low-income households living in USDA Section 515 properties and receiving USDA Section 521 Rental Assistance.</p>
+		<p>In a small number of counties, the analysis produces negative estimates for affordable, available, and adequate units when federal assistance is removed. These estimates are not negative in reality, but are likely a result of sampling error from the American Community Survey. To adjust for this, we set the unassisted unit count to zero and adjust all affected variables accordingly. This adjustment affects only these small subset of counties, and has no effect on the overall national estimates. For more detail on the methodology, click here (link to report).</p>
 		<hr style="border-color: #b3b3b3">
-		<p><em>The Assisted Housing Initiative is a project of the Urban Institute, made possible by support from Housing Authority Insurance, Inc.  (HAI, Inc.), to provide fact-based analysis about public and assisted housing. The Urban Institute is a non-profit, nonpartisan research organization and retains independent and exclusive control over substance and quality of any Assisted Housing Initiative products. The views expressed in this and other Assisted Housing Initiative commentaries are those of the authors and should not be attributed to the Urban Institute or HAI, Inc.</em></p>
+		<p><em>The Assisted Housing Initiative is a project of the Urban Institute, made possible by support from Housing Authority Insurance, Inc. (HAI, Inc.), to provide fact-based analysis about public and assisted housing. The Urban Institute is a non-profit, nonpartisan research organization and retains independent and exclusive control over substance and quality of any Assisted Housing Initiative products. The views expressed in this and other Assisted Housing Initiative commentaries are those of the authors and should not be attributed to the Urban Institute or HAI, Inc.</em></p>
 </div>
 	</div>
 	<div class = "right footer">
@@ -191,32 +194,42 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<p>Institute fellow and Director of urban policy initiatives</p>
 
 			<h2><a href = "http://www.urban.org/author/liza-getsinger">Liza Getsinger</a></h2>
-			<p>Policy and research program manager</p>
+			<p>Director of strategy and operations</p>
+
+			<h2><a href = "http://www.urban.org/author/josh-leopold">Josh Leopold</a></h2>
+			<p>Senior research associate</p>
+
+			<h2><a href = "http://www.urban.org/author/graham-macdonald">Graham MacDonald</a></h2>
+			<p>Data scientist</p>
+
+			<h2><a href = "http://www.urban.org/author/lily-posey">Lily Posey</a></h2>
+			<p>Research assistant</p>
 
 			<h2><a href = "http://www.urban.org/author/pamela-blumenthal">Pamela Blumenthal</a></h2>
 			<p>Senior research associate</p>
-
-			<h2><a href = "http://www.urban.org/author/josh-leopold">Josh Leopold</a></h2>
-			<p>Research associate</p>
 
 			<h2><a href = "http://www.urban.org/author/reed-jordan">Reed Jordan</a></h2>
 			<p>Research associate II</p>
 
 			<h2><a href = "http://www.urban.org/author/katya-abazajian">Katya Abazajian</a></h2>
 			<p>Research assistant</p>
+			<div id = "githubCopyright">This page was last updated April 27, 2017.<br/><a href = "https://github.com/UrbanInstitute/housing-assistance-matters">View this project on GitHub.</a></div>
 		</div>
 		<div class = = "right credits">
 		<h1>Feature</h1>
 			<h2><a href="http://www.urban.org/author/benjamin-chartoff">Ben Chartoff</a></h2>
 			<p>Data visualization developer</p>
 
-			<h2><a href = "http://www.urban.org/author/christina-baird-0">Christina Baird</a></h2>
+			<h2><a href = "http://www.urban.org/author/christina-baird">Christina Baird</a></h2>
 			<p>Web designer</p>
 
 			<h2><a href = "http://www.urban.org/author/fiona-blackshaw">Fiona Blackshaw</a></h2>
 			<p>Senior production editor</p>
 		</div>
+	
+
 	</div>
+
         </div>
 
 </div>

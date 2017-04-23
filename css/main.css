@@ -1,4 +1,6 @@
-
+*:focus{
+  outline: none;
+}
 body{
   overflow-x: hidden;
   margin: 0;
@@ -939,6 +941,15 @@ li {
   opacity: 0;
   /*top: -45px;*/
 }
+.help.text a{
+  text-decoration: none;
+  color: #1696d2;
+  cursor: pointer;
+}
+.help.text i.emph{
+  font-style: normal;
+  font-weight: bold;
+}
 .help.text:after {
     content:'';
     position: absolute;
@@ -1219,4 +1230,27 @@ hr{
    left: 30px;   
   }
 }
+
+#dataUpdate{
+  font-size: 15px;
+  font-weight: bold;
+  font-style: normal;
+  position: relative;
+  top: 20px;
+}
+
+
+
+#githubCopyright{
+  font-size: 15px;
+  font-style: italic;
+  margin-top: 50px;
+  width: 400px;
+}
+#githubCopyright a{
+  color: #1696d2 !important;
+}
+
+
+
 
