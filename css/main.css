@@ -1149,6 +1149,11 @@ hr{
   color: #0096d2;
 }
 
+.left.footer a{
+  text-decoration: none;
+  color: #1696d2;
+}
+
 .footer.read, .footer.data, .footer.print{
   float: left;
   /*clear: both;*/
@@ -1201,7 +1206,7 @@ hr{
 .left.credits{
   float: left;
   clear: both;
-  width: 228px;
+  width: 218px;
 }
 .fips_national.total.units{
   top: -41px;
@@ -1220,7 +1225,7 @@ hr{
 
 @media (max-width: 1335px){
   .footerRow{
-  height: 1200px;   
+  height: 1500px;   
   }
   .right.footer{
    left: 0;   

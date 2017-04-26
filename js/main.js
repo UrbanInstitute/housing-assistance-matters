@@ -1748,7 +1748,7 @@ d3.select(".population.header")
 			.style("z-index",5)
 			.transition()
 			.duration(100)
-			.style("top","-238px")
+			.style("top","-255px")
 			.style("opacity",1)
 	})
 	.on("mouseout", function(){
