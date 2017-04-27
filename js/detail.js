@@ -325,7 +325,7 @@ function drawGraphic(containerWidth){
 
 			row2006 = table.append("tr")
 			row2006.append("td")
-				.html("2006&ndash;'08")
+				.html("2005&ndash;'09")
 			row2006.append("td")
 				.html(comma(d.properties.totalPop2006))
 			row2006.append("td")
@@ -347,7 +347,7 @@ function drawGraphic(containerWidth){
 
 			row2013 = table.append("tr")
 			row2013.append("td")
-				.html("2013&ndash;'08")
+				.html("2010&ndash;'14")
 			row2013.append("td")
 				.html(comma(d.properties.totalPop2013))
 			row2013.append("td")
